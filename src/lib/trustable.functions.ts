@@ -106,7 +106,7 @@ export const getWorkspace = createServerFn({ method: "GET" })
         department_id: string | null;
         operator_label: string;
         task: string;
-        decision: Record<string, unknown>;
+        decision: Json;
         status: string;
         minutes_saved: number;
         created_at: string;
@@ -115,7 +115,7 @@ export const getWorkspace = createServerFn({ method: "GET" })
         seq: number;
         event: string;
         actor: string;
-        payload: Record<string, unknown>;
+        payload: Json;
         prev_hash: string;
         block_hash: string;
         created_at: string;

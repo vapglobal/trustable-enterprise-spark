@@ -29,7 +29,7 @@ function FlowPage() {
   const { data } = useWorkspace();
   const run = useServerFn(runFlow);
   const qc = useQueryClient();
-  const [task, setTask] = useState(EXAMPLES[0]);
+  const [task, setTask] = useState<string>(EXAMPLES[0]!);
   const [dept, setDept] = useState<string>("");
   const [operator, setOperator] = useState("Bob Henderson");
   const [busy, setBusy] = useState(false);

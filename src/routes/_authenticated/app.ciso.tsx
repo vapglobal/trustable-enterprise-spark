@@ -55,7 +55,7 @@ function CisoPage() {
     }
   }
 
-  const piiRuns = data?.runs.filter((r) => (r.decision as { pii_detected?: boolean }).pii_detected).length ?? 0;
+  const piiRuns = data?.runs.filter((r) => (r.decision as unknown as { pii_detected?: boolean } | null)?.pii_detected).length ?? 0;
 
   return (
     <div className="space-y-6">

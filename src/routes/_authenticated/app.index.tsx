@@ -100,8 +100,8 @@ function Overview() {
             {trail.map((p) => (
               <li key={p.name}>
                 <span className="absolute -left-[5px] mt-1.5 h-2.5 w-2.5 rounded-full bg-heart-gradient" />
-                <p className="eyebrow">{PERSONAS[p.name].beat} · {new Date(p.first!).toLocaleDateString()}</p>
-                <p className="font-medium">{p.name} <span className="text-muted-foreground">— {PERSONAS[p.name].role}</span></p>
+                <p className="eyebrow">{PERSONAS[p.name]!.beat} · {new Date(p.first!).toLocaleDateString()}</p>
+                <p className="font-medium">{p.name} <span className="text-muted-foreground">— {PERSONAS[p.name]!.role}</span></p>
                 <p className="text-sm text-muted-foreground">{p.runs} runs · {p.minutes} minutes returned</p>
               </li>
             ))}
