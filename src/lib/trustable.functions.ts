@@ -67,7 +67,8 @@ export const getWorkspace = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = context as unknown as Ctx;
-    const role = await requireRole(ctx, ["owner", "admin", "operator", "auditor"]);
+    await requirePerm(ctx, "overview.view");
+    const role = await myRole(ctx);
     const [t, d, r, l] = await Promise.all([
       ctx.supabase.from("tenants").select("id, name, sector").eq("id", DEMO_TENANT_ID).single(),
       ctx.supabase.from("departments").select("id, name, headcount, loaded_hourly_rate").eq("tenant_id", DEMO_TENANT_ID).order("name"),
@@ -124,7 +125,7 @@ export const runFlow = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const ctx = context as unknown as Ctx;
-    await requireRole(ctx, ["owner", "admin", "operator"]);
+    await requirePerm(ctx, "flow.run");
     const result = await decide(data.task);
     if (!result.ok) {
       await ledger(ctx, "flow.gate_failed", { reason: result.reason, latencyMs: result.latencyMs });
@@ -166,7 +167,7 @@ export const verifyLedger = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const ctx = context as unknown as Ctx;
-    await requireRole(ctx, ["owner", "admin", "operator", "auditor"]);
+    await requirePerm(ctx, "ledger.verify");
     let tamperPayload: Json | undefined;
     if (data.tamperSeq) {
       const { data: blk } = await ctx.supabase
@@ -193,7 +194,7 @@ export const runRedTeam = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = context as unknown as Ctx;
-    await requireRole(ctx, ["owner", "admin", "operator", "auditor"]);
+    await requirePerm(ctx, "redteam.run");
     const results: { id: string; name: string; vector: string; blocked: boolean; evidence: string }[] = [];
 
     const cross = await ctx.supabase.from("flow_runs").select("id, task").eq("tenant_id", ISOLATION_TENANT_ID);
@@ -282,15 +283,18 @@ export const listAccess = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = context as unknown as Ctx;
-    const role = await requireRole(ctx, ["owner", "admin", "auditor"]);
+    await requirePerm(ctx, "access.view");
+    const role = await myRole(ctx);
+    const canInvite = !!(await ctx.supabase.rpc("has_permission", { _user: ctx.userId, _tenant: DEMO_TENANT_ID, _perm: "access.invite" })).data;
     const [m, i] = await Promise.all([
       ctx.supabase.from("user_roles").select("email, role, created_at").eq("tenant_id", DEMO_TENANT_ID).order("created_at"),
-      role === "auditor"
+      !canInvite
         ? Promise.resolve({ data: [] })
         : ctx.supabase.from("invites").select("id, email, role, display_name, accepted_at, created_at").eq("tenant_id", DEMO_TENANT_ID).order("created_at"),
     ]);
     return {
-      canInvite: role === "owner" || role === "admin",
+      canInvite,
+      role,
       members: (m.data ?? []) as { email: string | null; role: AppRole; created_at: string }[],
       invites: (i.data ?? []) as { id: string; email: string; role: AppRole; display_name: string | null; accepted_at: string | null; created_at: string }[],
     };
@@ -309,7 +313,8 @@ export const createInvite = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const ctx = context as unknown as Ctx;
-    const myR = await requireRole(ctx, ["owner", "admin"]);
+    await requirePerm(ctx, "access.invite");
+    const myR = await myRole(ctx);
     if (data.role === "admin" && myR !== "owner") throw new Error("Only owners can invite admins");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("invites").upsert(
@@ -325,7 +330,7 @@ export const exportSurfaceReport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = context as unknown as Ctx;
-    await requireRole(ctx, ["owner", "admin", "auditor"]);
+    await requirePerm(ctx, "report.export");
     const [{ data: runs }, { data: verify }, { data: head }] = await Promise.all([
       ctx.supabase.from("flow_runs").select("status, minutes_saved, decision").eq("tenant_id", DEMO_TENANT_ID),
       ctx.supabase.rpc("verify_ledger", { _tenant: DEMO_TENANT_ID }),
