@@ -4,6 +4,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { DEMO_TENANT_ID } from "./tenant";
 import { type Ctx, ledger, myRole, requirePerm, ownerEmail } from "./authz.server";
 import { CONTROLS } from "./controls";
+import type { Json } from "@/integrations/supabase/types";
 
 const auth = requireSupabaseAuth;
 const c = (x: unknown) => x as Ctx;
@@ -414,7 +415,7 @@ async function queryAudit(ctx: Ctx, f: z.infer<typeof AuditFilter>, limit: numbe
   if (f.to) q = q.lte("created_at", `${f.to}T23:59:59.999Z`);
   const { data, error } = await q;
   if (error) throw new Error("Could not read audit log");
-  return (data ?? []) as { seq: number; event: string; actor: string; payload: unknown; prev_hash: string; block_hash: string; created_at: string }[];
+  return (data ?? []) as { seq: number; event: string; actor: string; payload: Json; prev_hash: string; block_hash: string; created_at: string }[];
 }
 
 export const listAudit = createServerFn({ method: "POST" })

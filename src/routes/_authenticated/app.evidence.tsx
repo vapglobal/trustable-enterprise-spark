@@ -44,7 +44,7 @@ function EvidencePage() {
   }
 
   async function onFile(file: File) {
-    if (file.size > 2_000_000) return toast.error("Files must be under 2 MB.");
+    if (file.size > 2_000_000) { toast.error("Files must be under 2 MB."); return; }
     if (file.type.startsWith("image/")) {
       const r = new FileReader();
       r.onload = () => setImage(String(r.result));
