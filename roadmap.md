@@ -8,6 +8,6 @@
 - [ ] Evidence intake (diagrams, policies, compliance) + AI control-gap analysis -> prioritized remediation findings
 - [ ] Tamper-evident audit logging (auth, authz denials, workspace changes, evidence access, admin) with filters + CSV export
 - [ ] Security posture dashboard: tenant risk, open findings, control coverage, remediation ownership, evidence freshness
-- [ ] Forgot/reset password flow; admin: send reset email, suspend/reinstate, remove member
+- [ ] Forgot/reset password flow; admin: create user (email invite), send reset email, suspend/reinstate, remove member
 - [ ] Signed-in end-to-end check — needs Chris to sign in with the owner email
 - [ ] Reviewer invites (Matt, Jessica, Katie, Kevin, Luke) — needs their emails
