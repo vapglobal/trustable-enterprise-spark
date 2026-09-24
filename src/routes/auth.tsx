@@ -59,6 +59,18 @@ function AuthPage() {
     }
   }
 
+  async function forgot() {
+    if (!email) {
+      toast.error("Enter your work email first.");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) toast.error(error.message);
+    else toast.success("If that account exists, a reset link is on its way.");
+  }
+
   async function google() {
     const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/auth" });
     if (result.error) {
@@ -103,9 +115,16 @@ function AuthPage() {
               {busy ? "Verifying…" : mode === "in" ? "Sign in" : "Create account"}
             </Button>
           </form>
-          <button type="button" className="mt-4 text-sm text-primary hover:underline" onClick={() => setMode(mode === "in" ? "up" : "in")}>
-            {mode === "in" ? "Have an invite but no account? Create one" : "Already have an account? Sign in"}
-          </button>
+          <div className="mt-4 flex flex-wrap justify-between gap-2">
+            <button type="button" className="text-sm text-primary hover:underline" onClick={() => setMode(mode === "in" ? "up" : "in")}>
+              {mode === "in" ? "Have an invite but no account? Create one" : "Already have an account? Sign in"}
+            </button>
+            {mode === "in" && (
+              <button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={forgot}>
+                Forgot password?
+              </button>
+            )}
+          </div>
         </div>
       </main>
       <ConfidentialFooter />

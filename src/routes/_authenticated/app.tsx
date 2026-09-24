@@ -1,12 +1,14 @@
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { LogOut, ShieldAlert } from "lucide-react";
-import { bootstrapAccess } from "@/lib/trustable.functions";
+import { Lock, LogOut, ShieldAlert } from "lucide-react";
+import { recordSignOut } from "@/lib/trustable.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ConfidentialFooter, Wordmark } from "@/components/trustable/Chrome";
 import { HeartVault } from "@/components/trustable/HeartVault";
+import { useAccess } from "@/hooks/use-access";
+import type { Perm } from "@/lib/controls";
 
 export const Route = createFileRoute("/_authenticated/app")({
   head: () => ({
@@ -20,26 +22,40 @@ export const Route = createFileRoute("/_authenticated/app")({
   component: AppLayout,
 });
 
-const NAV = [
-  { to: "/app", label: "Overview", exact: true },
-  { to: "/app/flow", label: "Trustable Flow" },
-  { to: "/app/ciso", label: "CISO Console" },
-  { to: "/app/redteam", label: "Red Team" },
-  { to: "/app/access", label: "Access" },
-] as const;
+const NAV: { to: string; label: string; perm: Perm; exact?: boolean }[] = [
+  { to: "/app", label: "Overview", perm: "overview.view", exact: true },
+  { to: "/app/posture", label: "Posture", perm: "posture.view" },
+  { to: "/app/evidence", label: "Evidence", perm: "evidence.view" },
+  { to: "/app/flow", label: "Trustable Flow", perm: "flow.view" },
+  { to: "/app/ciso", label: "CISO Console", perm: "ciso.view" },
+  { to: "/app/redteam", label: "Red Team", perm: "redteam.run" },
+  { to: "/app/audit", label: "Audit Log", perm: "audit.view" },
+  { to: "/app/access", label: "Access", perm: "access.view" },
+];
+
+function permFor(path: string): Perm | null {
+  const p = path.replace(/\/$/, "") || "/app";
+  const match = NAV.filter((n) => (n.exact ? p === n.to : p === n.to || p.startsWith(n.to + "/")));
+  return match.sort((a, b) => b.to.length - a.to.length)[0]?.perm ?? null;
+}
 
 function AppLayout() {
-  const boot = useServerFn(bootstrapAccess);
+  const signOutFn = useServerFn(recordSignOut);
   const qc = useQueryClient();
   const navigate = useNavigate();
-  const access = useQuery({ queryKey: ["access"], queryFn: () => boot(), staleTime: Infinity });
+  const { pathname } = useLocation();
+  const access = useAccess();
 
   async function signOut() {
+    await signOutFn().catch(() => undefined);
     await qc.cancelQueries();
     qc.clear();
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
   }
+
+  const required = permFor(pathname);
+  const allowed = !required || access.can(required);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -47,6 +63,7 @@ function AppLayout() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <Wordmark />
           <div className="flex items-center gap-3">
+            {access.data?.email && <span className="hidden text-xs text-muted-foreground md:inline">{access.data.email}</span>}
             {access.data?.role && (
               <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-primary">
                 {access.data.role}
@@ -59,11 +76,11 @@ function AppLayout() {
         </div>
         {access.data?.status === "active" && (
           <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-6">
-            {NAV.map((n) => (
+            {NAV.filter((n) => access.can(n.perm)).map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
-                activeOptions={{ exact: "exact" in n }}
+                activeOptions={{ exact: !!n.exact }}
                 className="whitespace-nowrap border-b-2 border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 activeProps={{ className: "!border-primary !text-foreground" }}
               >
@@ -86,11 +103,22 @@ function AppLayout() {
             <ShieldAlert className="mx-auto h-8 w-8 text-warning" />
             <h1 className="mt-4 text-2xl font-bold">Access pending</h1>
             <p className="mt-2 text-muted-foreground">
-              You're signed in, but this email doesn't have an invite yet. Trustable is invite-only — ask the owner to invite this address, then sign in again.
+              {access.data.verified
+                ? "You're signed in, but this account has no role in this tenant. Ask the owner to grant access, then sign in again."
+                : "Confirm your email address from the link in your inbox, then sign in again."}
             </p>
           </div>
         )}
-        {access.data?.status === "active" && <Outlet />}
+        {access.data?.status === "active" &&
+          (allowed ? (
+            <Outlet />
+          ) : (
+            <div className="panel mx-auto max-w-lg p-8 text-center">
+              <Lock className="mx-auto h-8 w-8 text-muted-foreground" />
+              <h1 className="mt-4 text-2xl font-bold">Not permitted</h1>
+              <p className="mt-2 text-muted-foreground">Your role doesn't include access to this workspace. The attempt is enforced on the server as well.</p>
+            </div>
+          ))}
       </main>
       <ConfidentialFooter />
     </div>

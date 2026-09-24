@@ -4,58 +4,38 @@ import { createHash } from "node:crypto";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { decide, CONFIDENCE_THRESHOLD } from "./decide.server";
 import { DEMO_TENANT_ID, ISOLATION_TENANT_ID, type AppRole } from "./tenant";
+import { type Ctx, ledger, myRole, myPermissions, requirePerm, ownerEmail } from "./authz.server";
 import type { Json } from "@/integrations/supabase/types";
 
-type Ctx = { supabase: any; userId: string; claims: { email?: string } };
-
-async function myRole(ctx: Ctx): Promise<AppRole | null> {
-  const { data } = await ctx.supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", ctx.userId)
-    .eq("tenant_id", DEMO_TENANT_ID)
-    .maybeSingle();
-  return (data?.role as AppRole) ?? null;
-}
-
-async function requireRole(ctx: Ctx, roles: AppRole[]) {
-  const role = await myRole(ctx);
-  if (!role || !roles.includes(role)) throw new Error("Forbidden: insufficient role");
-  return role;
-}
-
-async function ledger(ctx: Ctx, event: string, payload: Record<string, unknown>) {
-  const { error } = await ctx.supabase.rpc("append_ledger", {
-    _tenant: DEMO_TENANT_ID,
-    _event: event,
-    _payload: payload as Json,
-  });
-  if (error) console.error("ledger append failed", error.message);
-}
-
-/** Grants access on first sign-in: first user becomes owner; others need an invite. */
+/**
+ * Resolves access on sign-in. The owner is bound to the TRUSTABLE_OWNER_EMAIL secret
+ * (verified email required). Everyone else needs an invite or an admin-created account.
+ */
 export const bootstrapAccess = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = context as unknown as Ctx;
-    const existing = await myRole(ctx);
-    if (existing) {
-      await ledger(ctx, "access.signin", { role: existing });
-      return { status: "active" as const, role: existing };
-    }
     const email = (ctx.claims.email ?? "").toLowerCase();
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { count } = await supabaseAdmin
+    const { data: u } = await supabaseAdmin.auth.admin.getUserById(ctx.userId);
+    const verified = !!u.user?.email_confirmed_at;
+    const isOwner = verified && !!email && email === ownerEmail();
+
+    // Reconcile the owner row with the secured identity.
+    const { data: row } = await supabaseAdmin
       .from("user_roles")
-      .select("id", { count: "exact", head: true })
+      .select("id, role")
+      .eq("user_id", ctx.userId)
       .eq("tenant_id", DEMO_TENANT_ID)
-      .eq("role", "owner");
-    let role: AppRole | null = null;
-    let via = "";
-    if (!count) {
-      role = "owner";
-      via = "first_user_bootstrap";
-    } else if (email) {
+      .maybeSingle();
+    if (isOwner && row?.role !== "owner") {
+      if (row) await supabaseAdmin.from("user_roles").update({ role: "owner", email }).eq("id", row.id);
+      else await supabaseAdmin.from("user_roles").insert({ user_id: ctx.userId, tenant_id: DEMO_TENANT_ID, role: "owner", email });
+      await ledger(ctx, "access.granted", { role: "owner", via: "secured_owner_identity" });
+    }
+
+    let role = await myRole(ctx);
+    if (!role && !isOwner && email && verified) {
       const { data: inv } = await supabaseAdmin
         .from("invites")
         .select("id, role")
@@ -63,23 +43,32 @@ export const bootstrapAccess = createServerFn({ method: "POST" })
         .eq("email", email)
         .is("accepted_at", null)
         .maybeSingle();
-      if (inv) {
-        role = inv.role as AppRole;
-        via = "invite";
+      if (inv && inv.role !== "owner") {
+        await supabaseAdmin.from("user_roles").insert({ user_id: ctx.userId, tenant_id: DEMO_TENANT_ID, role: inv.role, email });
         await supabaseAdmin.from("invites").update({ accepted_at: new Date().toISOString() }).eq("id", inv.id);
+        role = inv.role as AppRole;
+        await ledger(ctx, "access.granted", { role, via: "invite" });
       }
     }
-    if (!role) return { status: "pending" as const, role: null };
-    await supabaseAdmin.from("user_roles").insert({ user_id: ctx.userId, tenant_id: DEMO_TENANT_ID, role, email });
-    await ledger(ctx, "access.granted", { role, via });
-    return { status: "active" as const, role };
+    if (!role) return { status: "pending" as const, role: null, perms: [], email, verified };
+    await ledger(ctx, "access.signin", { role });
+    return { status: "active" as const, role, perms: await myPermissions(ctx), email, verified };
+  });
+
+export const recordSignOut = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const ctx = context as unknown as Ctx;
+    if (await myRole(ctx)) await ledger(ctx, "access.signout", {});
+    return { ok: true };
   });
 
 export const getWorkspace = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = context as unknown as Ctx;
-    const role = await requireRole(ctx, ["owner", "admin", "operator", "auditor"]);
+    await requirePerm(ctx, "overview.view");
+    const role = await myRole(ctx);
     const [t, d, r, l] = await Promise.all([
       ctx.supabase.from("tenants").select("id, name, sector").eq("id", DEMO_TENANT_ID).single(),
       ctx.supabase.from("departments").select("id, name, headcount, loaded_hourly_rate").eq("tenant_id", DEMO_TENANT_ID).order("name"),
@@ -136,7 +125,7 @@ export const runFlow = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const ctx = context as unknown as Ctx;
-    await requireRole(ctx, ["owner", "admin", "operator"]);
+    await requirePerm(ctx, "flow.run");
     const result = await decide(data.task);
     if (!result.ok) {
       await ledger(ctx, "flow.gate_failed", { reason: result.reason, latencyMs: result.latencyMs });
@@ -178,7 +167,7 @@ export const verifyLedger = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const ctx = context as unknown as Ctx;
-    await requireRole(ctx, ["owner", "admin", "operator", "auditor"]);
+    await requirePerm(ctx, "ledger.verify");
     let tamperPayload: Json | undefined;
     if (data.tamperSeq) {
       const { data: blk } = await ctx.supabase
@@ -205,7 +194,7 @@ export const runRedTeam = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = context as unknown as Ctx;
-    await requireRole(ctx, ["owner", "admin", "operator", "auditor"]);
+    await requirePerm(ctx, "redteam.run");
     const results: { id: string; name: string; vector: string; blocked: boolean; evidence: string }[] = [];
 
     const cross = await ctx.supabase.from("flow_runs").select("id, task").eq("tenant_id", ISOLATION_TENANT_ID);
@@ -294,15 +283,18 @@ export const listAccess = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = context as unknown as Ctx;
-    const role = await requireRole(ctx, ["owner", "admin", "auditor"]);
+    await requirePerm(ctx, "access.view");
+    const role = await myRole(ctx);
+    const canInvite = !!(await ctx.supabase.rpc("has_permission", { _user: ctx.userId, _tenant: DEMO_TENANT_ID, _perm: "access.invite" })).data;
     const [m, i] = await Promise.all([
       ctx.supabase.from("user_roles").select("email, role, created_at").eq("tenant_id", DEMO_TENANT_ID).order("created_at"),
-      role === "auditor"
+      !canInvite
         ? Promise.resolve({ data: [] })
         : ctx.supabase.from("invites").select("id, email, role, display_name, accepted_at, created_at").eq("tenant_id", DEMO_TENANT_ID).order("created_at"),
     ]);
     return {
-      canInvite: role === "owner" || role === "admin",
+      canInvite,
+      role,
       members: (m.data ?? []) as { email: string | null; role: AppRole; created_at: string }[],
       invites: (i.data ?? []) as { id: string; email: string; role: AppRole; display_name: string | null; accepted_at: string | null; created_at: string }[],
     };
@@ -321,7 +313,8 @@ export const createInvite = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const ctx = context as unknown as Ctx;
-    const myR = await requireRole(ctx, ["owner", "admin"]);
+    await requirePerm(ctx, "access.invite");
+    const myR = await myRole(ctx);
     if (data.role === "admin" && myR !== "owner") throw new Error("Only owners can invite admins");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("invites").upsert(
@@ -337,7 +330,7 @@ export const exportSurfaceReport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = context as unknown as Ctx;
-    await requireRole(ctx, ["owner", "admin", "auditor"]);
+    await requirePerm(ctx, "report.export");
     const [{ data: runs }, { data: verify }, { data: head }] = await Promise.all([
       ctx.supabase.from("flow_runs").select("status, minutes_saved, decision").eq("tenant_id", DEMO_TENANT_ID),
       ctx.supabase.rpc("verify_ledger", { _tenant: DEMO_TENANT_ID }),

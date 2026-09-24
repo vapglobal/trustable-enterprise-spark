@@ -13,11 +13,15 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as ArchitectureRouteImport } from './routes/architecture'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
 import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authenticated/app.access'
+import { Route as AuthenticatedAppAuditRouteImport } from './routes/_authenticated/app.audit'
 import { Route as AuthenticatedAppCisoRouteImport } from './routes/_authenticated/app.ciso'
+import { Route as AuthenticatedAppEvidenceRouteImport } from './routes/_authenticated/app.evidence'
 import { Route as AuthenticatedAppFlowRouteImport } from './routes/_authenticated/app.flow'
+import { Route as AuthenticatedAppPostureRouteImport } from './routes/_authenticated/app.posture'
 import { Route as AuthenticatedAppRedteamRouteImport } from './routes/_authenticated/app.redteam'
 
 const IndexRoute = IndexRouteImport.update({
@@ -39,6 +43,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -54,14 +63,30 @@ const AuthenticatedAppAccessRoute = AuthenticatedAppAccessRouteImport.update({
   path: '/access',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppAuditRoute = AuthenticatedAppAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 const AuthenticatedAppCisoRoute = AuthenticatedAppCisoRouteImport.update({
   id: '/ciso',
   path: '/ciso',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppEvidenceRoute =
+  AuthenticatedAppEvidenceRouteImport.update({
+    id: '/evidence',
+    path: '/evidence',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppFlowRoute = AuthenticatedAppFlowRouteImport.update({
   id: '/flow',
   path: '/flow',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppPostureRoute = AuthenticatedAppPostureRouteImport.update({
+  id: '/posture',
+  path: '/posture',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
 const AuthenticatedAppRedteamRoute = AuthenticatedAppRedteamRouteImport.update({
@@ -74,10 +99,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
   '/app/': typeof AuthenticatedAppIndexRoute
 }
@@ -85,9 +114,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
   '/app': typeof AuthenticatedAppIndexRoute
 }
@@ -97,10 +130,14 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/app/access': typeof AuthenticatedAppAccessRoute
+  '/_authenticated/app/audit': typeof AuthenticatedAppAuditRoute
   '/_authenticated/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/_authenticated/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/_authenticated/app/flow': typeof AuthenticatedAppFlowRoute
+  '/_authenticated/app/posture': typeof AuthenticatedAppPostureRoute
   '/_authenticated/app/redteam': typeof AuthenticatedAppRedteamRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
@@ -110,10 +147,14 @@ export interface FileRouteTypes {
     | '/'
     | '/architecture'
     | '/auth'
+    | '/reset-password'
     | '/app'
     | '/app/access'
+    | '/app/audit'
     | '/app/ciso'
+    | '/app/evidence'
     | '/app/flow'
+    | '/app/posture'
     | '/app/redteam'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
@@ -121,9 +162,13 @@ export interface FileRouteTypes {
     | '/'
     | '/architecture'
     | '/auth'
+    | '/reset-password'
     | '/app/access'
+    | '/app/audit'
     | '/app/ciso'
+    | '/app/evidence'
     | '/app/flow'
+    | '/app/posture'
     | '/app/redteam'
     | '/app'
   id:
@@ -132,10 +177,14 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/architecture'
     | '/auth'
+    | '/reset-password'
     | '/_authenticated/app'
     | '/_authenticated/app/access'
+    | '/_authenticated/app/audit'
     | '/_authenticated/app/ciso'
+    | '/_authenticated/app/evidence'
     | '/_authenticated/app/flow'
+    | '/_authenticated/app/posture'
     | '/_authenticated/app/redteam'
     | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
@@ -145,6 +194,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ArchitectureRoute: typeof ArchitectureRoute
   AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -177,6 +227,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/app': {
       id: '/_authenticated/app'
       path: '/app'
@@ -198,6 +255,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppAccessRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/audit': {
+      id: '/_authenticated/app/audit'
+      path: '/audit'
+      fullPath: '/app/audit'
+      preLoaderRoute: typeof AuthenticatedAppAuditRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/ciso': {
       id: '/_authenticated/app/ciso'
       path: '/ciso'
@@ -205,11 +269,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppCisoRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/evidence': {
+      id: '/_authenticated/app/evidence'
+      path: '/evidence'
+      fullPath: '/app/evidence'
+      preLoaderRoute: typeof AuthenticatedAppEvidenceRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/flow': {
       id: '/_authenticated/app/flow'
       path: '/flow'
       fullPath: '/app/flow'
       preLoaderRoute: typeof AuthenticatedAppFlowRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/posture': {
+      id: '/_authenticated/app/posture'
+      path: '/posture'
+      fullPath: '/app/posture'
+      preLoaderRoute: typeof AuthenticatedAppPostureRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
     '/_authenticated/app/redteam': {
@@ -224,16 +302,22 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppAccessRoute: typeof AuthenticatedAppAccessRoute
+  AuthenticatedAppAuditRoute: typeof AuthenticatedAppAuditRoute
   AuthenticatedAppCisoRoute: typeof AuthenticatedAppCisoRoute
+  AuthenticatedAppEvidenceRoute: typeof AuthenticatedAppEvidenceRoute
   AuthenticatedAppFlowRoute: typeof AuthenticatedAppFlowRoute
+  AuthenticatedAppPostureRoute: typeof AuthenticatedAppPostureRoute
   AuthenticatedAppRedteamRoute: typeof AuthenticatedAppRedteamRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppAccessRoute: AuthenticatedAppAccessRoute,
+  AuthenticatedAppAuditRoute: AuthenticatedAppAuditRoute,
   AuthenticatedAppCisoRoute: AuthenticatedAppCisoRoute,
+  AuthenticatedAppEvidenceRoute: AuthenticatedAppEvidenceRoute,
   AuthenticatedAppFlowRoute: AuthenticatedAppFlowRoute,
+  AuthenticatedAppPostureRoute: AuthenticatedAppPostureRoute,
   AuthenticatedAppRedteamRoute: AuthenticatedAppRedteamRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
@@ -257,6 +341,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ArchitectureRoute: ArchitectureRoute,
   AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
