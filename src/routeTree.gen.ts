@@ -14,6 +14,10 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authenticated/app.access'
+import { Route as AuthenticatedAppCisoRouteImport } from './routes/_authenticated/app.ciso'
+import { Route as AuthenticatedAppFlowRouteImport } from './routes/_authenticated/app.flow'
+import { Route as AuthenticatedAppRedteamRouteImport } from './routes/_authenticated/app.redteam'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,16 +43,44 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppAccessRoute = AuthenticatedAppAccessRouteImport.update({
+  id: '/access',
+  path: '/access',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppCisoRoute = AuthenticatedAppCisoRouteImport.update({
+  id: '/ciso',
+  path: '/ciso',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppFlowRoute = AuthenticatedAppFlowRouteImport.update({
+  id: '/flow',
+  path: '/flow',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppRedteamRoute = AuthenticatedAppRedteamRouteImport.update({
+  id: '/redteam',
+  path: '/redteam',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
+  '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/redteam': typeof AuthenticatedAppRedteamRoute
   '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/redteam': typeof AuthenticatedAppRedteamRoute
   '/app': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
@@ -57,19 +89,42 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
+  '/_authenticated/app/access': typeof AuthenticatedAppAccessRoute
+  '/_authenticated/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/_authenticated/app/flow': typeof AuthenticatedAppFlowRoute
+  '/_authenticated/app/redteam': typeof AuthenticatedAppRedteamRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/app' | '/app/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/app'
+    | '/app/access'
+    | '/app/ciso'
+    | '/app/flow'
+    | '/app/redteam'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/app'
+  to:
+    | '/'
+    | '/auth'
+    | '/app/access'
+    | '/app/ciso'
+    | '/app/flow'
+    | '/app/redteam'
+    | '/app'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/app'
+    | '/_authenticated/app/access'
+    | '/_authenticated/app/ciso'
+    | '/_authenticated/app/flow'
+    | '/_authenticated/app/redteam'
     | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
 }
@@ -116,14 +171,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/access': {
+      id: '/_authenticated/app/access'
+      path: '/access'
+      fullPath: '/app/access'
+      preLoaderRoute: typeof AuthenticatedAppAccessRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/ciso': {
+      id: '/_authenticated/app/ciso'
+      path: '/ciso'
+      fullPath: '/app/ciso'
+      preLoaderRoute: typeof AuthenticatedAppCisoRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/flow': {
+      id: '/_authenticated/app/flow'
+      path: '/flow'
+      fullPath: '/app/flow'
+      preLoaderRoute: typeof AuthenticatedAppFlowRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/redteam': {
+      id: '/_authenticated/app/redteam'
+      path: '/redteam'
+      fullPath: '/app/redteam'
+      preLoaderRoute: typeof AuthenticatedAppRedteamRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
   }
 }
 
 interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppAccessRoute: typeof AuthenticatedAppAccessRoute
+  AuthenticatedAppCisoRoute: typeof AuthenticatedAppCisoRoute
+  AuthenticatedAppFlowRoute: typeof AuthenticatedAppFlowRoute
+  AuthenticatedAppRedteamRoute: typeof AuthenticatedAppRedteamRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppAccessRoute: AuthenticatedAppAccessRoute,
+  AuthenticatedAppCisoRoute: AuthenticatedAppCisoRoute,
+  AuthenticatedAppFlowRoute: AuthenticatedAppFlowRoute,
+  AuthenticatedAppRedteamRoute: AuthenticatedAppRedteamRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
 
