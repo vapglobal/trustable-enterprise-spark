@@ -17,8 +17,10 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
 import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authenticated/app.access'
+import { Route as AuthenticatedAppAuditRouteImport } from './routes/_authenticated/app.audit'
 import { Route as AuthenticatedAppCisoRouteImport } from './routes/_authenticated/app.ciso'
 import { Route as AuthenticatedAppFlowRouteImport } from './routes/_authenticated/app.flow'
+import { Route as AuthenticatedAppPostureRouteImport } from './routes/_authenticated/app.posture'
 import { Route as AuthenticatedAppRedteamRouteImport } from './routes/_authenticated/app.redteam'
 
 const IndexRoute = IndexRouteImport.update({
@@ -60,6 +62,11 @@ const AuthenticatedAppAccessRoute = AuthenticatedAppAccessRouteImport.update({
   path: '/access',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppAuditRoute = AuthenticatedAppAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 const AuthenticatedAppCisoRoute = AuthenticatedAppCisoRouteImport.update({
   id: '/ciso',
   path: '/ciso',
@@ -68,6 +75,11 @@ const AuthenticatedAppCisoRoute = AuthenticatedAppCisoRouteImport.update({
 const AuthenticatedAppFlowRoute = AuthenticatedAppFlowRouteImport.update({
   id: '/flow',
   path: '/flow',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppPostureRoute = AuthenticatedAppPostureRouteImport.update({
+  id: '/posture',
+  path: '/posture',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
 const AuthenticatedAppRedteamRoute = AuthenticatedAppRedteamRouteImport.update({
@@ -83,8 +95,10 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
   '/app/': typeof AuthenticatedAppIndexRoute
 }
@@ -94,8 +108,10 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
   '/app': typeof AuthenticatedAppIndexRoute
 }
@@ -108,8 +124,10 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/app/access': typeof AuthenticatedAppAccessRoute
+  '/_authenticated/app/audit': typeof AuthenticatedAppAuditRoute
   '/_authenticated/app/ciso': typeof AuthenticatedAppCisoRoute
   '/_authenticated/app/flow': typeof AuthenticatedAppFlowRoute
+  '/_authenticated/app/posture': typeof AuthenticatedAppPostureRoute
   '/_authenticated/app/redteam': typeof AuthenticatedAppRedteamRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
@@ -122,8 +140,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/app'
     | '/app/access'
+    | '/app/audit'
     | '/app/ciso'
     | '/app/flow'
+    | '/app/posture'
     | '/app/redteam'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
@@ -133,8 +153,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/app/access'
+    | '/app/audit'
     | '/app/ciso'
     | '/app/flow'
+    | '/app/posture'
     | '/app/redteam'
     | '/app'
   id:
@@ -146,8 +168,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/app'
     | '/_authenticated/app/access'
+    | '/_authenticated/app/audit'
     | '/_authenticated/app/ciso'
     | '/_authenticated/app/flow'
+    | '/_authenticated/app/posture'
     | '/_authenticated/app/redteam'
     | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
@@ -218,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppAccessRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/audit': {
+      id: '/_authenticated/app/audit'
+      path: '/audit'
+      fullPath: '/app/audit'
+      preLoaderRoute: typeof AuthenticatedAppAuditRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/ciso': {
       id: '/_authenticated/app/ciso'
       path: '/ciso'
@@ -232,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppFlowRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/posture': {
+      id: '/_authenticated/app/posture'
+      path: '/posture'
+      fullPath: '/app/posture'
+      preLoaderRoute: typeof AuthenticatedAppPostureRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/redteam': {
       id: '/_authenticated/app/redteam'
       path: '/redteam'
@@ -244,16 +282,20 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppAccessRoute: typeof AuthenticatedAppAccessRoute
+  AuthenticatedAppAuditRoute: typeof AuthenticatedAppAuditRoute
   AuthenticatedAppCisoRoute: typeof AuthenticatedAppCisoRoute
   AuthenticatedAppFlowRoute: typeof AuthenticatedAppFlowRoute
+  AuthenticatedAppPostureRoute: typeof AuthenticatedAppPostureRoute
   AuthenticatedAppRedteamRoute: typeof AuthenticatedAppRedteamRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppAccessRoute: AuthenticatedAppAccessRoute,
+  AuthenticatedAppAuditRoute: AuthenticatedAppAuditRoute,
   AuthenticatedAppCisoRoute: AuthenticatedAppCisoRoute,
   AuthenticatedAppFlowRoute: AuthenticatedAppFlowRoute,
+  AuthenticatedAppPostureRoute: AuthenticatedAppPostureRoute,
   AuthenticatedAppRedteamRoute: AuthenticatedAppRedteamRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
