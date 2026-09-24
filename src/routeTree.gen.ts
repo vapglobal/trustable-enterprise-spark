@@ -10,33 +10,141 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as ArchitectureRouteImport } from './routes/architecture'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
+import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authenticated/app.access'
+import { Route as AuthenticatedAppCisoRouteImport } from './routes/_authenticated/app.ciso'
+import { Route as AuthenticatedAppFlowRouteImport } from './routes/_authenticated/app.flow'
+import { Route as AuthenticatedAppRedteamRouteImport } from './routes/_authenticated/app.redteam'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArchitectureRoute = ArchitectureRouteImport.update({
+  id: '/architecture',
+  path: '/architecture',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppAccessRoute = AuthenticatedAppAccessRouteImport.update({
+  id: '/access',
+  path: '/access',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppCisoRoute = AuthenticatedAppCisoRouteImport.update({
+  id: '/ciso',
+  path: '/ciso',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppFlowRoute = AuthenticatedAppFlowRouteImport.update({
+  id: '/flow',
+  path: '/flow',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppRedteamRoute = AuthenticatedAppRedteamRouteImport.update({
+  id: '/redteam',
+  path: '/redteam',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/architecture': typeof ArchitectureRoute
+  '/auth': typeof AuthRoute
+  '/app': typeof AuthenticatedAppRouteWithChildren
+  '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/redteam': typeof AuthenticatedAppRedteamRoute
+  '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/architecture': typeof ArchitectureRoute
+  '/auth': typeof AuthRoute
+  '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/redteam': typeof AuthenticatedAppRedteamRoute
+  '/app': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/architecture': typeof ArchitectureRoute
+  '/auth': typeof AuthRoute
+  '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
+  '/_authenticated/app/access': typeof AuthenticatedAppAccessRoute
+  '/_authenticated/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/_authenticated/app/flow': typeof AuthenticatedAppFlowRoute
+  '/_authenticated/app/redteam': typeof AuthenticatedAppRedteamRoute
+  '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/architecture'
+    | '/auth'
+    | '/app'
+    | '/app/access'
+    | '/app/ciso'
+    | '/app/flow'
+    | '/app/redteam'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/architecture'
+    | '/auth'
+    | '/app/access'
+    | '/app/ciso'
+    | '/app/flow'
+    | '/app/redteam'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/architecture'
+    | '/auth'
+    | '/_authenticated/app'
+    | '/_authenticated/app/access'
+    | '/_authenticated/app/ciso'
+    | '/_authenticated/app/flow'
+    | '/_authenticated/app/redteam'
+    | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  ArchitectureRoute: typeof ArchitectureRoute
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +156,107 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/architecture': {
+      id: '/architecture'
+      path: '/architecture'
+      fullPath: '/architecture'
+      preLoaderRoute: typeof ArchitectureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/app': {
+      id: '/_authenticated/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AuthenticatedAppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/app/': {
+      id: '/_authenticated/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/access': {
+      id: '/_authenticated/app/access'
+      path: '/access'
+      fullPath: '/app/access'
+      preLoaderRoute: typeof AuthenticatedAppAccessRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/ciso': {
+      id: '/_authenticated/app/ciso'
+      path: '/ciso'
+      fullPath: '/app/ciso'
+      preLoaderRoute: typeof AuthenticatedAppCisoRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/flow': {
+      id: '/_authenticated/app/flow'
+      path: '/flow'
+      fullPath: '/app/flow'
+      preLoaderRoute: typeof AuthenticatedAppFlowRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/redteam': {
+      id: '/_authenticated/app/redteam'
+      path: '/redteam'
+      fullPath: '/app/redteam'
+      preLoaderRoute: typeof AuthenticatedAppRedteamRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
   }
 }
 
+interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppAccessRoute: typeof AuthenticatedAppAccessRoute
+  AuthenticatedAppCisoRoute: typeof AuthenticatedAppCisoRoute
+  AuthenticatedAppFlowRoute: typeof AuthenticatedAppFlowRoute
+  AuthenticatedAppRedteamRoute: typeof AuthenticatedAppRedteamRoute
+  AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
+}
+
+const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppAccessRoute: AuthenticatedAppAccessRoute,
+  AuthenticatedAppCisoRoute: AuthenticatedAppCisoRoute,
+  AuthenticatedAppFlowRoute: AuthenticatedAppFlowRoute,
+  AuthenticatedAppRedteamRoute: AuthenticatedAppRedteamRoute,
+  AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
+}
+
+const AuthenticatedAppRouteWithChildren =
+  AuthenticatedAppRoute._addFileChildren(AuthenticatedAppRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppRoute: typeof AuthenticatedAppRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppRoute: AuthenticatedAppRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  ArchitectureRoute: ArchitectureRoute,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
