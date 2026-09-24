@@ -14,16 +14,323 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_ledger: {
+        Row: {
+          actor: string
+          block_hash: string
+          created_at: string
+          event: string
+          id: number
+          payload: Json
+          prev_hash: string
+          seq: number
+          tenant_id: string
+        }
+        Insert: {
+          actor: string
+          block_hash: string
+          created_at?: string
+          event: string
+          id?: number
+          payload?: Json
+          prev_hash: string
+          seq: number
+          tenant_id: string
+        }
+        Update: {
+          actor?: string
+          block_hash?: string
+          created_at?: string
+          event?: string
+          id?: number
+          payload?: Json
+          prev_hash?: string
+          seq?: number
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_ledger_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      departments: {
+        Row: {
+          created_at: string
+          headcount: number
+          id: string
+          loaded_hourly_rate: number
+          name: string
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          headcount?: number
+          id?: string
+          loaded_hourly_rate?: number
+          name: string
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          headcount?: number
+          id?: string
+          loaded_hourly_rate?: number
+          name?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "departments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flow_runs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          decision: Json
+          department_id: string | null
+          id: string
+          minutes_saved: number
+          operator_label: string
+          status: string
+          task: string
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          decision?: Json
+          department_id?: string | null
+          id?: string
+          minutes_saved?: number
+          operator_label: string
+          status?: string
+          task: string
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          decision?: Json
+          department_id?: string | null
+          id?: string
+          minutes_saved?: number
+          operator_label?: string
+          status?: string
+          task?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flow_runs_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flow_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invites: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          created_by: string | null
+          display_name: string | null
+          email: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          tenant_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_name?: string | null
+          email: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          tenant_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_name?: string | null
+          email?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invites_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          sector: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          sector?: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          sector?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      append_ledger: {
+        Args: { _event: string; _payload: Json; _tenant: string }
+        Returns: {
+          actor: string
+          block_hash: string
+          created_at: string
+          event: string
+          id: number
+          payload: Json
+          prev_hash: string
+          seq: number
+          tenant_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "audit_ledger"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      has_tenant_role: {
+        Args: {
+          _roles: Database["public"]["Enums"]["app_role"][]
+          _tenant: string
+          _user: string
+        }
+        Returns: boolean
+      }
+      is_member: { Args: { _tenant: string; _user: string }; Returns: boolean }
+      ledger_append_internal: {
+        Args: {
+          _actor: string
+          _event: string
+          _payload: Json
+          _tenant: string
+          _ts?: string
+        }
+        Returns: {
+          actor: string
+          block_hash: string
+          created_at: string
+          event: string
+          id: number
+          payload: Json
+          prev_hash: string
+          seq: number
+          tenant_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "audit_ledger"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      ledger_hash: {
+        Args: {
+          _actor: string
+          _event: string
+          _payload: Json
+          _prev: string
+          _ts: string
+        }
+        Returns: string
+      }
+      verify_ledger: {
+        Args: { _tamper_payload?: Json; _tamper_seq?: number; _tenant: string }
+        Returns: {
+          computed_hash: string
+          event: string
+          hash_ok: boolean
+          link_ok: boolean
+          seq: number
+          stored_hash: string
+        }[]
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "owner" | "admin" | "operator" | "auditor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +457,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["owner", "admin", "operator", "auditor"],
+    },
   },
 } as const
