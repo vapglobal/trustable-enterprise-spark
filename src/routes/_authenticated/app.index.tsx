@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Clock, DollarSign, Workflow, ShieldCheck } from "lucide-react";
 import { useWorkspace, fmtMoney } from "@/hooks/use-workspace";
-import { ProofBadge } from "@/components/trustable/Chrome";
+import { ProofBadge, StatusPill } from "@/components/trustable/Chrome";
 
 export const Route = createFileRoute("/_authenticated/app/")({
   component: Overview,
@@ -126,16 +126,6 @@ function Overview() {
       </section>
     </div>
   );
-}
-
-export function StatusPill({ status }: { status: string }) {
-  const cls =
-    status === "executed"
-      ? "border-success/40 bg-success/10 text-success"
-      : status === "review"
-        ? "border-warning/40 bg-warning/10 text-warning"
-        : "border-destructive/40 bg-destructive/10 text-destructive";
-  return <span className={`rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${cls}`}>{status}</span>;
 }
 
 function Stat({ icon: I, label, value }: { icon: typeof Clock; label: string; value: string }) {
