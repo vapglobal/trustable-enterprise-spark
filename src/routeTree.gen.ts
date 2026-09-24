@@ -19,6 +19,7 @@ import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authenticated/app.access'
 import { Route as AuthenticatedAppAuditRouteImport } from './routes/_authenticated/app.audit'
 import { Route as AuthenticatedAppCisoRouteImport } from './routes/_authenticated/app.ciso'
+import { Route as AuthenticatedAppEvidenceRouteImport } from './routes/_authenticated/app.evidence'
 import { Route as AuthenticatedAppFlowRouteImport } from './routes/_authenticated/app.flow'
 import { Route as AuthenticatedAppPostureRouteImport } from './routes/_authenticated/app.posture'
 import { Route as AuthenticatedAppRedteamRouteImport } from './routes/_authenticated/app.redteam'
@@ -72,6 +73,12 @@ const AuthenticatedAppCisoRoute = AuthenticatedAppCisoRouteImport.update({
   path: '/ciso',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppEvidenceRoute =
+  AuthenticatedAppEvidenceRouteImport.update({
+    id: '/evidence',
+    path: '/evidence',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppFlowRoute = AuthenticatedAppFlowRouteImport.update({
   id: '/flow',
   path: '/flow',
@@ -97,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/app/access': typeof AuthenticatedAppAccessRoute
   '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
   '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
@@ -110,6 +118,7 @@ export interface FileRoutesByTo {
   '/app/access': typeof AuthenticatedAppAccessRoute
   '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
   '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
@@ -126,6 +135,7 @@ export interface FileRoutesById {
   '/_authenticated/app/access': typeof AuthenticatedAppAccessRoute
   '/_authenticated/app/audit': typeof AuthenticatedAppAuditRoute
   '/_authenticated/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/_authenticated/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/_authenticated/app/flow': typeof AuthenticatedAppFlowRoute
   '/_authenticated/app/posture': typeof AuthenticatedAppPostureRoute
   '/_authenticated/app/redteam': typeof AuthenticatedAppRedteamRoute
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/app/access'
     | '/app/audit'
     | '/app/ciso'
+    | '/app/evidence'
     | '/app/flow'
     | '/app/posture'
     | '/app/redteam'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/app/access'
     | '/app/audit'
     | '/app/ciso'
+    | '/app/evidence'
     | '/app/flow'
     | '/app/posture'
     | '/app/redteam'
@@ -170,6 +182,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/access'
     | '/_authenticated/app/audit'
     | '/_authenticated/app/ciso'
+    | '/_authenticated/app/evidence'
     | '/_authenticated/app/flow'
     | '/_authenticated/app/posture'
     | '/_authenticated/app/redteam'
@@ -256,6 +269,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppCisoRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/evidence': {
+      id: '/_authenticated/app/evidence'
+      path: '/evidence'
+      fullPath: '/app/evidence'
+      preLoaderRoute: typeof AuthenticatedAppEvidenceRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/flow': {
       id: '/_authenticated/app/flow'
       path: '/flow'
@@ -284,6 +304,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppAccessRoute: typeof AuthenticatedAppAccessRoute
   AuthenticatedAppAuditRoute: typeof AuthenticatedAppAuditRoute
   AuthenticatedAppCisoRoute: typeof AuthenticatedAppCisoRoute
+  AuthenticatedAppEvidenceRoute: typeof AuthenticatedAppEvidenceRoute
   AuthenticatedAppFlowRoute: typeof AuthenticatedAppFlowRoute
   AuthenticatedAppPostureRoute: typeof AuthenticatedAppPostureRoute
   AuthenticatedAppRedteamRoute: typeof AuthenticatedAppRedteamRoute
@@ -294,6 +315,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppAccessRoute: AuthenticatedAppAccessRoute,
   AuthenticatedAppAuditRoute: AuthenticatedAppAuditRoute,
   AuthenticatedAppCisoRoute: AuthenticatedAppCisoRoute,
+  AuthenticatedAppEvidenceRoute: AuthenticatedAppEvidenceRoute,
   AuthenticatedAppFlowRoute: AuthenticatedAppFlowRoute,
   AuthenticatedAppPostureRoute: AuthenticatedAppPostureRoute,
   AuthenticatedAppRedteamRoute: AuthenticatedAppRedteamRoute,
