@@ -127,8 +127,10 @@ export type Database = {
       }
       evidence: {
         Row: {
+          analysis_summary: string | null
           analyzed_at: string | null
           content: string
+          covered_controls: string[]
           created_at: string
           created_by: string | null
           created_by_email: string | null
@@ -140,8 +142,10 @@ export type Database = {
           title: string
         }
         Insert: {
+          analysis_summary?: string | null
           analyzed_at?: string | null
           content?: string
+          covered_controls?: string[]
           created_at?: string
           created_by?: string | null
           created_by_email?: string | null
@@ -153,8 +157,10 @@ export type Database = {
           title: string
         }
         Update: {
+          analysis_summary?: string | null
           analyzed_at?: string | null
           content?: string
+          covered_controls?: string[]
           created_at?: string
           created_by?: string | null
           created_by_email?: string | null
