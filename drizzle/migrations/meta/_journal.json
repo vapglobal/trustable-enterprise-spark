@@ -8,6 +8,13 @@
       "when": 1790289464471,
       "tag": "0000_trustable_core_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790293190912,
+      "tag": "0001_enterprise_rbac_evidence_findings",
+      "breakpoints": true
     }
   ]
 }

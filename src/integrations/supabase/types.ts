@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_groups: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_groups_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_ledger: {
         Row: {
           actor: string
@@ -93,6 +125,56 @@ export type Database = {
           },
         ]
       }
+      evidence: {
+        Row: {
+          analyzed_at: string | null
+          content: string
+          created_at: string
+          created_by: string | null
+          created_by_email: string | null
+          framework: string | null
+          id: string
+          image_data: string | null
+          kind: string
+          tenant_id: string
+          title: string
+        }
+        Insert: {
+          analyzed_at?: string | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          created_by_email?: string | null
+          framework?: string | null
+          id?: string
+          image_data?: string | null
+          kind: string
+          tenant_id: string
+          title: string
+        }
+        Update: {
+          analyzed_at?: string | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          created_by_email?: string | null
+          framework?: string | null
+          id?: string
+          image_data?: string | null
+          kind?: string
+          tenant_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidence_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       flow_runs: {
         Row: {
           created_at: string
@@ -147,6 +229,59 @@ export type Database = {
           },
         ]
       }
+      group_members: {
+        Row: {
+          group_id: string
+          user_id: string
+        }
+        Insert: {
+          group_id: string
+          user_id: string
+        }
+        Update: {
+          group_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "access_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_permissions: {
+        Row: {
+          group_id: string
+          permission: string
+        }
+        Insert: {
+          group_id: string
+          permission: string
+        }
+        Update: {
+          group_id?: string
+          permission?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_permissions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "access_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_permissions_permission_fkey"
+            columns: ["permission"]
+            isOneToOne: false
+            referencedRelation: "permissions"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
       invites: {
         Row: {
           accepted_at: string | null
@@ -188,6 +323,194 @@ export type Database = {
           },
         ]
       }
+      member_roles: {
+        Row: {
+          created_at: string
+          role_id: string
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          role_id: string
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          role_id?: string
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_roles_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_roles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permissions: {
+        Row: {
+          area: string
+          description: string
+          key: string
+        }
+        Insert: {
+          area: string
+          description: string
+          key: string
+        }
+        Update: {
+          area?: string
+          description?: string
+          key?: string
+        }
+        Relationships: []
+      }
+      role_permissions: {
+        Row: {
+          permission: string
+          role_id: string
+        }
+        Insert: {
+          permission: string
+          role_id: string
+        }
+        Update: {
+          permission?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_permission_fkey"
+            columns: ["permission"]
+            isOneToOne: false
+            referencedRelation: "permissions"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "role_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_findings: {
+        Row: {
+          control_id: string
+          created_at: string
+          due_date: string | null
+          evidence_id: string | null
+          gap: string
+          id: string
+          owner_email: string | null
+          priority: number
+          remediation: string
+          severity: string
+          status: string
+          tenant_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          control_id: string
+          created_at?: string
+          due_date?: string | null
+          evidence_id?: string | null
+          gap: string
+          id?: string
+          owner_email?: string | null
+          priority?: number
+          remediation: string
+          severity: string
+          status?: string
+          tenant_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          control_id?: string
+          created_at?: string
+          due_date?: string | null
+          evidence_id?: string | null
+          gap?: string
+          id?: string
+          owner_email?: string | null
+          priority?: number
+          remediation?: string
+          severity?: string
+          status?: string
+          tenant_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_findings_evidence_id_fkey"
+            columns: ["evidence_id"]
+            isOneToOne: false
+            referencedRelation: "evidence"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_findings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_roles: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_system: boolean
+          key: string
+          name: string
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_system?: boolean
+          key: string
+          name: string
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_system?: boolean
+          key?: string
+          name?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_roles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenants: {
         Row: {
           created_at: string
@@ -211,6 +534,45 @@ export type Database = {
           slug?: string
         }
         Relationships: []
+      }
+      user_permission_overrides: {
+        Row: {
+          created_at: string
+          effect: string
+          permission: string
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          effect: string
+          permission: string
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          effect?: string
+          permission?: string
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_permission_overrides_permission_fkey"
+            columns: ["permission"]
+            isOneToOne: false
+            referencedRelation: "permissions"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "user_permission_overrides_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -272,6 +634,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      has_permission: {
+        Args: { _perm: string; _tenant: string; _user: string }
+        Returns: boolean
+      }
       has_tenant_role: {
         Args: {
           _roles: Database["public"]["Enums"]["app_role"][]
@@ -317,6 +683,7 @@ export type Database = {
         }
         Returns: string
       }
+      my_permissions: { Args: { _tenant: string }; Returns: string[] }
       verify_ledger: {
         Args: { _tamper_payload?: Json; _tamper_seq?: number; _tenant: string }
         Returns: {
