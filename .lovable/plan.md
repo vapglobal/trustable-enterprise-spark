@@ -70,3 +70,11 @@ Ships with a demo enterprise tenant pre-populated at first load — departments,
 5. Executive ROI and adoption trail
 6. Heart-to-Vault architecture showcase and brand polish
 7. Full security scan, end-to-end verification signed in as a real operator and as an auditor
+
+## Adjustments from the latest agent output (confidential)
+
+- **Reviewer access done securely.** The draft email offers a 24h bearer token in the URL and shared passphrases that skip login. A security panel will flag that immediately (tokens leak through browser history, logs, and forwarded emails). Instead: named reviewer accounts for Matt, Jessica, Katie, Kevin, and Luke, each with an auditor or operator role. Access is revocable and every sign-in goes into the ledger. You'd send each person a one-time invite link.
+- **Confidentiality marking on every screen and export.** Footer text: "Property of EngineWare.ai. Solely authored and owned by Christopher Ware. Confidential & Proprietary — prepared exclusively for Lovable.dev leadership evaluation." The whole app is private (no search indexing, sign-in required past the landing page).
+- **Label proof clearly: what runs vs. what's roadmap.** Things this app actually does (roles, data isolation, hash-chained ledger, schema-checked AI decisions) get a "Live" badge. Hardware isolation (AMD SEV-SNP), on-prem GPU enclaves, kernel egress rules, and the TypeSafe benchmark numbers get a "Reference architecture" badge. Panelists will probe these claims, and being upfront about which is which builds more trust than overclaiming.
+- **Red-team workbench (the TrustGuard idea, made real).** Run live attacks against the app itself: prompt injection against the decision step, reading another tenant's data, raising your own role, editing the ledger. Each attempt shows up as blocked, with evidence.
+- **Worth checking before you send (not built):** the draft names "Claude 3.5 Sonnet / GPT-4o / o1" (outdated for 2026), says Anton bought lovable.com, and says you own trustable.com, which your own tear sheet calls "available at ~$25k". Make sure every fact is verified before it reaches Matt.
