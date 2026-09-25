@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EmphasizedControl, EmphasizedField } from "@/components/trustable/EmphasizedField";
 
 export const Route = createFileRoute("/_authenticated/app/access")({
   head: () => ({ meta: [{ title: "Access control — Trustable" }, { name: "description", content: "Members, roles, groups and permissions." }] }),
@@ -106,14 +107,13 @@ function CreateUser({ isOwner }: { isOwner: boolean }) {
         ).then(() => { setEmail(""); setName(""); });
       }}
     >
-      <div className="space-y-1.5"><Label>Name</Label><Input value={name} maxLength={80} onChange={(e) => setName(e.target.value)} /></div>
-      <div className="space-y-1.5"><Label>Email</Label><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-      <div className="space-y-1.5">
-        <Label>Base role</Label>
+      <EmphasizedField label="Name" value={name} onChange={setName}><Input value={name} maxLength={80} onChange={(e) => setName(e.target.value)} /></EmphasizedField>
+      <EmphasizedField label="Email" ai={false} value={email} onChange={setEmail}><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></EmphasizedField>
+      <EmphasizedControl label="Base role">
         <select className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm" value={role} onChange={(e) => setRole(e.target.value as typeof role)}>
           <option value="auditor">Auditor</option><option value="operator">Operator</option>{isOwner && <option value="admin">Administrator</option>}
         </select>
-      </div>
+      </EmphasizedControl>
       <div className="flex items-end"><Button type="submit"><UserPlus className="mr-2 h-4 w-4" /> Create user</Button></div>
     </form>
   );
@@ -228,8 +228,8 @@ function RoleEditor({ d, role }: { d: Rbac; role?: Rbac["roles"][number] }) {
         <>
           {(!role || !role.is_system) && (
             <div className="grid gap-3 md:grid-cols-2">
-              <Input placeholder="Role name" value={name} disabled={locked} onChange={(e) => setName(e.target.value)} />
-              <Input placeholder="Description" value={desc} disabled={locked} onChange={(e) => setDesc(e.target.value)} />
+              <EmphasizedField label="Role name" value={name} onChange={setName}><Input placeholder="Role name" value={name} disabled={locked} onChange={(e) => setName(e.target.value)} /></EmphasizedField>
+              <EmphasizedField label="Description" value={desc} onChange={setDesc}><Input placeholder="Description" value={desc} disabled={locked} onChange={(e) => setDesc(e.target.value)} /></EmphasizedField>
             </div>
           )}
           <PermPicker all={d.permissions} value={perms} onChange={setPerms} disabled={locked} />
@@ -256,8 +256,8 @@ function GroupEditor({ d, group }: { d: Rbac; group?: Rbac["groups"][number] }) 
         {group && d.canManage && <Button size="sm" variant="ghost" className="text-destructive" onClick={() => run("Group deleted.", () => del({ data: { id: group.id } }))}>Delete</Button>}
       </div>
       <div className="grid gap-3 md:grid-cols-2">
-        <Input placeholder="Group name (e.g. Security Engineering)" value={name} disabled={locked} onChange={(e) => setName(e.target.value)} />
-        <Input placeholder="Description" value={desc} disabled={locked} onChange={(e) => setDesc(e.target.value)} />
+        <EmphasizedField label="Group name" value={name} onChange={setName}><Input placeholder="Group name (e.g. Security Engineering)" value={name} disabled={locked} onChange={(e) => setName(e.target.value)} /></EmphasizedField>
+        <EmphasizedField label="Description" value={desc} onChange={setDesc}><Input placeholder="Description" value={desc} disabled={locked} onChange={(e) => setDesc(e.target.value)} /></EmphasizedField>
       </div>
       <div>
         <Label>Members</Label>

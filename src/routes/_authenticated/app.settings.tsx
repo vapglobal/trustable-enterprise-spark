@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { pageMeta } from "@/lib/site";
+import { EmphasizedControl } from "@/components/trustable/EmphasizedField";
 
 export const Route = createFileRoute("/_authenticated/app/settings")({
   head: () => pageMeta({ title: "Settings — Trustable", description: "Your account, password and library settings.", path: "/app/settings", index: false }),
@@ -41,8 +42,8 @@ function SettingsPage() {
       </section>
       <form onSubmit={changePassword} className="panel space-y-4 p-6">
         <h2 className="text-lg font-semibold">Change password</h2>
-        <div className="space-y-1.5"><Label>New password</Label><Input type="password" autoComplete="new-password" value={pw.a} onChange={(e) => setPw({ ...pw, a: e.target.value })} /></div>
-        <div className="space-y-1.5"><Label>Confirm</Label><Input type="password" autoComplete="new-password" value={pw.b} onChange={(e) => setPw({ ...pw, b: e.target.value })} /></div>
+        <EmphasizedControl label="New password" hint="Sensitive fields intentionally exclude AI and clipboard actions."><Input type="password" autoComplete="new-password" value={pw.a} onChange={(e) => setPw({ ...pw, a: e.target.value })} /></EmphasizedControl>
+        <EmphasizedControl label="Confirm"><Input type="password" autoComplete="new-password" value={pw.b} onChange={(e) => setPw({ ...pw, b: e.target.value })} /></EmphasizedControl>
         <Button disabled={busy}>Update password</Button>
       </form>
       <section className="panel p-6 lg:col-span-2">
