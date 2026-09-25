@@ -1,7 +1,7 @@
-import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Braces, Lock, LogOut, ShieldAlert } from "lucide-react";
+import { Lock, LogOut, ShieldAlert } from "lucide-react";
 import { recordSignOut } from "@/lib/trustable.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { useAccess } from "@/hooks/use-access";
 import type { Perm } from "@/lib/controls";
 import { pageMeta } from "@/lib/site";
 import { GlobalAssistant } from "@/components/trustable/GlobalAssistant";
+import { WorkspaceRail } from "@/components/trustable/WorkspaceRail";
 
 export const Route = createFileRoute("/_authenticated/app")({
   head: () => pageMeta({ title: "Workspace — Trustable", description: "Your secure Trustable enterprise workspace.", path: "/app", index: false }),
@@ -74,23 +75,10 @@ function AppLayout() {
             </Button>
           </div>
         </div>
-        {access.data?.status === "active" && (
-          <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-6">
-            {NAV.filter((n) => access.can(n.perm)).map((n) => (
-              <Link
-                key={n.to}
-                to={n.to}
-                activeOptions={{ exact: !!n.exact }}
-                className="whitespace-nowrap border-b-2 border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                activeProps={{ className: "!border-primary !text-foreground" }}
-              >
-                {n.to === "/app/api-console" && <Braces className="mr-1 inline h-3.5 w-3.5" />}{n.label}
-              </Link>
-            ))}
-          </nav>
-        )}
       </header>
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">
+      <div className="flex min-w-0 flex-1">
+      {access.data?.status === "active" && <WorkspaceRail can={access.can} />}
+      <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-8">
         {access.isLoading && (
           <div className="flex flex-col items-center py-20">
             <HeartVault size={220} />
@@ -120,6 +108,7 @@ function AppLayout() {
             </div>
           ))}
       </main>
+      </div>
       <ConfidentialFooter />
     </div>
   );
