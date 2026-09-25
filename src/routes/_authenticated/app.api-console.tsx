@@ -17,11 +17,9 @@ import {
   Database,
   Download,
   FileJson,
-  Filter,
   Gauge,
   GitBranch,
   KeyRound,
-  ListFilter,
   Network,
   PanelLeft,
   PanelRight,
@@ -126,7 +124,7 @@ function ApiConsole() {
       <TabsContent value="console" className="mt-2">
         <div className={cn("grid h-[calc(100vh-255px)] min-h-[590px] overflow-hidden border border-border bg-card/25", leftOpen && rightOpen ? "xl:grid-cols-[260px_minmax(430px,1fr)_330px]" : leftOpen ? "xl:grid-cols-[260px_minmax(500px,1fr)]" : rightOpen ? "xl:grid-cols-[minmax(500px,1fr)_330px]" : "grid-cols-1")}>
           {leftOpen && <aside className="hidden min-w-0 border-r border-border xl:flex xl:flex-col"><Explorer query={query} setQuery={setQuery} facets={facets} setFacets={setFacets} facetGroups={facetGroups} filtered={filtered} selectedId={selectedId} setSelectedId={setSelectedId} /></aside>}
-          <main className="min-w-0 overflow-y-auto">
+          <section className="min-w-0 overflow-y-auto">
              <div className="flex items-center justify-between border-b border-border px-4 py-2"><div className="flex min-w-0 items-center gap-2"><MethodBadge method={selected.method} /><span className="truncate font-mono text-xs">{selected.path}</span></div><MobileExplorer query={query} setQuery={setQuery} facets={facets} setFacets={setFacets} facetGroups={facetGroups} filtered={filtered} selectedId={selectedId} setSelectedId={setSelectedId} /></div>
             <div className="space-y-4 p-4">
               <section><div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3"><div className="min-w-0"><h2 className="text-lg font-semibold">{selected.title}</h2><p className="mt-1 text-xs leading-relaxed text-muted-foreground">{selected.description}</p></div><ProofBadge kind={selected.surface === "Live server action" ? "live" : "reference"} /></div></section>
@@ -140,7 +138,7 @@ function ApiConsole() {
                 {selected.surface === "Live server action" ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" /> : <CircleOff className="mt-0.5 h-4 w-4 shrink-0" />}<span>{selected.surface === "Live server action" ? "Callable through Trustable’s authenticated interface. Open the owning workspace to execute it with its full validation and audit path." : "Not callable here. Direct checks of the displayed REST path returned 404; this remains OASA Reference architecture."}</span>
               </div>{selected.route ? <Button asChild><Link to={selected.route}><Play className="mr-1.5 h-4 w-4" />Open live surface</Link></Button> : <Button disabled><CircleOff className="mr-1.5 h-4 w-4" />Connector required</Button>}</div>
             </div>
-          </main>
+          </section>
           {rightOpen && <aside className="hidden min-w-0 border-l border-border xl:flex xl:flex-col"><Inspector selected={selected} payload={payload} copy={copy} /></aside>}
           <MobileInspector selected={selected} payload={payload} copy={copy} />
         </div>
