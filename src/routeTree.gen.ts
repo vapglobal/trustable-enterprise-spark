@@ -23,6 +23,7 @@ import { Route as AuthenticatedAppCisoRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedAppCompletionLedgerRouteImport } from './routes/_authenticated/app.completion-ledger'
 import { Route as AuthenticatedAppEvidenceRouteImport } from './routes/_authenticated/app.evidence'
 import { Route as AuthenticatedAppFlowRouteImport } from './routes/_authenticated/app.flow'
+import { Route as AuthenticatedAppGrowthRouteImport } from './routes/_authenticated/app.growth'
 import { Route as AuthenticatedAppLibraryRouteImport } from './routes/_authenticated/app.library'
 import { Route as AuthenticatedAppPostureRouteImport } from './routes/_authenticated/app.posture'
 import { Route as AuthenticatedAppRedteamRouteImport } from './routes/_authenticated/app.redteam'
@@ -100,6 +101,11 @@ const AuthenticatedAppFlowRoute = AuthenticatedAppFlowRouteImport.update({
   path: '/flow',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppGrowthRoute = AuthenticatedAppGrowthRouteImport.update({
+  id: '/growth',
+  path: '/growth',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 const AuthenticatedAppLibraryRoute = AuthenticatedAppLibraryRouteImport.update({
   id: '/library',
   path: '/library',
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/app/completion-ledger': typeof AuthenticatedAppCompletionLedgerRoute
   '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/growth': typeof AuthenticatedAppGrowthRoute
   '/app/library': typeof AuthenticatedAppLibraryRoute
   '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
@@ -153,6 +160,7 @@ export interface FileRoutesByTo {
   '/app/completion-ledger': typeof AuthenticatedAppCompletionLedgerRoute
   '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/growth': typeof AuthenticatedAppGrowthRoute
   '/app/library': typeof AuthenticatedAppLibraryRoute
   '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
@@ -174,6 +182,7 @@ export interface FileRoutesById {
   '/_authenticated/app/completion-ledger': typeof AuthenticatedAppCompletionLedgerRoute
   '/_authenticated/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/_authenticated/app/flow': typeof AuthenticatedAppFlowRoute
+  '/_authenticated/app/growth': typeof AuthenticatedAppGrowthRoute
   '/_authenticated/app/library': typeof AuthenticatedAppLibraryRoute
   '/_authenticated/app/posture': typeof AuthenticatedAppPostureRoute
   '/_authenticated/app/redteam': typeof AuthenticatedAppRedteamRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/app/completion-ledger'
     | '/app/evidence'
     | '/app/flow'
+    | '/app/growth'
     | '/app/library'
     | '/app/posture'
     | '/app/redteam'
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
     | '/app/completion-ledger'
     | '/app/evidence'
     | '/app/flow'
+    | '/app/growth'
     | '/app/library'
     | '/app/posture'
     | '/app/redteam'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/completion-ledger'
     | '/_authenticated/app/evidence'
     | '/_authenticated/app/flow'
+    | '/_authenticated/app/growth'
     | '/_authenticated/app/library'
     | '/_authenticated/app/posture'
     | '/_authenticated/app/redteam'
@@ -348,6 +360,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppFlowRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/growth': {
+      id: '/_authenticated/app/growth'
+      path: '/growth'
+      fullPath: '/app/growth'
+      preLoaderRoute: typeof AuthenticatedAppGrowthRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/library': {
       id: '/_authenticated/app/library'
       path: '/library'
@@ -387,6 +406,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppCompletionLedgerRoute: typeof AuthenticatedAppCompletionLedgerRoute
   AuthenticatedAppEvidenceRoute: typeof AuthenticatedAppEvidenceRoute
   AuthenticatedAppFlowRoute: typeof AuthenticatedAppFlowRoute
+  AuthenticatedAppGrowthRoute: typeof AuthenticatedAppGrowthRoute
   AuthenticatedAppLibraryRoute: typeof AuthenticatedAppLibraryRoute
   AuthenticatedAppPostureRoute: typeof AuthenticatedAppPostureRoute
   AuthenticatedAppRedteamRoute: typeof AuthenticatedAppRedteamRoute
@@ -402,6 +422,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppCompletionLedgerRoute: AuthenticatedAppCompletionLedgerRoute,
   AuthenticatedAppEvidenceRoute: AuthenticatedAppEvidenceRoute,
   AuthenticatedAppFlowRoute: AuthenticatedAppFlowRoute,
+  AuthenticatedAppGrowthRoute: AuthenticatedAppGrowthRoute,
   AuthenticatedAppLibraryRoute: AuthenticatedAppLibraryRoute,
   AuthenticatedAppPostureRoute: AuthenticatedAppPostureRoute,
   AuthenticatedAppRedteamRoute: AuthenticatedAppRedteamRoute,

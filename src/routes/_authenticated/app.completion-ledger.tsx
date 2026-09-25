@@ -27,6 +27,7 @@ const REQUIREMENTS: Requirement[] = [
   { id: "REQ-006", title: "EngineWare OASA negotiation and graphlets", group: "EngineWare integration", state: "blocked", proof: "reference", gates: {}, blocker: "No callable EngineWare endpoint contract is available; direct checks returned unavailable." },
   { id: "REQ-007", title: "JEV TypeSafe machine verification", group: "EngineWare integration", state: "blocked", proof: "reference", gates: {}, blocker: "No callable JEV TypeSafe verification contract is available." },
   { id: "REQ-008", title: "Owner email and push alerts for sign-in activity", group: "Security operations", state: "planned", proof: "reference", gates: {}, blocker: "Delivery channels and verified notification contracts are not connected." },
+  { id: "REQ-009", title: "Builder growth organism and Level 1/5/10 synchronized workspace", group: "Enterprise adoption", state: "testing", proof: "live", gates: { implementation: true }, blocker: "Certification, advocate allocation, commercial discounts, and OASA growth remain illustrative until approved contracts exist; browser and accessibility evidence are in progress." },
 ];
 
 function CompletionLedgerPage() {
