@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { LibraryPicker } from "./LibraryPicker";
+import { Tip } from "./Tip";
 
 type Action = "improve" | "shorten" | "expand" | "fix" | "draft";
 
@@ -28,7 +29,7 @@ export function EmphasizedField({ label, value, onChange, children, hint, ai = t
   return (
     <div className={cn("enterprise-field group/field", className)}>
       <div className="mb-2 flex min-h-8 items-center justify-between gap-2">
-        <div><Label>{label}</Label>{hint && <p className="mt-0.5 text-[11px] text-muted-foreground">{hint}</p>}</div>
+        <div><div className="flex items-center gap-1"><Label>{label}</Label>{hint && <Tip text={hint}><span className="cursor-help text-[10px] text-primary" aria-label={`Help for ${label}`}>?</span></Tip>}</div>{hint && <p className="mt-0.5 text-[11px] text-muted-foreground">{hint}</p>}</div>
         <div className="flex items-center gap-1 opacity-80 transition-opacity group-hover/field:opacity-100 group-focus-within/field:opacity-100">
           {library && <LibraryPicker label="Library" onInsert={(text) => onChange(value ? `${value}\n\n${text}` : text)} />}
           {ai && <Button type="button" size="sm" variant="ghost" disabled={busy} onClick={() => act(value.trim() ? "improve" : "draft")} title="Improve this field with Trustable AI"><Sparkles className="h-4 w-4" /><span className="sr-only">AI assist</span></Button>}
@@ -48,5 +49,5 @@ export function EmphasizedField({ label, value, onChange, children, hint, ai = t
 }
 
 export function EmphasizedControl({ label, hint, children, className }: { label: string; hint?: string; children: ReactNode; className?: string }) {
-  return <div className={cn("enterprise-field", className)}><div className="mb-2"><Label>{label}</Label>{hint && <p className="mt-0.5 text-[11px] text-muted-foreground">{hint}</p>}</div>{children}</div>;
+  return <div className={cn("enterprise-field", className)}><div className="mb-2"><div className="flex items-center gap-1"><Label>{label}</Label>{hint && <Tip text={hint}><span className="cursor-help text-[10px] text-primary" aria-label={`Help for ${label}`}>?</span></Tip>}</div>{hint && <p className="mt-0.5 text-[11px] text-muted-foreground">{hint}</p>}</div>{children}</div>;
 }
