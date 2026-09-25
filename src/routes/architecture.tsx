@@ -73,6 +73,20 @@ function Architecture() {
           </ol>
         </section>
 
+        <section className="panel p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="eyebrow">OASA · EngineWare.ai proprietary architecture</p>
+              <h2 className="mt-1 text-2xl font-bold">Organic API Advocate System Architecture</h2>
+            </div>
+            <ProofBadge kind="reference" />
+          </div>
+          <p className="mt-4 max-w-3xl text-sm text-muted-foreground">
+            A revolutionary, cutting-edge agentic evolution of the OAS specification: individual advocates negotiate typed endpoint subsets, parameters, permissions, and resources through governed organization graphlets.
+          </p>
+          <p className="mt-3 font-mono text-[10px] uppercase text-primary">Created and powered by EngineWare.ai · Owned by Christopher Ware · Confidential · Not for redistribution</p>
+        </section>
+
         <div className="grid gap-6 lg:grid-cols-2">
           <section className="panel p-6">
             <div className="flex items-center justify-between"><h2 className="text-lg font-semibold">DataProvider contract</h2></div>
