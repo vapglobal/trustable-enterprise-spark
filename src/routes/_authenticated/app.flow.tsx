@@ -82,7 +82,10 @@ function FlowPage() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Task</Label>
+            <div className="flex items-center justify-between">
+              <Label>Task</Label>
+              <LibraryPicker onInsert={(t) => setTask((cur) => (cur.trim() ? cur.trim() + "\n\n" : "") + t).slice(0, 1000))} />
+            </div>
             <Textarea rows={5} value={task} onChange={(e) => setTask(e.target.value)} maxLength={1000} />
           </div>
           <div className="flex flex-wrap gap-2">

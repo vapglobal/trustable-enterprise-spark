@@ -8,16 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ConfidentialFooter, Wordmark } from "@/components/trustable/Chrome";
 import { HeartVault } from "@/components/trustable/HeartVault";
+import { pageMeta } from "@/lib/site";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({
-    meta: [
-      { title: "Sign in — Trustable" },
-      { name: "description", content: "Invite-only reviewer access to the Trustable enclave." },
-      { property: "og:title", content: "Sign in — Trustable" },
-      { property: "og:description", content: "Invite-only reviewer access." },
-    ],
-  }),
+  head: () => pageMeta({ title: "Sign in — Trustable", description: "Secure, invite-only sign in to the Trustable enterprise workspace.", path: "/auth", index: false }),
   component: AuthPage,
 });
 
