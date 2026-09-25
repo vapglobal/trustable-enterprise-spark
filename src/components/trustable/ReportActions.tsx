@@ -22,12 +22,12 @@ function csv(data: unknown) {
 export function ReportActions({ title, data, className }: Props) {
   const [working, setWorking] = useState(false); const body = `${CONFIDENTIAL_NOTICE}\n\n${title}\n\n${text(data)}`; const name = safe(title);
   const run = async (fn: () => Promise<void> | void) => { setWorking(true); try { await fn(); } finally { setWorking(false); } };
-  const assistant = () => window.dispatchEvent(new CustomEvent("trustable:assistant", { detail: { prompt: `Analyze this report and identify key risks, anomalies, and prioritized next actions:\n\n${body.slice(0, 30000)}` } }));
+  const assistant = () => window.dispatchEvent(new CustomEvent("trustable:assistant", { detail: { prompt: "Analyze this report and identify key risks, anomalies, and prioritized next actions:\n\n" + body.slice(0, 30000) } }));
   return <DropdownMenu><DropdownMenuTrigger asChild><Button variant="outline" size="sm" disabled={working} className={className} title="Report actions"><MoreHorizontal className="mr-2 h-4 w-4" />Actions</Button></DropdownMenuTrigger><DropdownMenuContent align="end" className="w-56">
     <DropdownMenuLabel>Export and work with report</DropdownMenuLabel>
     <DropdownMenuItem onClick={() => run(() => navigator.clipboard.writeText(body))}><Copy className="mr-2 h-4 w-4" />Copy</DropdownMenuItem>
     <DropdownMenuItem onClick={() => run(() => download(new Blob([body], { type: "text/plain" }), `${name}.txt`))}><FileText className="mr-2 h-4 w-4" />Text</DropdownMenuItem>
-    <DropdownMenuItem onClick={() => run(() => download(new Blob([`# ${title}\n\n> ${CONFIDENTIAL_NOTICE}\n\n\`\`\`json\n${text(data)}\n\`\`\``], { type: "text/markdown" }), `${name}.md`))}><FileText className="mr-2 h-4 w-4" />Markdown</DropdownMenuItem>
+    <DropdownMenuItem onClick={() => run(() => download(new Blob(["# " + title + "\n\n> " + CONFIDENTIAL_NOTICE + "\n\n```json\n" + text(data) + "\n```"], { type: "text/markdown" }), `${name}.md`))}><FileText className="mr-2 h-4 w-4" />Markdown</DropdownMenuItem>
     <DropdownMenuItem onClick={() => run(() => download(new Blob([JSON.stringify({ confidentiality: CONFIDENTIAL_NOTICE, title, data }, null, 2)], { type: "application/json" }), `${name}.json`))}><FileJson className="mr-2 h-4 w-4" />JSON</DropdownMenuItem>
     <DropdownMenuItem onClick={() => run(() => download(new Blob([`${CONFIDENTIAL_NOTICE}\n${csv(data)}`], { type: "text/csv" }), `${name}.csv`))}><Table2 className="mr-2 h-4 w-4" />CSV</DropdownMenuItem><DropdownMenuSeparator />
     <DropdownMenuItem onClick={() => run(() => { const pdf = new jsPDF(); const lines = pdf.splitTextToSize(body, 175) as string[]; let y = 15; lines.forEach((line) => { if (y > 280) { pdf.addPage(); y = 15; } pdf.text(line, 15, y); y += 6; }); pdf.save(`${name}.pdf`); })}><Download className="mr-2 h-4 w-4" />PDF</DropdownMenuItem>

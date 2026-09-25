@@ -29,6 +29,15 @@ export function GlobalAssistant({ pathname }: { pathname: string }) {
   const bottom = useRef<HTMLDivElement>(null);
   const recent = useMemo(() => (q.data ?? []).filter((m) => m.role === "user").slice(-4).reverse(), [q.data]);
   useEffect(() => { if (open) bottom.current?.scrollIntoView({ behavior: "smooth" }); }, [open, q.data, busy]);
+  useEffect(() => {
+    const handle = (event: Event) => {
+      const detail = (event as CustomEvent<{ prompt?: string }>).detail;
+      setOpen(true);
+      if (detail?.prompt) setPrompt(detail.prompt);
+    };
+    window.addEventListener("trustable:assistant", handle);
+    return () => window.removeEventListener("trustable:assistant", handle);
+  }, []);
   async function send(text = prompt) {
     if (text.trim().length < 2 || busy) return;
     const optimistic = { id: `local-${Date.now()}`, role: "user" as const, content: text.trim(), context_paths: contexts, created_at: new Date().toISOString() };
