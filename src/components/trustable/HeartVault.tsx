@@ -39,7 +39,7 @@ function VaultArtwork({ compact = false, animated = false }: VaultArtworkProps) 
           <stop offset="1" stopColor="var(--muted)" />
         </linearGradient>
         <radialGradient id={door} cx="42%" cy="30%" r="75%">
-          <stop offset="0" stopColor="var(--primary)" stopOpacity="0.45" />
+          <stop offset="0" stopColor="var(--primary)" stopOpacity="0.18" />
           <stop offset="0.45" stopColor="var(--card)" />
           <stop offset="1" stopColor="var(--background)" />
         </radialGradient>
