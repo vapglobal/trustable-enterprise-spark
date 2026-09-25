@@ -50,6 +50,8 @@ export function GraphWorkbench() {
     if (window.matchMedia("(min-width: 1024px)").matches) {
       setLeftOpen(true);
       setRightOpen(true);
+    } else {
+      setView("list");
     }
   }, []);
 
