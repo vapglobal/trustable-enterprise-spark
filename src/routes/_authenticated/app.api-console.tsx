@@ -87,7 +87,7 @@ function ApiConsole() {
   const [rightOpen, setRightOpen] = useState(true);
   const selected = ENDPOINTS.find((endpoint) => endpoint.id === selectedId) ?? ENDPOINTS[0];
   if (!selected) return null;
-  const filtered = useMemo(() => ENDPOINTS.filter((endpoint) => `${endpoint.namespace} ${endpoint.method} ${endpoint.path} ${endpoint.title} ${endpoint.description}`.toLowerCase().includes(query.toLowerCase()) && (!facets.surface?.length || facets.surface.includes(endpoint.surface)) && (!facets.method?.length || facets.method.includes(endpoint.method)) && (!facets.namespace?.length || facets.namespace.includes(endpoint.namespace))), [query, facets]);
+  const filtered = useMemo(() => ENDPOINTS.filter((endpoint) => `${endpoint.namespace} ${endpoint.method} ${endpoint.path} ${endpoint.title} ${endpoint.description}`.toLowerCase().includes(query.toLowerCase()) && (!facets["surface"]?.length || facets["surface"].includes(endpoint.surface)) && (!facets["method"]?.length || facets["method"].includes(endpoint.method)) && (!facets["namespace"]?.length || facets["namespace"].includes(endpoint.namespace))), [query, facets]);
   const facetGroups = useMemo<FacetTreeGroup[]>(() => {
     const count = (key: "surface" | "method" | "namespace", value: string) => ENDPOINTS.filter((endpoint) => endpoint[key] === value).length;
     return [
