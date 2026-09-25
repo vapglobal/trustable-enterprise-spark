@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Lock, Zap, Users, ShieldCheck, Link2, FileCheck2, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { Lock, Zap, Users, ShieldCheck, Link2, FileCheck2, ArrowRight, RotateCcw } from "lucide-react";
 import { HeartVault } from "@/components/trustable/HeartVault";
 import { ConfidentialFooter, ProofBadge, Wordmark } from "@/components/trustable/Chrome";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,8 @@ const LIVE = [
 ];
 
 function Landing() {
+  const [vaultRun, setVaultRun] = useState(0);
+
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
