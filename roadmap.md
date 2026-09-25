@@ -14,3 +14,4 @@
 - [x] Clean SEO: shared title/description/keywords in sync with landing; site indexable, private pages noindex
 - [x] Personal Library (files/links/notes, drag-drop, filters, tags, previews) + Settings; insert-from-library in Flow
 - [ ] Voice transcription — never received; needs Chris to resend
+- [ ] Enterprise interaction pass: drill-down details, stronger visual depth, complete tooltips, and global multi-format report actions
