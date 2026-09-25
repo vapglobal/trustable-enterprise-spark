@@ -27,3 +27,6 @@
 - [ ] Deliver approved package by email and Dropbox once connected destinations and recipients are verified
 - [ ] Review the uploaded EngineWare Organic Advocate System backend-agent summaries against the Trustable specification and verified backend interfaces
 - [ ] Publish the verified Trustable update after the specification audit and security check pass
+- [ ] Establish a contract-based completion ledger: each requirement must carry implementation evidence, test evidence, red-team status, TypeSafe/JEV status, Live/Reference classification, and immutable audit receipt before completion
+- [ ] Run comprehensive red-team and security verification across every live Trustable capability; do not mark items complete without evidence
+- [ ] Continue iterative milestone reporting; email milestone updates only after a verified email connection and recipient are available
