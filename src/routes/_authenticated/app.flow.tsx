@@ -9,10 +9,10 @@ import { useWorkspace } from "@/hooks/use-workspace";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProofBadge, StatusPill } from "@/components/trustable/Chrome";
-import { LibraryPicker } from "@/components/trustable/LibraryPicker";
+import { EmphasizedControl, EmphasizedField } from "@/components/trustable/EmphasizedField";
+import { DrillDown, drillableClass } from "@/components/trustable/DrillDown";
 
 export const Route = createFileRoute("/_authenticated/app/flow")({
   component: FlowPage,
@@ -68,27 +68,21 @@ function FlowPage() {
         {!canRun && <p className="mt-4 rounded-md border border-warning/40 bg-warning/10 p-3 text-sm text-warning">Auditors have read-only access. Runs are disabled for your role.</p>}
         <div className="mt-5 space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Operator</Label>
+            <EmphasizedField label="Operator" value={operator} onChange={setOperator}>
               <Input value={operator} onChange={(e) => setOperator(e.target.value)} maxLength={80} />
-            </div>
-            <div className="space-y-2">
-              <Label>Department</Label>
+            </EmphasizedField>
+            <EmphasizedControl label="Department">
               <Select value={deptId} onValueChange={setDept}>
                 <SelectTrigger><SelectValue placeholder="Department" /></SelectTrigger>
                 <SelectContent>
                   {data?.departments.map((d) => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
                 </SelectContent>
               </Select>
-            </div>
+            </EmphasizedControl>
           </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label>Task</Label>
-              <LibraryPicker onInsert={(t) => setTask((cur) => ((cur.trim() ? cur.trim() + "\n\n" : "") + t).slice(0, 1000))} />
-            </div>
+          <EmphasizedField label="Task" hint="Describe one repeatable workflow; use your Library to inject trusted context." value={task} onChange={(v) => setTask(v.slice(0, 1000))} library>
             <Textarea rows={5} value={task} onChange={(e) => setTask(e.target.value)} maxLength={1000} />
-          </div>
+          </EmphasizedField>
           <div className="flex flex-wrap gap-2">
             {EXAMPLES.map((e, i) => (
               <button key={i} type="button" onClick={() => setTask(e)} className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:border-primary hover:text-foreground">
@@ -118,11 +112,9 @@ function FlowPage() {
               <StatusPill status={result.status} />
               <span className="font-mono text-xs text-muted-foreground">{result.model} · {result.latencyMs}ms</span>
             </div>
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <Mini label="Action" value={result.decision.action} />
-              <Mini label="Confidence" value={result.decision.confidence.toFixed(2)} />
-              <Mini label="Minutes" value={`+${result.minutes}`} />
-            </div>
+            <DrillDown title="Bounded decision detail" description="The validated model output and execution outcome for this run." trigger={<button className={`grid w-full grid-cols-3 gap-3 text-center ${drillableClass}`}>
+              <Mini label="Action" value={result.decision.action} /><Mini label="Confidence" value={result.decision.confidence.toFixed(2)} /><Mini label="Minutes" value={`+${result.minutes}`} />
+            </button>}><pre className="max-h-96 overflow-auto rounded-lg bg-muted/50 p-4 font-mono text-xs">{JSON.stringify(result, null, 2)}</pre></DrillDown>
             <div>
               <p className="eyebrow">Steps</p>
               <ul className="mt-2 space-y-1 text-sm">

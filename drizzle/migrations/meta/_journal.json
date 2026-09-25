@@ -29,6 +29,13 @@
       "when": 1790319794727,
       "tag": "0003_user_library",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790323654684,
+      "tag": "0004_create_trustable_assistant_messages",
+      "breakpoints": true
     }
   ]
 }
