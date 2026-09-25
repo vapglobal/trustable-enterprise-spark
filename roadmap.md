@@ -31,3 +31,4 @@
 - [ ] Run comprehensive red-team and security verification across every live Trustable capability; do not mark items complete without evidence
 - [ ] Continue iterative milestone reporting; email milestone updates only after a verified email connection and recipient are available
 - [ ] Rebuild the API Console from verified EngineWare global UI/API-console module patterns: single-frame flyout workspace, Magic Bar, sub-tabs, left endpoint tree, right inspector, guided prefilled controls, and live endpoint verification; adapt only presentation styling to Trustable without changing protected configuration or backend contracts
+- [ ] Upgrade Trustable Flow’s narrow node list into a visible whiteboard dashboard with tabbed builder panels, graph/map/detail panes, and a substantially improved mobile-first creation experience
