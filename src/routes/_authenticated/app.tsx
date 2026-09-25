@@ -10,6 +10,7 @@ import { HeartVault } from "@/components/trustable/HeartVault";
 import { useAccess } from "@/hooks/use-access";
 import type { Perm } from "@/lib/controls";
 import { pageMeta } from "@/lib/site";
+import { GlobalAssistant } from "@/components/trustable/GlobalAssistant";
 
 export const Route = createFileRoute("/_authenticated/app")({
   head: () => pageMeta({ title: "Workspace — Trustable", description: "Your secure Trustable enterprise workspace.", path: "/app", index: false }),
@@ -59,6 +60,7 @@ function AppLayout() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <Wordmark />
           <div className="flex items-center gap-3">
+            {access.data?.status === "active" && <GlobalAssistant pathname={pathname} />}
             {access.data?.email && <span className="hidden text-xs text-muted-foreground md:inline">{access.data.email}</span>}
             {access.data?.role && (
               <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-primary">

@@ -99,7 +99,7 @@
   background-color: color-mix(in oklab, var(--card) 85%, transparent);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  box-shadow: 0 1px 0 0 oklch(1 0 0 / 5%) inset, 0 20px 50px -30px oklch(0 0 0 / 70%);
+  box-shadow: 0 1px 0 0 oklch(1 0 0 / 7%) inset, 0 24px 55px -30px oklch(0 0 0 / 82%), 0 8px 18px -14px color-mix(in oklab, var(--primary) 24%, transparent);
 }
 @utility eyebrow {
   font-family: var(--font-mono);
@@ -165,4 +165,26 @@
     background-attachment: fixed;
   }
   h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+  input:not([type="checkbox"]):not([type="radio"]), textarea, select, button[role="combobox"] {
+    box-shadow: 0 1px 0 oklch(1 0 0 / 7%) inset, 0 10px 24px -16px oklch(0 0 0 / 92%);
+  }
 }
+
+@utility enterprise-field {
+  border: 1px solid color-mix(in oklab, var(--border) 76%, var(--primary) 24%);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, color-mix(in oklab, var(--card) 94%, var(--primary) 6%), color-mix(in oklab, var(--background) 88%, transparent));
+  padding: .85rem;
+  box-shadow: 0 1px 0 oklch(1 0 0 / 6%) inset, 0 16px 35px -24px oklch(0 0 0 / 95%);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.enterprise-field:focus-within {
+  border-color: color-mix(in oklab, var(--primary) 62%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 22%, transparent), 0 20px 45px -24px oklch(0 0 0 / 98%);
+  transform: translateY(-1px);
+}
+.assistant-markdown > * + * { margin-top: .65rem; }
+.assistant-markdown ul, .assistant-markdown ol { padding-left: 1.2rem; }
+.assistant-markdown ul { list-style: disc; }
+.assistant-markdown ol { list-style: decimal; }
+.assistant-markdown strong { color: var(--foreground); }
