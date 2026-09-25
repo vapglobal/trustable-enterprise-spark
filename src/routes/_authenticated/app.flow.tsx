@@ -16,6 +16,7 @@ import { EmphasizedControl, EmphasizedField } from "@/components/trustable/Empha
 import { DrillDown, drillableClass } from "@/components/trustable/DrillDown";
 import { ReportActions } from "@/components/trustable/ReportActions";
 import { pageMeta } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/app/flow")({
   head: () => pageMeta({ title: "Trustable Flow Builder", description: "Build, inspect, and measure governed enterprise workflows.", path: "/app/flow", index: false }),
