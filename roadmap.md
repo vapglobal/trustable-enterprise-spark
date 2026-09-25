@@ -43,3 +43,5 @@
 - [ ] Build the graph foundation as a full canvas workspace: draggable palette items, left/right flyouts, search, node and edge editing, security-gate/bottleneck/harness/loop overlays, visual callouts, undo, save, click-to-toggle layers, adjustable weights, and simulation controls
 - [ ] Review and adapt verified patterns from CareerCaptain Career Graph and the MICDP2 geospatial global module; preserve EngineWare backend ownership and label unavailable contracts Reference architecture
 - [ ] Establish a repeatable QA matrix and milestone checklist for every live surface, covering permissions, validation, request states, accessibility, themes, desktop/mobile layouts, graph interactions, audit receipts, red-team evidence, and TypeSafe/JEV evidence
+- [ ] Change the homepage autonomy line to “Then watch the next—and all the rest—build themselves.”
+- [ ] Add verified owner email alerts, push notifications, and security summaries for successful and attempted sign-ins by named reviewers or any user; classify critical events accurately and do not claim delivery until notification contracts are connected and tested
