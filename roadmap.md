@@ -20,3 +20,13 @@
 - [ ] Full-screen API Console: sanitized parameterized calls, telemetry/logs, search/filter/multi-select, generated endpoint documentation and saved queries, live OAS/sub-spec export; EngineWare/MyCDB SQL Server remains future source of truth pending direct connection contract
 - [ ] Landing page: explain the simple Trustable creation loop and measurable enterprise outcomes in plain language
 - [ ] Global choice rule: every multiple-choice prompt identifies a recommended option and always provides custom Other text input
+- [ ] EngineWare positioning: present Trustable as powered by Lovable and the EngineWare backend; document organic API advocate/router/sub-command architecture, organization graph mapping, customized graphlets, TypeSafe governance, telemetry, RBAC, and evolving endpoint/query negotiation
+- [ ] EngineWare integration pre-wiring: discover available global modules, agent-memory recall, JEV TypeSafe endpoints, audit/ranking/decision/state modules; connect only verified interfaces and mark unavailable connections clearly
+- [ ] Dedicated in-app technical showcase plus confidential PDF and PowerPoint with diagrams, table of contents, and interview-ready narrative; sync corresponding CareerCaptain Trustable demo content
+- [ ] Apply highly visible EngineWare.ai / Christopher Ware confidential proprietary IP and no-redistribution markings to Trustable pages, exports, diagrams, and presentation deliverables
+- [ ] Deliver approved package by email and Dropbox once connected destinations and recipients are verified
+- [ ] Review the uploaded EngineWare Organic Advocate System backend-agent summaries against the Trustable specification and verified backend interfaces
+- [x] Publish the verified Trustable update after the specification audit and security check; unresolved security finding reported explicitly
+- [ ] Establish a contract-based completion ledger: each requirement must carry implementation evidence, test evidence, red-team status, TypeSafe/JEV status, Live/Reference classification, and immutable audit receipt before completion
+- [ ] Run comprehensive red-team and security verification across every live Trustable capability; do not mark items complete without evidence
+- [ ] Continue iterative milestone reporting; email milestone updates only after a verified email connection and recipient are available

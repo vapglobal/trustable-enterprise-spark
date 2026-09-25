@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Sparkles } from "lucide-react";
+import { AlertTriangle, ArrowRight, BarChart3, Boxes, Braces, Check, ChevronRight, Clock3, Copy, Database, FileSpreadsheet, GitBranch, Mail, MoreHorizontal, Play, Save, Search, Share2, ShieldCheck, Sparkles, UserRound } from "lucide-react";
 import { runFlow } from "@/lib/trustable.functions";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { Button } from "@/components/ui/button";
@@ -13,130 +13,65 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ProofBadge, StatusPill } from "@/components/trustable/Chrome";
 import { EmphasizedControl, EmphasizedField } from "@/components/trustable/EmphasizedField";
 import { DrillDown, drillableClass } from "@/components/trustable/DrillDown";
+import { ReportActions } from "@/components/trustable/ReportActions";
+import { pageMeta } from "@/lib/site";
 
 export const Route = createFileRoute("/_authenticated/app/flow")({
+  head: () => pageMeta({ title: "Trustable Flow Builder", description: "Build, inspect, and measure governed enterprise workflows.", path: "/app/flow", index: false }),
   component: FlowPage,
 });
 
-const EXAMPLES = [
-  "Every Monday I pull the weekly pipeline export, fix the rep names in about 400 rows, save it to Dropbox, and email a summary to my VP.",
-  "After each leadership sync I turn the meeting notes into action items with owners and deadlines and paste them into Jira.",
-  "Each quarter I review which contractors still have access to our 14 SaaS tools, including their home addresses and SSNs on file.",
-];
-
+type Template = { id: string; title: string; task: string; role: string; department: string; category: string; risk: "Low" | "Review" | "Elevated"; apps: string[]; minutes: number; created: string; used: string };
+const SEEDS = [
+  ["Quarterly contractor access review", "Each quarter, I review which contractors still have access to our 14 SaaS tools, including their home addresses, then email an Excel file to Security.", "IT Admin", "IT", "Access", "Elevated", ["Entra ID", "Excel", "Outlook"], 180],
+  ["Pipeline hygiene", "Every Monday I reconcile pipeline owners, correct account stages, and email a summary to the revenue leadership team.", "Sales Ops", "Revenue", "Reporting", "Low", ["Salesforce", "Excel", "Outlook"], 75],
+  ["Leadership action register", "After each leadership meeting, turn notes into action items with owners and deadlines and publish them to the delivery board.", "Chief of Staff", "Executive", "Coordination", "Low", ["Teams", "Jira"], 45],
+  ["Vendor risk intake", "Collect security questionnaires and policies from new vendors, identify unanswered controls, and route material gaps to Security.", "Risk Analyst", "Security", "Risk", "Review", ["SharePoint", "Jira", "Outlook"], 120],
+  ["Joiner access package", "When a new employee starts, create the approved account package for their department and notify their manager.", "HR Partner", "People", "Onboarding", "Review", ["Workday", "Entra ID", "Teams"], 60],
+  ["Invoice exception review", "Find invoices above policy thresholds, attach supporting records, and send exceptions to the finance approver.", "Controller", "Finance", "Approval", "Review", ["SQL Server", "Excel", "Outlook"], 90],
+] as const;
+const TEMPLATES: Template[] = Array.from({ length: 24 }, (_, i) => { const s = SEEDS[i % SEEDS.length]!; return { id: `TF-${String(i + 1).padStart(3, "0")}`, title: i < SEEDS.length ? s[0] : `${s[0]} · ${Math.floor(i / SEEDS.length) + 1}`, task: s[1], role: s[2], department: s[3], category: s[4], risk: s[5], apps: [...s[6]], minutes: s[7] + (i % 4) * 10, created: `${3 + i} days ago`, used: i % 5 === 0 ? "Never" : `${(i % 8) + 1}h ago` }; });
 type Result = Awaited<ReturnType<typeof runFlow>>;
 
 function FlowPage() {
-  const { data } = useWorkspace();
-  const run = useServerFn(runFlow);
-  const qc = useQueryClient();
-  const [task, setTask] = useState<string>(EXAMPLES[0]!);
-  const [dept, setDept] = useState<string>("");
-  const [operator, setOperator] = useState("Bob Henderson");
-  const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<Result | null>(null);
+  const { data } = useWorkspace(); const run = useServerFn(runFlow); const qc = useQueryClient();
+  const [selected, setSelected] = useState(TEMPLATES[0]!); const [task, setTask] = useState(selected.task); const [dept, setDept] = useState(""); const [operator, setOperator] = useState("Bob Henderson");
+  const [query, setQuery] = useState(""); const [role, setRole] = useState("all"); const [category, setCategory] = useState("all"); const [expert, setExpert] = useState(false); const [busy, setBusy] = useState(false); const [result, setResult] = useState<Result | null>(null);
+  const canRun = data && data.role !== "auditor"; const deptId = dept || data?.departments[0]?.id || "";
+  const visible = useMemo(() => TEMPLATES.filter((t) => `${t.title} ${t.task} ${t.role} ${t.department} ${t.category} ${t.apps.join(" ")}`.toLowerCase().includes(query.toLowerCase()) && (role === "all" || t.role === role) && (category === "all" || t.category === category)), [query, role, category]);
+  const choose = (t: Template) => { setSelected(t); setTask(t.task); setResult(null); };
+  async function go() { setBusy(true); setResult(null); try { const r = await run({ data: { task, departmentId: deptId, operatorLabel: operator } }); setResult(r); if (!r.ok) toast.error(r.reason); else toast.success(r.status === "executed" ? `Flow ready. ${r.minutes} minutes returned this week.` : "Trustable held this flow for human review."); qc.invalidateQueries({ queryKey: ["workspace"] }); } catch (e) { toast.error(e instanceof Error ? e.message : "Flow could not be evaluated"); } finally { setBusy(false); } }
 
-  const canRun = data && data.role !== "auditor";
-  const deptId = dept || data?.departments[0]?.id || "";
-
-  async function go() {
-    setBusy(true);
-    setResult(null);
-    try {
-      const r = await run({ data: { task, departmentId: deptId, operatorLabel: operator } });
-      setResult(r);
-      if (!r.ok) toast.error(r.reason);
-      else if (r.status === "executed") toast.success(`Trustable Flow executed. ${r.minutes} minutes returned this week.`);
-      else if (r.status === "review") toast.message("Routed to human review — the gate wasn't confident enough to act alone.");
-      else toast.message("Request rejected by the decision gate.");
-      qc.invalidateQueries({ queryKey: ["workspace"] });
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Run failed");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-      <section className="panel p-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Trustable Flow</h1>
-          <ProofBadge kind="live" />
-        </div>
-        <p className="mt-2 text-sm text-muted-foreground">Describe one repetitive task that costs you 15–30 minutes every week.</p>
-        {!canRun && <p className="mt-4 rounded-md border border-warning/40 bg-warning/10 p-3 text-sm text-warning">Auditors have read-only access. Runs are disabled for your role.</p>}
-        <div className="mt-5 space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <EmphasizedField label="Operator" value={operator} onChange={setOperator}>
-              <Input value={operator} onChange={(e) => setOperator(e.target.value)} maxLength={80} />
-            </EmphasizedField>
-            <EmphasizedControl label="Department">
-              <Select value={deptId} onValueChange={setDept}>
-                <SelectTrigger><SelectValue placeholder="Department" /></SelectTrigger>
-                <SelectContent>
-                  {data?.departments.map((d) => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </EmphasizedControl>
-          </div>
-          <EmphasizedField label="Task" hint="Describe one repeatable workflow; use your Library to inject trusted context." value={task} onChange={(v) => setTask(v.slice(0, 1000))} library>
-            <Textarea rows={5} value={task} onChange={(e) => setTask(e.target.value)} maxLength={1000} />
-          </EmphasizedField>
-          <div className="flex flex-wrap gap-2">
-            {EXAMPLES.map((e, i) => (
-              <button key={i} type="button" onClick={() => setTask(e)} className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:border-primary hover:text-foreground">
-                Example {i + 1}{i === 2 ? " (contains PII)" : ""}
-              </button>
-            ))}
-          </div>
-          <Button onClick={go} disabled={!canRun || busy || task.trim().length < 8} className="w-full" size="lg">
-            <Sparkles className="mr-2 h-4 w-4" /> {busy ? "Running through the decision gate…" : "Run through the gate"}
-          </Button>
-        </div>
-      </section>
-
-      <section className="panel p-6">
-        <h2 className="text-lg font-semibold">Bounded decision</h2>
-        <p className="text-sm text-muted-foreground">The model can only answer with a fixed schema. Anything outside it is rejected before it touches data.</p>
-        <ol className="mt-5 space-y-2 font-mono text-xs text-muted-foreground">
-          <li>1 · Role re-checked on the server (operator or above)</li>
-          <li>2 · Task sent as untrusted data to the typed decision tool</li>
-          <li>3 · Output validated against a strict schema</li>
-          <li>4 · Confidence under 0.70 or PII detected → human review</li>
-          <li>5 · Run recorded, block appended to the SHA-512 ledger</li>
-        </ol>
-        {result?.ok && (
-          <div className="mt-6 space-y-4">
-            <div className="flex items-center gap-3">
-              <StatusPill status={result.status} />
-              <span className="font-mono text-xs text-muted-foreground">{result.model} · {result.latencyMs}ms</span>
-            </div>
-            <DrillDown title="Bounded decision detail" description="The validated model output and execution outcome for this run." trigger={<button className={`grid w-full grid-cols-3 gap-3 text-center ${drillableClass}`}>
-              <Mini label="Action" value={result.decision.action} /><Mini label="Confidence" value={result.decision.confidence.toFixed(2)} /><Mini label="Minutes" value={`+${result.minutes}`} />
-            </button>}><pre className="max-h-96 overflow-auto rounded-lg bg-muted/50 p-4 font-mono text-xs">{JSON.stringify(result, null, 2)}</pre></DrillDown>
-            <div>
-              <p className="eyebrow">Steps</p>
-              <ul className="mt-2 space-y-1 text-sm">
-                {result.decision.steps.map((s, i) => <li key={i}>— {s}</li>)}
-              </ul>
-            </div>
-            <p className="text-sm text-muted-foreground">{result.decision.rationale}</p>
-            {result.decision.pii_detected && <p className="text-sm text-warning">Personal data detected — held for human review.</p>}
-            <pre className="max-h-56 overflow-auto rounded-md bg-muted/50 p-3 font-mono text-[11px]">{JSON.stringify(result.decision, null, 2)}</pre>
-          </div>
-        )}
-        {result && !result.ok && <p className="mt-6 text-sm text-destructive">Gate refused: {result.reason}. Nothing was executed.</p>}
-      </section>
+  return <div className="space-y-5">
+    <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="eyebrow">Two-week enterprise pilot · Bob’s workspace</p><h1 className="text-3xl font-bold">Build a Trustable Flow</h1><p className="mt-1 text-sm text-muted-foreground">Describe the work. Trustable maps the systems, checks the risk, and shows the value.</p></div><div className="flex gap-2"><ProofBadge kind="live" /><Button variant={expert ? "default" : "outline"} onClick={() => setExpert((v) => !v)}><Braces className="mr-2 h-4 w-4" />{expert ? "Simple view" : "Show wiring"}</Button></div></div>
+    <div className="rounded-md border border-warning/40 bg-warning/10 px-4 py-3 text-xs font-semibold text-warning">CONFIDENTIAL · PROPRIETARY ENGINEWARE.AI IP · OWNED BY CHRISTOPHER WARE · NOT FOR REDISTRIBUTION</div>
+    <div className="grid gap-5 xl:grid-cols-[310px_minmax(360px,520px)_1fr]">
+      <aside className="panel max-h-[790px] overflow-hidden p-4"><div className="flex items-center justify-between"><div><p className="eyebrow">Flow catalog</p><h2 className="font-semibold">{visible.length} matched flows</h2></div><Boxes className="h-5 w-5 text-primary" /></div>
+        <div className="mt-3 space-y-2"><div className="relative"><Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" /><Input className="pl-9" placeholder="Search tasks, roles, apps…" value={query} onChange={(e) => setQuery(e.target.value)} /></div><div className="grid grid-cols-2 gap-2"><Select value={role} onValueChange={setRole}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">All roles (recommended)</SelectItem>{[...new Set(TEMPLATES.map((t) => t.role))].map((v) => <SelectItem key={v} value={v}>{v}</SelectItem>)}<SelectItem value="other">Other / custom</SelectItem></SelectContent></Select><Select value={category} onValueChange={setCategory}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">All types (recommended)</SelectItem>{[...new Set(TEMPLATES.map((t) => t.category))].map((v) => <SelectItem key={v} value={v}>{v}</SelectItem>)}<SelectItem value="other">Other / custom</SelectItem></SelectContent></Select></div></div>
+        <div className="mt-3 max-h-[640px] space-y-2 overflow-y-auto pr-1">{visible.map((t) => <Button key={t.id} variant="ghost" onClick={() => choose(t)} className={`h-auto w-full justify-start whitespace-normal border p-3 text-left ${selected.id === t.id ? "border-primary bg-primary/10" : "border-border bg-card/40"}`}><div className="w-full"><div className="flex items-start gap-2"><FlowIcon category={t.category} /><span className="flex-1 font-medium leading-tight">{t.title}</span><ChevronRight className="h-4 w-4 shrink-0" /></div><div className="mt-2 flex flex-wrap gap-1"><Tag>{t.role}</Tag><Tag>{t.department}</Tag><Risk value={t.risk} /></div><p className="mt-2 flex justify-between text-[10px] text-muted-foreground"><span>Created {t.created}</span><span>Used {t.used}</span></p></div></Button>)}</div>
+      </aside>
+      <main className="mx-auto w-full max-w-[480px] rounded-[32px] border-[6px] border-foreground/10 bg-card p-2 shadow-[0_35px_90px_-35px_oklch(0_0_0/95%)]"><div className="rounded-[24px] border border-border bg-background p-5"><div className="mx-auto mb-4 h-1.5 w-20 rounded-full bg-muted" /><div className="flex items-center justify-between"><div><p className="eyebrow">Hello, Bob</p><h2 className="text-xl font-bold">What should we improve?</h2></div><UserRound className="h-8 w-8 rounded-full bg-primary/10 p-1.5 text-primary" /></div>
+        {!canRun && <p className="mt-3 rounded border border-warning/40 bg-warning/10 p-2 text-xs text-warning">Your auditor role is read-only.</p>}
+        <div className="mt-4 space-y-3"><EmphasizedField label="Describe the work" hint="Use plain language. Suggestions and mapped services update as you type." value={task} onChange={(v) => setTask(v.slice(0, 1000))} library><Textarea rows={7} value={task} onChange={(e) => setTask(e.target.value)} maxLength={1000} /></EmphasizedField>
+          <div className="rounded-lg border border-primary/25 bg-primary/5 p-3"><p className="flex items-center gap-2 text-xs font-semibold"><Sparkles className="h-4 w-4 text-primary" />Trustable recognized</p><div className="mt-2 flex flex-wrap gap-1">{selected.apps.map((app) => <Tag key={app}>{app}</Tag>)}<Tag>Quarterly trigger</Tag>{task.toLowerCase().includes("address") && <Risk value="Elevated" />}</div></div>
+          <div className="grid grid-cols-2 gap-3"><EmphasizedField label="Person" value={operator} onChange={setOperator}><Input value={operator} onChange={(e) => setOperator(e.target.value)} /></EmphasizedField><EmphasizedControl label="Team"><Select value={deptId} onValueChange={setDept}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{data?.departments.map((d) => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}<SelectItem value="other">Other / custom</SelectItem></SelectContent></Select></EmphasizedControl></div>
+          <div className="grid grid-cols-3 gap-2 text-center"><Mini label="Weekly value" value={`${selected.minutes}m`} /><Mini label="Systems" value={String(selected.apps.length)} /><Mini label="Checks" value="5/5" /></div>
+          <Button onClick={go} disabled={!canRun || busy || task.trim().length < 8} className="w-full" size="lg"><Play className="mr-2 h-4 w-4" />{busy ? "Mapping and checking…" : "Check and build my flow"}</Button>
+          <div className="grid grid-cols-4 gap-1"><Button size="sm" variant="ghost" title="Save draft" onClick={() => toast.message("Session draft is ready; persistent flow storage requires the EngineWare contract.")}><Save className="h-4 w-4" /></Button><Button size="sm" variant="ghost" title="Copy flow" onClick={() => navigator.clipboard.writeText(task)}><Copy className="h-4 w-4" /></Button><Button size="sm" variant="ghost" title="Share flow" onClick={() => navigator.share?.({ title: selected.title, text: task })}><Share2 className="h-4 w-4" /></Button><ReportActions title={selected.title} data={{ ...selected, task }} className="px-2" /></div>
+        </div></div></main>
+      <aside className="panel min-h-[620px] p-5"><div className="flex items-center justify-between"><div><p className="eyebrow">Live organization map</p><h2 className="font-semibold">Your flow is taking shape</h2></div><GitBranch className="h-5 w-5 text-primary" /></div><FlowMap apps={selected.apps} risky={task.toLowerCase().includes("address") || task.toLowerCase().includes("ssn")} />
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2"><CheckRow text="Identity and role confirmed" /><CheckRow text="Systems mapped" /><CheckRow text="Sensitive data classified" warn={task.toLowerCase().includes("address")} /><CheckRow text="Audit receipt enabled" /></div>
+        {task.toLowerCase().includes("address") && <div className="mt-4 rounded-lg border border-warning/40 bg-warning/10 p-3"><p className="flex gap-2 text-sm font-semibold text-warning"><AlertTriangle className="h-4 w-4" />Sensitive-data path detected</p><p className="mt-1 text-xs text-muted-foreground">Home addresses require a human approval gate before export.</p><Button asChild size="sm" variant="outline" className="mt-3"><Link to="/app/redteam">Send to Red Team <ArrowRight className="ml-1 h-3 w-3" /></Link></Button></div>}
+        {expert && <div className="mt-4 rounded-lg border border-border bg-muted/40 p-3"><div className="flex items-center justify-between"><p className="font-mono text-xs text-primary">POST /v1/trustable/flows/evaluate</p><Button size="icon" variant="ghost" onClick={() => navigator.clipboard.writeText(JSON.stringify({ operator, departmentId: deptId, task: "[SANITIZED USER INPUT]" }, null, 2))}><Copy className="h-4 w-4" /></Button></div><pre className="mt-2 overflow-auto text-[10px] text-muted-foreground">{JSON.stringify({ operator, departmentId: deptId, task: "[SANITIZED USER INPUT]", controls: ["rbac", "pii", "confidence", "ledger"] }, null, 2)}</pre><Button asChild variant="outline" size="sm" className="mt-3 w-full"><Link to="/app/api-console">Open API Console</Link></Button><p className="mt-2 text-[10px] text-muted-foreground">EngineWare organic endpoint negotiation: Reference architecture pending verified connector contract.</p></div>}
+        {result?.ok && <div className="mt-5 rounded-lg border border-success/35 bg-success/10 p-4"><p className="flex items-center gap-2 font-semibold text-success"><Check className="h-5 w-5" />You built a governed flow</p><div className="mt-3 flex items-center gap-2"><StatusPill status={result.status} /><span className="font-mono text-xs">{result.latencyMs}ms · +{result.minutes}m</span></div><p className="mt-2 text-sm">This is measurable work you can own, improve, and combine into a larger Trustable solution.</p><DrillDown title="Validated flow detail" description="Full decision and audit-ready output." trigger={<Button className="mt-3" variant="outline" size="sm">Inspect every detail</Button>}><pre className="max-h-96 overflow-auto text-xs">{JSON.stringify(result, null, 2)}</pre></DrillDown></div>}
+      </aside>
     </div>
-  );
+  </div>;
 }
 
-function Mini({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-border bg-muted/40 p-3">
-      <p className="font-display text-lg font-bold">{value}</p>
-      <p className="eyebrow">{label}</p>
-    </div>
-  );
-}
+function FlowMap({ apps, risky }: { apps: string[]; risky: boolean }) { const nodes = [{ icon: Clock3, label: "Quarterly", kind: "Trigger" }, ...apps.slice(0, 3).map((label, i) => ({ icon: i === 0 ? Database : i === 1 ? FileSpreadsheet : Mail, label, kind: "Mapped service" })), { icon: ShieldCheck, label: risky ? "Human approval" : "Trustable gate", kind: risky ? "Required" : "Verified" }, { icon: BarChart3, label: "Impact receipt", kind: "Measured" }]; return <div className="relative mt-5 space-y-2 before:absolute before:bottom-7 before:left-[21px] before:top-7 before:w-px before:bg-primary/35">{nodes.map(({ icon: I, label, kind }, i) => <DrillDown key={`${label}-${i}`} title={label} description={`${kind} node in the current flow graph.`} trigger={<Button variant="ghost" className={`relative h-auto w-full justify-start gap-3 border p-2.5 text-left ${kind === "Required" ? "border-warning/50 bg-warning/10" : "border-border bg-card"}`}><span className="z-10 flex h-9 w-9 items-center justify-center rounded-full border border-primary/30 bg-background"><I className="h-4 w-4 text-primary" /></span><span><span className="block text-sm font-medium">{label}</span><span className="block text-[10px] uppercase text-muted-foreground">{kind} · {18 + i * 11}ms</span></span><MoreHorizontal className="ml-auto h-4 w-4" /></Button>}><p className="text-sm">Node telemetry, policy evaluation, parameters, and downstream edges are available here.</p></DrillDown>)}</div>; }
+function FlowIcon({ category }: { category: string }) { const I = category === "Reporting" ? BarChart3 : category === "Access" ? ShieldCheck : category === "Approval" ? Check : GitBranch; return <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-primary/10"><I className="h-3.5 w-3.5 text-primary" /></span>; }
+function Tag({ children }: { children: React.ReactNode }) { return <span className="rounded border border-border bg-muted/50 px-1.5 py-0.5 text-[9px] uppercase text-muted-foreground">{children}</span>; }
+function Risk({ value }: { value: Template["risk"] }) { return <span className={`rounded border px-1.5 py-0.5 text-[9px] uppercase ${value === "Elevated" ? "border-destructive/40 text-destructive" : value === "Review" ? "border-warning/40 text-warning" : "border-success/40 text-success"}`}>{value}</span>; }
+function Mini({ label, value }: { label: string; value: string }) { return <div className="rounded-lg border border-border bg-muted/40 p-2"><p className="font-display text-lg font-bold">{value}</p><p className="text-[9px] uppercase text-muted-foreground">{label}</p></div>; }
+function CheckRow({ text, warn }: { text: string; warn?: boolean }) { return <div className="flex items-center gap-2 rounded border border-border bg-card p-2 text-xs">{warn ? <AlertTriangle className="h-4 w-4 text-warning" /> : <Check className="h-4 w-4 text-success" />}{text}</div>; }

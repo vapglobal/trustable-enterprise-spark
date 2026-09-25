@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Lock, LogOut, ShieldAlert } from "lucide-react";
+import { Braces, Lock, LogOut, ShieldAlert } from "lucide-react";
 import { recordSignOut } from "@/lib/trustable.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ const NAV: { to: string; label: string; perm: Perm; exact?: boolean }[] = [
   { to: "/app/posture", label: "Posture", perm: "posture.view" },
   { to: "/app/evidence", label: "Evidence", perm: "evidence.view" },
   { to: "/app/flow", label: "Trustable Flow", perm: "flow.view" },
+  { to: "/app/api-console", label: "API Console", perm: "ciso.view" },
   { to: "/app/library", label: "Library", perm: "overview.view" },
   { to: "/app/ciso", label: "CISO Console", perm: "ciso.view" },
   { to: "/app/redteam", label: "Red Team", perm: "redteam.run" },
@@ -57,6 +58,7 @@ function AppLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
+        <div className="border-b border-warning/25 bg-warning/10 px-4 py-1 text-center font-mono text-[9px] font-semibold uppercase text-warning">EngineWare.ai proprietary IP · Owned by Christopher Ware · Confidential · Not for redistribution</div>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <Wordmark />
           <div className="flex items-center gap-3">
@@ -82,7 +84,7 @@ function AppLayout() {
                 className="whitespace-nowrap border-b-2 border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 activeProps={{ className: "!border-primary !text-foreground" }}
               >
-                {n.label}
+                {n.to === "/app/api-console" && <Braces className="mr-1 inline h-3.5 w-3.5" />}{n.label}
               </Link>
             ))}
           </nav>

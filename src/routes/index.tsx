@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Lock, Zap, Users, ShieldCheck, Link2, FileCheck2, ArrowRight, RotateCcw } from "lucide-react";
+import { Lock, Zap, Users, ShieldCheck, Link2, FileCheck2, ArrowRight, RotateCcw, GitBranch, BarChart3, CheckCircle2 } from "lucide-react";
 import { HeartVault } from "@/components/trustable/HeartVault";
 import { ConfidentialFooter, ProofBadge, Wordmark } from "@/components/trustable/Chrome";
 import { Button } from "@/components/ui/button";
@@ -113,6 +113,14 @@ function Landing() {
               <RotateCcw className="mr-1.5 h-3 w-3" /> Replay the heart-to-vault animation
             </Button>
           </div>
+        </div>
+      </section>
+
+      <section className="border-y border-border bg-card/30 py-16">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="max-w-3xl"><p className="eyebrow">Simple on the surface · EngineWare power underneath</p><h2 className="mt-2 text-3xl font-bold">Create something useful. Prove its value. Build the next one.</h2><p className="mt-3 text-muted-foreground">Trustable turns everyday work into governed, measurable flows while advanced teams can inspect every system, policy gate, API call, and audit receipt.</p></div>
+          <div className="mt-8 grid gap-3 md:grid-cols-5">{[[Zap,"Describe","Tell Trustable what takes time."],[GitBranch,"Map","See systems, data, and connections."],[ShieldCheck,"Check","Catch risk before anything runs."],[CheckCircle2,"Create","Approve a safe, working flow."],[BarChart3,"Prove","Track time returned and impact."]].map(([Icon,t,d], i) => { const I = Icon as typeof Zap; return <div key={t as string} className="relative border-l border-primary/35 pl-4"><span className="font-mono text-[10px] text-primary">0{i + 1}</span><I className="mt-3 h-5 w-5 text-primary" /><h3 className="mt-2 font-semibold">{t as string}</h3><p className="mt-1 text-xs text-muted-foreground">{d as string}</p></div>; })}</div>
+          <div className="mt-8 rounded-md border border-warning/40 bg-warning/10 px-4 py-3 text-xs font-semibold text-warning">CONFIDENTIAL · PROPRIETARY ENGINEWARE.AI IP · CREATED AND OWNED BY CHRISTOPHER WARE · NOT FOR REDISTRIBUTION</div>
         </div>
       </section>
 

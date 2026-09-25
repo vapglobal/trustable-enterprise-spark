@@ -17,6 +17,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
 import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authenticated/app.access'
+import { Route as AuthenticatedAppApiConsoleRouteImport } from './routes/_authenticated/app.api-console'
 import { Route as AuthenticatedAppAuditRouteImport } from './routes/_authenticated/app.audit'
 import { Route as AuthenticatedAppCisoRouteImport } from './routes/_authenticated/app.ciso'
 import { Route as AuthenticatedAppEvidenceRouteImport } from './routes/_authenticated/app.evidence'
@@ -65,6 +66,12 @@ const AuthenticatedAppAccessRoute = AuthenticatedAppAccessRouteImport.update({
   path: '/access',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppApiConsoleRoute =
+  AuthenticatedAppApiConsoleRouteImport.update({
+    id: '/api-console',
+    path: '/api-console',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppAuditRoute = AuthenticatedAppAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
@@ -115,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/api-console': typeof AuthenticatedAppApiConsoleRoute
   '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
   '/app/evidence': typeof AuthenticatedAppEvidenceRoute
@@ -131,6 +139,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/api-console': typeof AuthenticatedAppApiConsoleRoute
   '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
   '/app/evidence': typeof AuthenticatedAppEvidenceRoute
@@ -150,6 +159,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/app/access': typeof AuthenticatedAppAccessRoute
+  '/_authenticated/app/api-console': typeof AuthenticatedAppApiConsoleRoute
   '/_authenticated/app/audit': typeof AuthenticatedAppAuditRoute
   '/_authenticated/app/ciso': typeof AuthenticatedAppCisoRoute
   '/_authenticated/app/evidence': typeof AuthenticatedAppEvidenceRoute
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/app'
     | '/app/access'
+    | '/app/api-console'
     | '/app/audit'
     | '/app/ciso'
     | '/app/evidence'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/app/access'
+    | '/app/api-console'
     | '/app/audit'
     | '/app/ciso'
     | '/app/evidence'
@@ -203,6 +215,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/app'
     | '/_authenticated/app/access'
+    | '/_authenticated/app/api-console'
     | '/_authenticated/app/audit'
     | '/_authenticated/app/ciso'
     | '/_authenticated/app/evidence'
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppAccessRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/api-console': {
+      id: '/_authenticated/app/api-console'
+      path: '/api-console'
+      fullPath: '/app/api-console'
+      preLoaderRoute: typeof AuthenticatedAppApiConsoleRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/audit': {
       id: '/_authenticated/app/audit'
       path: '/audit'
@@ -341,6 +361,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppAccessRoute: typeof AuthenticatedAppAccessRoute
+  AuthenticatedAppApiConsoleRoute: typeof AuthenticatedAppApiConsoleRoute
   AuthenticatedAppAuditRoute: typeof AuthenticatedAppAuditRoute
   AuthenticatedAppCisoRoute: typeof AuthenticatedAppCisoRoute
   AuthenticatedAppEvidenceRoute: typeof AuthenticatedAppEvidenceRoute
@@ -354,6 +375,7 @@ interface AuthenticatedAppRouteChildren {
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppAccessRoute: AuthenticatedAppAccessRoute,
+  AuthenticatedAppApiConsoleRoute: AuthenticatedAppApiConsoleRoute,
   AuthenticatedAppAuditRoute: AuthenticatedAppAuditRoute,
   AuthenticatedAppCisoRoute: AuthenticatedAppCisoRoute,
   AuthenticatedAppEvidenceRoute: AuthenticatedAppEvidenceRoute,
