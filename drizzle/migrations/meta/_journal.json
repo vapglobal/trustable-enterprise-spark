@@ -36,6 +36,13 @@
       "when": 1790323654684,
       "tag": "0004_create_trustable_assistant_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790365161613,
+      "tag": "0005_restrict_permissions_catalog",
+      "breakpoints": true
     }
   ]
 }
