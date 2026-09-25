@@ -1,0 +1,13 @@
+# EngineWare Sovereign Codeowners
+# Protects core backend, security, and TypeSafe primitives from unauthorized modifications
+
+* @vapglobal
+
+# Protected Backend Core
+/src/lib/typesafe.ts @vapglobal
+/src/lib/trustableBridge.ts @vapglobal
+/src/lib/authz.server.ts @vapglobal
+/src/lib/security.functions.ts @vapglobal
+/drizzle/ @vapglobal
+/.lovable/contract.md @vapglobal
+/AGENTS.md @vapglobal
