@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import { Bot, Check, Clock3, History, Layers3, LoaderCircle, Send, Sparkles, Trash2, X } from "lucide-react";
+import { Bot, Check, Clock3, History, Layers3, LoaderCircle, Monitor, Moon, Send, Sparkles, Sun, Trash2, X } from "lucide-react";
 import { askTrustableAssistant, clearAssistantHistory, getAssistantHistory } from "@/lib/assistant.server";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +25,7 @@ export function GlobalAssistant({ pathname }: { pathname: string }) {
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [busy, setBusy] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light" | "system">("dark");
   const [contexts, setContexts] = useState<string[]>([pathname.includes("evidence") ? "evidence" : pathname.includes("flow") ? "flows" : pathname.includes("audit") ? "audit" : "posture", "findings"]);
   const bottom = useRef<HTMLDivElement>(null);
   const recent = useMemo(() => (q.data ?? []).filter((m) => m.role === "user").slice(-4).reverse(), [q.data]);
@@ -38,6 +39,18 @@ export function GlobalAssistant({ pathname }: { pathname: string }) {
     window.addEventListener("trustable:assistant", handle);
     return () => window.removeEventListener("trustable:assistant", handle);
   }, []);
+  useEffect(() => {
+    const saved = window.localStorage.getItem("trustable-theme");
+    const next = saved === "light" || saved === "system" ? saved : "dark";
+    setTheme(next);
+    applyTheme(next);
+  }, []);
+  function applyTheme(next: "dark" | "light" | "system") {
+    const light = next === "light" || (next === "system" && window.matchMedia("(prefers-color-scheme: light)").matches);
+    document.documentElement.classList.toggle("light", light);
+    window.localStorage.setItem("trustable-theme", next);
+  }
+  function changeTheme(next: "dark" | "light" | "system") { setTheme(next); applyTheme(next); }
   async function send(text = prompt) {
     if (text.trim().length < 2 || busy) return;
     const optimistic = { id: `local-${Date.now()}`, role: "user" as const, content: text.trim(), context_paths: contexts, created_at: new Date().toISOString() };
@@ -59,9 +72,9 @@ export function GlobalAssistant({ pathname }: { pathname: string }) {
             <Button className="mt-4 w-full" size="sm" variant="ghost" onClick={() => confirm("Clear your Trustable AI conversation history?") && clear().then(() => q.refetch())}><Trash2 className="mr-1.5 h-3.5 w-3.5" />Clear history</Button>
           </aside>
           <section className="flex min-h-[440px] flex-col">
-            <div className="flex items-start justify-between border-b border-border px-5 py-4">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border-b border-border px-5 py-4">
               <div><p className="flex items-center gap-2 font-semibold"><Bot className="h-5 w-5 text-primary" />Trustable AI Assistant <span className="rounded-full border border-success/30 bg-success/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-success">Live</span></p><p className="text-xs text-muted-foreground">One continuous, tenant-scoped conversation · history synced to your account</p></div>
-              <Button size="sm" variant="ghost" onClick={() => setOpen(false)}><X className="h-4 w-4" /></Button>
+              <div className="flex shrink-0 items-center gap-1 rounded-md border border-border bg-muted/40 p-1"><Button size="icon" variant={theme === "light" ? "secondary" : "ghost"} className="h-7 w-7" onClick={() => changeTheme("light")} title="Light appearance"><Sun className="h-3.5 w-3.5" /></Button><Button size="icon" variant={theme === "dark" ? "secondary" : "ghost"} className="h-7 w-7" onClick={() => changeTheme("dark")} title="Dark appearance"><Moon className="h-3.5 w-3.5" /></Button><Button size="icon" variant={theme === "system" ? "secondary" : "ghost"} className="h-7 w-7" onClick={() => changeTheme("system")} title="Match device"><Monitor className="h-3.5 w-3.5" /></Button><Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setOpen(false)} title="Close assistant"><X className="h-4 w-4" /></Button></div>
             </div>
             <div className="max-h-[46vh] flex-1 space-y-4 overflow-y-auto px-5 py-5">
               {!q.data?.length && <div className="mx-auto max-w-2xl py-6 text-center"><Sparkles className="mx-auto h-8 w-8 text-primary" /><h2 className="mt-3 text-xl font-semibold">Ask across your Trustable workspace</h2><p className="mt-1 text-sm text-muted-foreground">Select authorized context, ask naturally, and continue the same conversation whenever you return.</p><div className="mt-5 grid gap-2 sm:grid-cols-2">{SUGGESTIONS.map((s) => <button key={s} onClick={() => send(s)} className="rounded-lg border border-border bg-card/70 p-3 text-left text-sm shadow-lg transition hover:-translate-y-0.5 hover:border-primary/50">{s}</button>)}</div></div>}
