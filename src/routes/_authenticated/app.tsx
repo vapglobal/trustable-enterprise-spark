@@ -9,6 +9,7 @@ import { ConfidentialFooter, Wordmark } from "@/components/trustable/Chrome";
 import { HeartVault } from "@/components/trustable/HeartVault";
 import { useAccess } from "@/hooks/use-access";
 import type { Perm } from "@/lib/controls";
+import { pageMeta } from "@/lib/site";
 
 export const Route = createFileRoute("/_authenticated/app")({
   head: () => pageMeta({ title: "Workspace — Trustable", description: "Your secure Trustable enterprise workspace.", path: "/app", index: false }),

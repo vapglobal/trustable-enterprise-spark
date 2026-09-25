@@ -20,8 +20,8 @@ function SettingsPage() {
 
   async function changePassword(e: React.FormEvent) {
     e.preventDefault();
-    if (pw.a.length < 10) return toast.error("Use at least 10 characters");
-    if (pw.a !== pw.b) return toast.error("Passwords don't match");
+    if (pw.a.length < 10) { toast.error("Use at least 10 characters"); return; }
+    if (pw.a !== pw.b) { toast.error("Passwords don't match"); return; }
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password: pw.a });
     setBusy(false);
