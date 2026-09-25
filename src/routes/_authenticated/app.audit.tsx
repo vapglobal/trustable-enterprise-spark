@@ -10,6 +10,8 @@ import { CONFIDENTIAL_NOTICE } from "@/lib/tenant";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DrillDown, drillableClass } from "@/components/trustable/DrillDown";
+import { EmphasizedControl, EmphasizedField } from "@/components/trustable/EmphasizedField";
 
 export const Route = createFileRoute("/_authenticated/app/audit")({
   head: () => ({ meta: [{ title: "Audit log — Trustable" }, { name: "description", content: "Tamper-evident audit log with filters and CSV export." }] }),
@@ -62,16 +64,15 @@ function AuditPage() {
         className="panel grid gap-4 p-5 md:grid-cols-5"
         onSubmit={(e) => { e.preventDefault(); setApplied(f); }}
       >
-        <div className="space-y-1.5">
-          <Label>Category</Label>
+        <EmphasizedControl label="Category">
           <select className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm" value={f.category} onChange={(e) => setF({ ...f, category: e.target.value })}>
             <option value="">All</option>
             {AUDIT_CATEGORIES.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
           </select>
-        </div>
-        <div className="space-y-1.5"><Label>Actor</Label><Input value={f.actor} maxLength={120} onChange={(e) => setF({ ...f, actor: e.target.value })} placeholder="email" /></div>
-        <div className="space-y-1.5"><Label>From</Label><Input type="date" value={f.from} onChange={(e) => setF({ ...f, from: e.target.value })} /></div>
-        <div className="space-y-1.5"><Label>To</Label><Input type="date" value={f.to} onChange={(e) => setF({ ...f, to: e.target.value })} /></div>
+        </EmphasizedControl>
+        <EmphasizedField label="Actor" ai={false} value={f.actor} onChange={(actor) => setF({ ...f, actor })}><Input value={f.actor} maxLength={120} onChange={(e) => setF({ ...f, actor: e.target.value })} placeholder="email" /></EmphasizedField>
+        <EmphasizedControl label="From"><Input type="date" value={f.from} onChange={(e) => setF({ ...f, from: e.target.value })} /></EmphasizedControl>
+        <EmphasizedControl label="To"><Input type="date" value={f.to} onChange={(e) => setF({ ...f, to: e.target.value })} /></EmphasizedControl>
         <div className="flex items-end"><Button type="submit" variant="outline" className="w-full">Apply</Button></div>
       </form>
       <section className="panel overflow-x-auto">
@@ -89,7 +90,7 @@ function AuditPage() {
                 <td className="whitespace-nowrap py-2 font-mono text-xs">{r.created_at.replace("T", " ").slice(0, 19)}</td>
                 <td className={`py-2 font-mono text-xs ${r.event.startsWith("authz.") ? "text-destructive" : "text-primary"}`}>{r.event}</td>
                 <td className="py-2 text-xs">{r.actor}</td>
-                <td className="max-w-xs truncate py-2 font-mono text-[11px] text-muted-foreground" title={JSON.stringify(r.payload)}>{JSON.stringify(r.payload)}</td>
+                <td className="max-w-xs py-2 font-mono text-[11px] text-muted-foreground"><DrillDown title={`Audit block #${r.seq}`} description={`${r.event} · ${r.actor}`} trigger={<button className={`max-w-xs truncate ${drillableClass}`}>{JSON.stringify(r.payload)}</button>}><pre className="max-h-96 overflow-auto rounded bg-muted/50 p-3 text-xs">{JSON.stringify(r, null, 2)}</pre></DrillDown></td>
                 <td className="py-2 pr-4 font-mono text-[11px] text-muted-foreground">{r.block_hash.slice(7, 19)}…</td>
               </tr>
             ))}
