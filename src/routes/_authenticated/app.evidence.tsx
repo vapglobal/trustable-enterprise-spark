@@ -194,13 +194,13 @@ function FindingRow({ f, canManage, onSaved }: { f: Finding; canManage: boolean;
       <p className="mt-2 text-xs text-muted-foreground"><b className="text-foreground">Gap:</b> {f.gap}</p>
       <p className="mt-1 text-xs text-muted-foreground"><b className="text-foreground">Remediation:</b> {f.remediation}</p>
       {canManage ? (
-        <div className="mt-3 flex flex-wrap items-end gap-2">
-           <select title="Finding status" className="h-9 rounded-md border border-input bg-background px-2 text-xs text-foreground" value={status} onChange={(e) => setStatus(e.target.value as Finding["status"])}>
+        <div className="mt-3 grid gap-2 md:grid-cols-[160px_1fr_170px_auto]">
+          <EmphasizedControl label="Status"><select title="Finding status" className="h-9 w-full rounded-md border border-input bg-background px-2 text-xs text-foreground" value={status} onChange={(e) => setStatus(e.target.value as Finding["status"])}>
             <option value="open">Open</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option><option value="accepted">Risk accepted</option>
-          </select>
-           <Input title="Remediation owner" className="h-9 w-56 text-xs" type="email" placeholder="owner@company.com" value={owner} onChange={(e) => setOwner(e.target.value)} />
-           <Input title="Remediation due date" className="h-9 w-40 text-xs" type="date" value={due} onChange={(e) => setDue(e.target.value)} />
-          <Button size="sm" variant="outline" onClick={save}>Save</Button>
+           </select></EmphasizedControl>
+           <EmphasizedField label="Remediation owner" ai={false} value={owner} onChange={setOwner}><Input title="Remediation owner" className="h-9 text-xs" type="email" placeholder="owner@company.com" value={owner} onChange={(e) => setOwner(e.target.value)} /></EmphasizedField>
+           <EmphasizedControl label="Due date"><Input title="Remediation due date" className="h-9 text-xs" type="date" value={due} onChange={(e) => setDue(e.target.value)} /></EmphasizedControl>
+           <div className="flex items-end"><Button size="sm" variant="outline" onClick={save}>Save</Button></div>
         </div>
       ) : (
         <p className="mt-2 text-xs text-muted-foreground">Owner: {f.owner_email ?? "Unassigned"}{f.due_date ? ` · due ${f.due_date}` : ""}</p>

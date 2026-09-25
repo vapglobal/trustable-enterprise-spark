@@ -106,18 +106,18 @@ function CisoPage() {
           {data?.ledger.map((b) => {
             const bad = v?.broken.includes(b.seq);
             return (
-              <DrillDown key={b.seq} title={`Ledger block #${b.seq}`} description={`${b.event} · ${b.actor}`} trigger={<button className={`grid w-full grid-cols-[3rem_1fr_auto] items-center gap-3 py-3 text-left ${drillableClass}`}>
+              <div key={b.seq} className="grid grid-cols-[3rem_1fr_auto] items-center gap-3 py-3">
                 <span className={`font-mono text-sm ${bad ? "text-destructive" : "text-muted-foreground"}`}>#{b.seq}</span>
-                <div className="min-w-0">
+                <DrillDown title={`Ledger block #${b.seq}`} description={`${b.event} · ${b.actor}`} trigger={<button className={`min-w-0 text-left ${drillableClass}`}>
                   <p className="text-sm">
                     <span className="font-mono text-primary">{b.event}</span> <span className="text-muted-foreground">· {b.actor} · {new Date(b.created_at).toLocaleString()}</span>
                   </p>
                   <p className="truncate font-mono text-[10px] text-muted-foreground">{b.block_hash}</p>
-                </div>
+                </button>}><pre className="max-h-96 overflow-auto rounded bg-muted/50 p-3 text-xs">{JSON.stringify(b, null, 2)}</pre></DrillDown>
                 <Button size="sm" variant="ghost" className="text-xs" disabled={!!busy} onClick={() => doVerify(b.seq)}>
                   {busy === `t${b.seq}` ? "…" : "Simulate tamper"}
                 </Button>
-              </button>}><pre className="max-h-96 overflow-auto rounded bg-muted/50 p-3 text-xs">{JSON.stringify(b, null, 2)}</pre></DrillDown>
+              </div>
             );
           })}
         </div>

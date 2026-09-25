@@ -111,7 +111,7 @@ function LibraryPage() {
         {allTags.map((t) => (
           <button key={t} onClick={() => setTag(tag === t ? null : t)} className={`rounded-full border px-2.5 py-0.5 text-xs ${tag === t ? "border-primary text-primary" : "border-border text-muted-foreground"}`}>#{t}</button>
         ))}
-        <Input placeholder="Search" value={q} onChange={(e) => setQ(e.target.value)} className="ml-auto h-8 w-56" />
+        <div className="ml-auto w-56"><EmphasizedField label="Search" ai={false} value={q} onChange={setQ}><Input placeholder="Search" value={q} onChange={(e) => setQ(e.target.value)} className="h-8" /></EmphasizedField></div>
       </div>
 
       {isLoading ? <p className="text-sm text-muted-foreground">Loading…</p> : shown.length === 0 ? (
