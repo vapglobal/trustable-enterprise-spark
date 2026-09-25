@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
       { name: "keywords", content: "Trustable, Lovable, Lovable.dev, enterprise AI, trust layer, tenant isolation, role-based access control, tamper-evident audit, AMD SEV-SNP, zero egress, SOC2, HIPAA" },
       { property: "og:title", content: "Trustable — Enterprise Solutions & Trust Layer for Lovable" },
       { property: "og:description", content: "Enterprise solutions & trust layer powered by Lovable's creative energy. From idea to impact — secure, compliant, and ready for the real world." },
-      { property: "og:url", content: "https://trustable-enterprise-spark.lovable.app" },
+      { property: "og:url", content: "https://trustable-enterprise-solutions.lovable.app" },
     ],
   }),
   component: Landing,

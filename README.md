@@ -14,7 +14,7 @@ This project front end was built with [Lovable](https://lovable.dev) and powered
 - Backend and repo managed by Engineware.ai
 - Front end managed by Lovable
 
-**Live app**: https://trustable-enterprise-spark.lovable.app
+**Live app**: https://trustable-enterprise-solutions.lovable.app
 
 ## Build with Lovable & Engineware.ai
 
