@@ -13,6 +13,8 @@ function VaultArtwork({ compact = false, animated = false }: VaultArtworkProps) 
   const door = `${uid}-door`;
   const heart = `${uid}-heart`;
   const glow = `${uid}-glow`;
+  const tFill = `${uid}-tfill`;
+  const tShadow = `${uid}-tshadow`;
 
   const rivets: Array<[number, number]> = [
     [200, 34], [140, 51], [260, 51], [91, 79], [309, 79],
@@ -50,6 +52,15 @@ function VaultArtwork({ compact = false, animated = false }: VaultArtworkProps) 
           <stop offset="0" stopColor="var(--heart)" stopOpacity="0.5" />
           <stop offset="1" stopColor="var(--heart)" stopOpacity="0" />
         </radialGradient>
+        <linearGradient id={tFill} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="var(--foreground)" />
+          <stop offset="0.25" stopColor="var(--primary)" />
+          <stop offset="1" stopColor="var(--primary)" stopOpacity="0.8" />
+        </linearGradient>
+        <filter id={tShadow} x="-30%" y="-30%" width="160%" height="170%">
+          <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="var(--background)" floodOpacity="0.9" />
+          <feDropShadow dx="0" dy="0" stdDeviation="8" floodColor="var(--primary)" floodOpacity="0.55" />
+        </filter>
       </defs>
 
       {!compact && <ellipse cx="200" cy="391" rx="130" ry="10" fill="var(--background)" opacity="0.75" />}
@@ -103,23 +114,13 @@ function VaultArtwork({ compact = false, animated = false }: VaultArtworkProps) 
       ))}
 
       <g className={animated ? "vault-final-lock" : undefined}>
-        <circle cx="200" cy="207" r="84" fill="var(--background)" fillOpacity="0.35" stroke="var(--steel)" strokeWidth="5" />
-        <circle cx="200" cy="207" r="70" fill="none" stroke="var(--primary)" strokeOpacity="0.45" strokeWidth="2" strokeDasharray="3 7" />
-        <circle cx="200" cy="207" r="84" fill="none" stroke="var(--primary)" strokeOpacity="0.22" strokeWidth="1.5" />
-        <path
-          d="M152 142h96v28h-35v115h-26V170h-35Z"
-          fill="var(--primary)"
-          stroke="var(--foreground)"
-          strokeOpacity="0.55"
-          strokeWidth="2"
-        />
-        {!compact && (
-          <g transform="translate(248 258)">
-            <rect x="0" y="16" width="38" height="30" rx="5" fill="var(--background)" stroke="var(--primary)" strokeWidth="3" />
-            <path d="M9 17V10a10 10 0 0 1 20 0v7" fill="none" stroke="var(--primary)" strokeWidth="4" />
-            <circle cx="19" cy="30" r="3" fill="var(--primary)" />
-          </g>
-        )}
+        <circle cx="200" cy="205" r="96" fill="var(--background)" fillOpacity="0.55" stroke={`url(#${steel})`} strokeWidth="6" filter={`url(#${tShadow})`} />
+        <circle cx="200" cy="205" r="84" fill="none" stroke="var(--primary)" strokeOpacity="0.5" strokeWidth="2" strokeDasharray="3 7" />
+        <g filter={`url(#${tShadow})`}>
+          <path d="M130 124h140v40h-50v150h-40V164h-50Z" fill="var(--background)" opacity="0.6" transform="translate(4 6)" />
+          <path d="M130 124h140v40h-50v150h-40V164h-50Z" fill={`url(#${tFill})`} stroke="var(--foreground)" strokeOpacity="0.7" strokeWidth="2.5" strokeLinejoin="round" />
+          <path d="M134 128h132v8H134Z" fill="var(--foreground)" opacity="0.45" />
+        </g>
       </g>
     </svg>
   );

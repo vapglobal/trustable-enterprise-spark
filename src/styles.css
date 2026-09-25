@@ -151,13 +151,6 @@
 .vault-heart-glow { animation: vault-heart-glow 7s ease-in-out forwards; }
 .vault-final-lock { animation: vault-lock-in 7s ease-out forwards; }
 
-@media (prefers-reduced-motion: reduce) {
-  .vault-door-left,
-  .vault-door-right,
-  .vault-heart,
-  .vault-heart-glow,
-  .vault-final-lock { animation: none; }
-}
 
 @layer base {
   * { border-color: var(--color-border); }
