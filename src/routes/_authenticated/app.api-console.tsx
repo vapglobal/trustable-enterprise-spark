@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Activity,
   AlertTriangle,
@@ -34,6 +35,7 @@ import {
   TerminalSquare,
   Workflow,
   XCircle,
+  LoaderCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -50,6 +52,9 @@ import { Tip } from "@/components/trustable/Tip";
 import { FacetTree, type FacetTreeGroup } from "@/components/trustable/FacetTree";
 import { cn } from "@/lib/utils";
 import { pageMeta } from "@/lib/site";
+import { getWorkspace, runFlow, verifyLedger } from "@/lib/trustable.functions";
+import { analyzeEvidenceFn, getPosture, listAudit } from "@/lib/security.functions";
+import { askTrustableAssistant } from "@/lib/assistant.server";
 
 export const Route = createFileRoute("/_authenticated/app/api-console")({
   head: () => pageMeta({ title: "OASA API Console — Trustable", description: "Inspect verified Trustable server actions and the EngineWare OASA reference architecture.", path: "/app/api-console", index: false }),
@@ -83,6 +88,8 @@ function ApiConsole() {
   const [facets, setFacets] = useState<Record<string, string[]>>({ surface: [], method: [], namespace: [] });
   const [environment, setEnvironment] = useState("trustable-session");
   const [sample, setSample] = useState("recommended");
+  const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
+  const [requestState, setRequestState] = useState<{ status: "idle" | "loading" | "success" | "error"; data?: unknown; error?: string }>({ status: "idle" });
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
   const selected = ENDPOINTS.find((endpoint) => endpoint.id === selectedId) ?? ENDPOINTS[0];
@@ -96,7 +103,33 @@ function ApiConsole() {
       { id: "namespace", label: "Namespace", options: NAMESPACES.map((value) => ({ value, label: value, count: count("namespace", value) })) },
     ];
   }, []);
-  const payload = Object.fromEntries(selected.parameters.map((parameter) => [parameter.name, parameter.example]));
+  const payload = Object.fromEntries(selected.parameters.map((parameter) => [parameter.name, parameterValues[`${selected.id}:${parameter.name}`] ?? (sample === "empty" ? "" : parameter.example)]));
+  const workspace = useServerFn(getWorkspace);
+  const flow = useServerFn(runFlow);
+  const posture = useServerFn(getPosture);
+  const evidence = useServerFn(analyzeEvidenceFn);
+  const audit = useServerFn(listAudit);
+  const ledger = useServerFn(verifyLedger);
+  const assistant = useServerFn(askTrustableAssistant);
+  const setParameter = (name: string, value: string) => setParameterValues((current) => ({ ...current, [`${selected.id}:${name}`]: value.slice(0, 2000) }));
+  async function execute() {
+    if (selected.surface !== "Live server action") return;
+    const missing = selected.parameters.filter((parameter) => parameter.required && !String(payload[parameter.name] ?? "").trim());
+    if (missing.length) { setRequestState({ status: "error", error: `Validation: ${missing.map((item) => item.name).join(", ")} ${missing.length === 1 ? "is" : "are"} required.` }); return; }
+    setRequestState({ status: "loading" });
+    try {
+      let data: unknown;
+      if (selected.id === "workspace.get") data = await workspace();
+      else if (selected.id === "posture.get") data = await posture();
+      else if (selected.id === "audit.list") data = await audit({ data: { category: String(payload["eventType"] ?? "").split(".")[0] || undefined } });
+      else if (selected.id === "ledger.verify") data = await ledger({ data: {} });
+      else if (selected.id === "flow.run") data = await flow({ data: { task: String(payload["task"] ?? ""), departmentId: String(payload["departmentId"] ?? ""), operatorLabel: String(payload["operatorLabel"] ?? "") } });
+      else if (selected.id === "evidence.analyze") data = await evidence({ data: { id: String(payload["evidenceId"] ?? "") } });
+      else if (selected.id === "assistant.ask") data = await assistant({ data: { prompt: String(payload["prompt"] ?? ""), contextPaths: String(payload["contextPaths"] ?? "").split(",").map((item) => item.trim()).filter(Boolean) } });
+      else throw new Error("No callable contract is registered for this surface.");
+      setRequestState({ status: "success", data });
+    } catch (error) { setRequestState({ status: "error", error: error instanceof Error ? error.message : "Request failed" }); }
+  }
   const copy = (value: unknown, message = "Copied") => navigator.clipboard.writeText(typeof value === "string" ? value : JSON.stringify(value, null, 2)).then(() => toast.success(message));
   const downloadSpec = () => {
     const spec = { openapi: "3.1.0", info: { title: "Trustable OASA Surface Inventory", version: "0.1-reference" }, "x-trustable-status": "Inventory only — not a callable public REST specification", surfaces: ENDPOINTS };
@@ -130,13 +163,17 @@ function ApiConsole() {
               <section><div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3"><div className="min-w-0"><h2 className="text-lg font-semibold">{selected.title}</h2><p className="mt-1 text-xs leading-relaxed text-muted-foreground">{selected.description}</p></div><ProofBadge kind={selected.surface === "Live server action" ? "live" : "reference"} /></div></section>
               <section className="grid gap-3 sm:grid-cols-2"><GuidedSelect label="Environment" tip="Trustable server actions use your current named, tenant-scoped session. OASA references cannot be executed until a connector contract exists." value={environment} onValueChange={setEnvironment} options={[{ value: "trustable-session", label: "Trustable session (recommended)" }, { value: "reviewer-session", label: "Reviewer session" }, { value: "other", label: "Other / custom" }]} /><GuidedSelect label="Request preset" tip="Presets prefill safe example values. Review every value before sending a live action from its owning workspace." value={sample} onValueChange={setSample} options={[{ value: "recommended", label: "Recommended safe sample" }, { value: "empty", label: "Empty request" }, { value: "other", label: "Other / custom" }]} /></section>
               <Section title="Parameters" icon={Settings2} action={<Tip text="Parameter values are examples only; live actions run from their owning workspace"><Button size="sm" variant="ghost"><Plus className="mr-1 h-3.5 w-3.5" />Add</Button></Tip>}>
-                {selected.parameters.length ? <div className="space-y-2">{selected.parameters.map((parameter) => <div key={parameter.name} className="grid gap-2 border-b border-border pb-2 last:border-0 last:pb-0 sm:grid-cols-[140px_90px_minmax(0,1fr)] sm:items-center"><div><p className="font-mono text-xs text-foreground">{parameter.name}</p><p className="text-[9px] uppercase text-muted-foreground">{parameter.required ? "Required" : "Optional"}</p></div><span className="font-mono text-[10px] text-primary">{parameter.type}</span><Tip text={`Example ${parameter.type} value for ${parameter.name}`}><Input value={sample === "empty" ? "" : parameter.example} readOnly placeholder={`Enter ${parameter.name}…`} className="h-8 font-mono text-xs" /></Tip></div>)}</div> : <div className="flex items-center gap-2 py-2 text-xs text-muted-foreground"><CheckCircle2 className="h-4 w-4 text-success" />No input parameters required.</div>}
+                {selected.parameters.length ? <div className="space-y-2">{selected.parameters.map((parameter) => <div key={parameter.name} className="grid gap-2 border-b border-border pb-2 last:border-0 last:pb-0 sm:grid-cols-[140px_90px_minmax(0,1fr)] sm:items-center"><div><p className="font-mono text-xs text-foreground">{parameter.name}</p><p className="text-[9px] uppercase text-muted-foreground">{parameter.required ? "Required" : "Optional"}</p></div><span className="font-mono text-[10px] text-primary">{parameter.type}</span><Tip text={`Enter a validated ${parameter.type} value for ${parameter.name}`}><Input value={String(payload[parameter.name] ?? "")} onChange={(event) => setParameter(parameter.name, event.target.value)} placeholder={`Enter ${parameter.name}…`} aria-label={`${parameter.name} request value`} className="h-9 font-mono text-xs" /></Tip></div>)}</div> : <div className="flex items-center gap-2 py-2 text-xs text-muted-foreground"><CheckCircle2 className="h-4 w-4 text-success" />No input parameters required.</div>}
               </Section>
               <Section title="Authorization boundary" icon={KeyRound}><div className="grid gap-2 sm:grid-cols-3"><Gate label="Authentication" value="Named session" /><Gate label="Tenant scope" value="Server checked" /><Gate label="Role policy" value="Least privilege" /></div></Section>
               <Section title="Request preview" icon={Code2} action={<Button size="sm" variant="ghost" onClick={() => copy(payload)}><Copy className="mr-1 h-3.5 w-3.5" />Copy</Button>}><pre className="max-h-44 overflow-auto bg-background/70 p-3 font-mono text-[10px] leading-relaxed text-muted-foreground">{JSON.stringify(payload, null, 2)}</pre></Section>
+              {requestState.status !== "idle" && <Section title="Live response" icon={requestState.status === "loading" ? LoaderCircle : requestState.status === "success" ? CheckCircle2 : XCircle}><div role="status" aria-live="polite" className={cn("border p-3 text-xs", requestState.status === "success" ? "border-success/30 bg-success/10" : requestState.status === "error" ? "border-destructive/30 bg-destructive/10 text-destructive" : "border-primary/30 bg-primary/10")}>
+                {requestState.status === "loading" ? <span className="flex items-center gap-2"><LoaderCircle className="h-4 w-4 animate-spin" />Request running through authenticated validation and policy checks…</span> : requestState.status === "error" ? requestState.error : <pre className="max-h-64 overflow-auto whitespace-pre-wrap font-mono text-[10px]">{JSON.stringify(requestState.data, null, 2)}</pre>}
+              </div></Section>}
               <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"><div className={cn("flex items-start gap-2 border px-3 py-2 text-xs", selected.surface === "Live server action" ? "border-success/30 bg-success/10 text-success" : "border-warning/30 bg-warning/10 text-warning")}>
                 {selected.surface === "Live server action" ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" /> : <CircleOff className="mt-0.5 h-4 w-4 shrink-0" />}<span>{selected.surface === "Live server action" ? "Callable through Trustable’s authenticated interface. Open the owning workspace to execute it with its full validation and audit path." : "Not callable here. Direct checks of the displayed REST path returned 404; this remains OASA Reference architecture."}</span>
-              </div>{selected.route ? <Button asChild><Link to={selected.route}><Play className="mr-1.5 h-4 w-4" />Open live surface</Link></Button> : <Button disabled><CircleOff className="mr-1.5 h-4 w-4" />Connector required</Button>}</div>
+              </div>{selected.surface === "Live server action" ? <Button onClick={execute} disabled={requestState.status === "loading"}>{requestState.status === "loading" ? <LoaderCircle className="mr-1.5 h-4 w-4 animate-spin" /> : <Play className="mr-1.5 h-4 w-4" />}Run request</Button> : <Button disabled><CircleOff className="mr-1.5 h-4 w-4" />Connector required</Button>}</div>
+              {selected.route && <Button asChild variant="outline" size="sm"><Link to={selected.route}>Open owning workspace</Link></Button>}
             </div>
           </section>
           {rightOpen && <aside className="hidden min-w-0 border-l border-border xl:flex xl:flex-col"><Inspector selected={selected} payload={payload} copy={copy} /></aside>}
