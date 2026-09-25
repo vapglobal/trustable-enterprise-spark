@@ -20,6 +20,7 @@ import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAppApiConsoleRouteImport } from './routes/_authenticated/app.api-console'
 import { Route as AuthenticatedAppAuditRouteImport } from './routes/_authenticated/app.audit'
 import { Route as AuthenticatedAppCisoRouteImport } from './routes/_authenticated/app.ciso'
+import { Route as AuthenticatedAppCompletionLedgerRouteImport } from './routes/_authenticated/app.completion-ledger'
 import { Route as AuthenticatedAppEvidenceRouteImport } from './routes/_authenticated/app.evidence'
 import { Route as AuthenticatedAppFlowRouteImport } from './routes/_authenticated/app.flow'
 import { Route as AuthenticatedAppLibraryRouteImport } from './routes/_authenticated/app.library'
@@ -82,6 +83,12 @@ const AuthenticatedAppCisoRoute = AuthenticatedAppCisoRouteImport.update({
   path: '/ciso',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppCompletionLedgerRoute =
+  AuthenticatedAppCompletionLedgerRouteImport.update({
+    id: '/completion-ledger',
+    path: '/completion-ledger',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppEvidenceRoute =
   AuthenticatedAppEvidenceRouteImport.update({
     id: '/evidence',
@@ -125,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/app/api-console': typeof AuthenticatedAppApiConsoleRoute
   '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/completion-ledger': typeof AuthenticatedAppCompletionLedgerRoute
   '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
   '/app/library': typeof AuthenticatedAppLibraryRoute
@@ -142,6 +150,7 @@ export interface FileRoutesByTo {
   '/app/api-console': typeof AuthenticatedAppApiConsoleRoute
   '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/completion-ledger': typeof AuthenticatedAppCompletionLedgerRoute
   '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
   '/app/library': typeof AuthenticatedAppLibraryRoute
@@ -162,6 +171,7 @@ export interface FileRoutesById {
   '/_authenticated/app/api-console': typeof AuthenticatedAppApiConsoleRoute
   '/_authenticated/app/audit': typeof AuthenticatedAppAuditRoute
   '/_authenticated/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/_authenticated/app/completion-ledger': typeof AuthenticatedAppCompletionLedgerRoute
   '/_authenticated/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/_authenticated/app/flow': typeof AuthenticatedAppFlowRoute
   '/_authenticated/app/library': typeof AuthenticatedAppLibraryRoute
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/app/api-console'
     | '/app/audit'
     | '/app/ciso'
+    | '/app/completion-ledger'
     | '/app/evidence'
     | '/app/flow'
     | '/app/library'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/app/api-console'
     | '/app/audit'
     | '/app/ciso'
+    | '/app/completion-ledger'
     | '/app/evidence'
     | '/app/flow'
     | '/app/library'
@@ -218,6 +230,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/api-console'
     | '/_authenticated/app/audit'
     | '/_authenticated/app/ciso'
+    | '/_authenticated/app/completion-ledger'
     | '/_authenticated/app/evidence'
     | '/_authenticated/app/flow'
     | '/_authenticated/app/library'
@@ -314,6 +327,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppCisoRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/completion-ledger': {
+      id: '/_authenticated/app/completion-ledger'
+      path: '/completion-ledger'
+      fullPath: '/app/completion-ledger'
+      preLoaderRoute: typeof AuthenticatedAppCompletionLedgerRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/evidence': {
       id: '/_authenticated/app/evidence'
       path: '/evidence'
@@ -364,6 +384,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppApiConsoleRoute: typeof AuthenticatedAppApiConsoleRoute
   AuthenticatedAppAuditRoute: typeof AuthenticatedAppAuditRoute
   AuthenticatedAppCisoRoute: typeof AuthenticatedAppCisoRoute
+  AuthenticatedAppCompletionLedgerRoute: typeof AuthenticatedAppCompletionLedgerRoute
   AuthenticatedAppEvidenceRoute: typeof AuthenticatedAppEvidenceRoute
   AuthenticatedAppFlowRoute: typeof AuthenticatedAppFlowRoute
   AuthenticatedAppLibraryRoute: typeof AuthenticatedAppLibraryRoute
@@ -378,6 +399,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppApiConsoleRoute: AuthenticatedAppApiConsoleRoute,
   AuthenticatedAppAuditRoute: AuthenticatedAppAuditRoute,
   AuthenticatedAppCisoRoute: AuthenticatedAppCisoRoute,
+  AuthenticatedAppCompletionLedgerRoute: AuthenticatedAppCompletionLedgerRoute,
   AuthenticatedAppEvidenceRoute: AuthenticatedAppEvidenceRoute,
   AuthenticatedAppFlowRoute: AuthenticatedAppFlowRoute,
   AuthenticatedAppLibraryRoute: AuthenticatedAppLibraryRoute,

@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   FileCheck2,
+  ClipboardCheck,
   Gauge,
   KeyRound,
   Library,
@@ -41,6 +42,7 @@ const GROUPS: RailGroup[] = [
     { to: "/app/evidence", label: "Evidence", icon: FileCheck2, perm: "evidence.view" },
     { to: "/app/redteam", label: "Red Team", icon: ShieldAlert, perm: "redteam.run" },
     { to: "/app/audit", label: "Audit Log", icon: Activity, perm: "audit.view" },
+    { to: "/app/completion-ledger", label: "Completion Ledger", icon: ClipboardCheck, perm: "audit.view" },
   ] },
   { label: "Develop", items: [
     { to: "/app/api-console", label: "OASA Console", icon: Braces, perm: "ciso.view" },
