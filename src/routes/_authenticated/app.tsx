@@ -23,6 +23,7 @@ const NAV: { to: string; label: string; perm: Perm; exact?: boolean }[] = [
   { to: "/app/posture", label: "Posture", perm: "posture.view" },
   { to: "/app/evidence", label: "Evidence", perm: "evidence.view" },
   { to: "/app/flow", label: "Trustable Flow", perm: "flow.view" },
+  { to: "/app/growth", label: "Builder Growth", perm: "overview.view" },
   { to: "/app/api-console", label: "API Console", perm: "ciso.view" },
   { to: "/app/library", label: "Library", perm: "overview.view" },
   { to: "/app/ciso", label: "CISO Console", perm: "ciso.view" },

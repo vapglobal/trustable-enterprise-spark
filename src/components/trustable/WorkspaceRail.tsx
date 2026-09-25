@@ -14,6 +14,7 @@ import {
   Library,
   Menu,
   Network,
+  Orbit,
   Settings,
   ShieldAlert,
   ShieldCheck,
@@ -35,6 +36,7 @@ const GROUPS: RailGroup[] = [
   { label: "Operate", items: [
     { to: "/app", label: "Overview", icon: Gauge, perm: "overview.view", exact: true },
     { to: "/app/flow", label: "Trustable Flow", icon: Workflow, perm: "flow.view" },
+    { to: "/app/growth", label: "Builder Growth", icon: Orbit, perm: "overview.view" },
     { to: "/app/library", label: "Library", icon: Library, perm: "overview.view" },
   ] },
   { label: "Assure", items: [
