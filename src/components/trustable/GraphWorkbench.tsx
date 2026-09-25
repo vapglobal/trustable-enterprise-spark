@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Activity, Bot, Building2, ChevronLeft, ChevronRight, Database, FileCheck2, GitBranch, Layers3, List, LockKeyhole, Move, Plus, Redo2, RotateCcw, Save, Search, ShieldCheck, Undo2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,14 +37,21 @@ export function GraphWorkbench() {
   const [future, setFuture] = useState<GraphNode[][]>([]);
   const [selectedId, setSelectedId] = useState("gate");
   const [view, setView] = useState<"graph" | "list">("graph");
-  const [leftOpen, setLeftOpen] = useState(true);
-  const [rightOpen, setRightOpen] = useState(true);
+  const [leftOpen, setLeftOpen] = useState(false);
+  const [rightOpen, setRightOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [overlays, setOverlays] = useState({ gates: true, weights: true, boundaries: true });
   const canvasRef = useRef<HTMLDivElement>(null);
   const selected = nodes.find((node) => node.id === selectedId) ?? nodes[0];
   const visiblePalette = PALETTE.filter((item) => `${item.label} ${item.detail}`.toLowerCase().includes(query.toLowerCase()));
   const nodeMap = useMemo(() => new Map(nodes.map((node) => [node.id, node])), [nodes]);
+
+  useEffect(() => {
+    if (window.matchMedia("(min-width: 1024px)").matches) {
+      setLeftOpen(true);
+      setRightOpen(true);
+    }
+  }, []);
 
   function commit(next: GraphNode[]) { setHistory((items) => [...items.slice(-49), nodes]); setFuture([]); setNodes(next); }
   function undo() { const prior = history.at(-1); if (!prior) return; setFuture((items) => [nodes, ...items]); setNodes(prior); setHistory((items) => items.slice(0, -1)); }
