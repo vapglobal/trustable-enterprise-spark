@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 
 type VaultArtworkProps = {
   compact?: boolean;
@@ -44,8 +44,8 @@ function VaultArtwork({ compact = false, animated = false }: VaultArtworkProps) 
           <stop offset="1" stopColor="var(--background)" />
         </radialGradient>
         <linearGradient id={heart} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="var(--heart-2)" />
-          <stop offset="1" stopColor="var(--heart)" />
+          <stop offset="0" stopColor="var(--heart)" />
+          <stop offset="1" stopColor="var(--heart-deep)" />
         </linearGradient>
         <radialGradient id={glow}>
           <stop offset="0" stopColor="var(--heart)" stopOpacity="0.5" />
