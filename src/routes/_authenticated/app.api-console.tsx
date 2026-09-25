@@ -92,8 +92,7 @@ function ApiConsole() {
   const [requestState, setRequestState] = useState<{ status: "idle" | "loading" | "success" | "error"; data?: unknown; error?: string }>({ status: "idle" });
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
-  const selected = ENDPOINTS.find((endpoint) => endpoint.id === selectedId) ?? ENDPOINTS[0];
-  if (!selected) return null;
+  const selected = ENDPOINTS.find((endpoint) => endpoint.id === selectedId);
   const filtered = useMemo(() => ENDPOINTS.filter((endpoint) => `${endpoint.namespace} ${endpoint.method} ${endpoint.path} ${endpoint.title} ${endpoint.description}`.toLowerCase().includes(query.toLowerCase()) && (!facets["surface"]?.length || facets["surface"].includes(endpoint.surface)) && (!facets["method"]?.length || facets["method"].includes(endpoint.method)) && (!facets["namespace"]?.length || facets["namespace"].includes(endpoint.namespace))), [query, facets]);
   const facetGroups = useMemo<FacetTreeGroup[]>(() => {
     const count = (key: "surface" | "method" | "namespace", value: string) => ENDPOINTS.filter((endpoint) => endpoint[key] === value).length;
@@ -103,7 +102,6 @@ function ApiConsole() {
       { id: "namespace", label: "Namespace", options: NAMESPACES.map((value) => ({ value, label: value, count: count("namespace", value) })) },
     ];
   }, []);
-  const payload = Object.fromEntries(selected.parameters.map((parameter) => [parameter.name, parameterValues[`${selected.id}:${parameter.name}`] ?? (sample === "empty" ? "" : parameter.example)]));
   const workspace = useServerFn(getWorkspace);
   const flow = useServerFn(runFlow);
   const posture = useServerFn(getPosture);
@@ -111,21 +109,24 @@ function ApiConsole() {
   const audit = useServerFn(listAudit);
   const ledger = useServerFn(verifyLedger);
   const assistant = useServerFn(askTrustableAssistant);
+  if (!selected) return null;
+  const payload = Object.fromEntries(selected.parameters.map((parameter) => [parameter.name, parameterValues[`${selected.id}:${parameter.name}`] ?? (sample === "empty" ? "" : parameter.example)]));
   const setParameter = (name: string, value: string) => setParameterValues((current) => ({ ...current, [`${selected.id}:${name}`]: value.slice(0, 2000) }));
   async function execute() {
-    if (selected.surface !== "Live server action") return;
-    const missing = selected.parameters.filter((parameter) => parameter.required && !String(payload[parameter.name] ?? "").trim());
+    const endpoint = ENDPOINTS.find((item) => item.id === selectedId);
+    if (!endpoint || endpoint.surface !== "Live server action") return;
+    const missing = endpoint.parameters.filter((parameter) => parameter.required && !String(payload[parameter.name] ?? "").trim());
     if (missing.length) { setRequestState({ status: "error", error: `Validation: ${missing.map((item) => item.name).join(", ")} ${missing.length === 1 ? "is" : "are"} required.` }); return; }
     setRequestState({ status: "loading" });
     try {
       let data: unknown;
-      if (selected.id === "workspace.get") data = await workspace();
-      else if (selected.id === "posture.get") data = await posture();
-      else if (selected.id === "audit.list") data = await audit({ data: { category: String(payload["eventType"] ?? "").split(".")[0] || undefined } });
-      else if (selected.id === "ledger.verify") data = await ledger({ data: {} });
-      else if (selected.id === "flow.run") data = await flow({ data: { task: String(payload["task"] ?? ""), departmentId: String(payload["departmentId"] ?? ""), operatorLabel: String(payload["operatorLabel"] ?? "") } });
-      else if (selected.id === "evidence.analyze") data = await evidence({ data: { id: String(payload["evidenceId"] ?? "") } });
-      else if (selected.id === "assistant.ask") data = await assistant({ data: { prompt: String(payload["prompt"] ?? ""), contextPaths: String(payload["contextPaths"] ?? "").split(",").map((item) => item.trim()).filter(Boolean) } });
+      if (endpoint.id === "workspace.get") data = await workspace();
+      else if (endpoint.id === "posture.get") data = await posture();
+      else if (endpoint.id === "audit.list") data = await audit({ data: { category: String(payload["eventType"] ?? "").split(".")[0] || undefined } });
+      else if (endpoint.id === "ledger.verify") data = await ledger({ data: {} });
+      else if (endpoint.id === "flow.run") data = await flow({ data: { task: String(payload["task"] ?? ""), departmentId: String(payload["departmentId"] ?? ""), operatorLabel: String(payload["operatorLabel"] ?? "") } });
+      else if (endpoint.id === "evidence.analyze") data = await evidence({ data: { id: String(payload["evidenceId"] ?? "") } });
+      else if (endpoint.id === "assistant.ask") data = await assistant({ data: { prompt: String(payload["prompt"] ?? ""), contextPaths: String(payload["contextPaths"] ?? "").split(",").map((item) => item.trim()).filter(Boolean) } });
       else throw new Error("No callable contract is registered for this surface.");
       setRequestState({ status: "success", data });
     } catch (error) { setRequestState({ status: "error", error: error instanceof Error ? error.message : "Request failed" }); }
