@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 
 type VaultArtworkProps = {
   compact?: boolean;
@@ -39,13 +39,12 @@ function VaultArtwork({ compact = false, animated = false }: VaultArtworkProps) 
           <stop offset="1" stopColor="var(--muted)" />
         </linearGradient>
         <radialGradient id={door} cx="42%" cy="30%" r="75%">
-          <stop offset="0" stopColor="var(--primary)" stopOpacity="0.45" />
-          <stop offset="0.45" stopColor="var(--card)" />
+          <stop offset="0" stopColor="var(--card)" />
           <stop offset="1" stopColor="var(--background)" />
         </radialGradient>
         <linearGradient id={heart} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="var(--heart-2)" />
-          <stop offset="1" stopColor="var(--heart)" />
+          <stop offset="0" stopColor="var(--heart)" />
+          <stop offset="1" stopColor="var(--heart-deep)" />
         </linearGradient>
         <radialGradient id={glow}>
           <stop offset="0" stopColor="var(--heart)" stopOpacity="0.5" />
@@ -104,9 +103,16 @@ function VaultArtwork({ compact = false, animated = false }: VaultArtworkProps) 
       ))}
 
       <g className={animated ? "vault-final-lock" : undefined}>
-        <circle cx="200" cy="207" r="76" fill="var(--background)" fillOpacity="0.28" stroke="var(--steel)" strokeWidth="5" />
-        <circle cx="200" cy="207" r="63" fill="none" stroke="var(--primary)" strokeOpacity="0.38" strokeWidth="2" strokeDasharray="3 7" />
-        <path d="M151 144h98v25h-35v105h-28V169h-35Z" fill={`url(#${steel})`} stroke="var(--foreground)" strokeOpacity="0.6" strokeWidth="2" />
+        <circle cx="200" cy="207" r="84" fill="var(--background)" fillOpacity="0.35" stroke="var(--steel)" strokeWidth="5" />
+        <circle cx="200" cy="207" r="70" fill="none" stroke="var(--primary)" strokeOpacity="0.45" strokeWidth="2" strokeDasharray="3 7" />
+        <circle cx="200" cy="207" r="84" fill="none" stroke="var(--primary)" strokeOpacity="0.22" strokeWidth="1.5" />
+        <path
+          d="M152 142h96v28h-35v115h-26V170h-35Z"
+          fill="var(--primary)"
+          stroke="var(--foreground)"
+          strokeOpacity="0.55"
+          strokeWidth="2"
+        />
         {!compact && (
           <g transform="translate(248 258)">
             <rect x="0" y="16" width="38" height="30" rx="5" fill="var(--background)" stroke="var(--primary)" strokeWidth="3" />
@@ -119,15 +125,19 @@ function VaultArtwork({ compact = false, animated = false }: VaultArtworkProps) 
   );
 }
 
-/** A vault door opens to reveal the heart, then seals into the Trustable shield. */
+/** A vault door opens to reveal the heart, then seals into the Trustable shield. Click to replay. */
 export function HeartVault({ size = 420, sealed }: { size?: number; sealed?: boolean }) {
+  const [run, setRun] = useState(0);
+
   return (
     <div
-      className="relative shrink-0"
+      className={sealed ? "relative shrink-0" : "relative shrink-0 cursor-pointer select-none"}
       style={{ width: `min(${size}px, 92vw)`, aspectRatio: "400 / 410" }}
       data-sealed={sealed ? "true" : undefined}
+      title={sealed ? undefined : "Click to replay the Heart-to-Vault animation"}
+      onClick={sealed ? undefined : () => setRun((r) => r + 1)}
     >
-      <VaultArtwork animated={!sealed} />
+      <VaultArtwork key={run} animated={!sealed} />
     </div>
   );
 }

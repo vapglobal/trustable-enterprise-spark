@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Lock, Zap, Users, ShieldCheck, Link2, FileCheck2, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { Lock, Zap, Users, ShieldCheck, Link2, FileCheck2, ArrowRight, RotateCcw } from "lucide-react";
 import { HeartVault } from "@/components/trustable/HeartVault";
 import { ConfidentialFooter, ProofBadge, Wordmark } from "@/components/trustable/Chrome";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,8 @@ const LIVE = [
 ];
 
 function Landing() {
+  const [vaultRun, setVaultRun] = useState(0);
+
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
@@ -81,12 +84,20 @@ function Landing() {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <HeartVault size={440} />
+          <HeartVault key={vaultRun} size={440} />
           <div className="mt-2 text-center">
             <p className="font-display text-5xl font-bold tracking-tight">
               TRUST<span className="text-primary">ABLE</span>
             </p>
             <p className="mt-1 text-muted-foreground">Enterprise trust layer for Lovable</p>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="mt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+              onClick={() => setVaultRun((r) => r + 1)}
+            >
+              <RotateCcw className="mr-1.5 h-3 w-3" /> Replay the heart-to-vault animation
+            </Button>
           </div>
         </div>
       </section>
