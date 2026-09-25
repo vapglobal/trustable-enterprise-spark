@@ -14,7 +14,7 @@ function VaultArtwork({ compact = false, animated = false }: VaultArtworkProps) 
   const heart = `${uid}-heart`;
   const glow = `${uid}-glow`;
 
-  const rivets = [
+  const rivets: Array<[number, number]> = [
     [200, 34], [140, 51], [260, 51], [91, 79], [309, 79],
     [67, 130], [333, 130], [63, 190], [337, 190], [76, 250],
     [324, 250], [104, 304], [296, 304], [147, 346], [253, 346], [200, 371],
