@@ -15,3 +15,4 @@
 - [x] Personal Library (files/links/notes, drag-drop, filters, tags, previews) + Settings; insert-from-library in Flow
 - [ ] Voice transcription — never received; needs Chris to resend
 - [ ] Enterprise interaction pass: drill-down details, stronger visual depth, complete tooltips, and global multi-format report actions
+- [ ] Global context layer: emphasized form fields, per-field AI assist/action menus, and persistent top-nav AI assistant with suggestions, history, filters, and multi-select; align with CareerCaptain and MyCDB patterns
