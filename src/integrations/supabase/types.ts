@@ -329,6 +329,54 @@ export type Database = {
           },
         ]
       }
+      library_items: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          mime_type: string | null
+          pinned: boolean
+          size_bytes: number | null
+          storage_path: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          mime_type?: string | null
+          pinned?: boolean
+          size_bytes?: number | null
+          storage_path?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          mime_type?: string | null
+          pinned?: boolean
+          size_bytes?: number | null
+          storage_path?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       member_roles: {
         Row: {
           created_at: string

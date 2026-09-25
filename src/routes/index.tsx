@@ -4,18 +4,30 @@ import { Lock, Zap, Users, ShieldCheck, Link2, FileCheck2, ArrowRight, RotateCcw
 import { HeartVault } from "@/components/trustable/HeartVault";
 import { ConfidentialFooter, ProofBadge, Wordmark } from "@/components/trustable/Chrome";
 import { Button } from "@/components/ui/button";
+import { SITE, pageMeta } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Trustable — Enterprise Solutions & Trust Layer for Lovable" },
-      { name: "description", content: "Enterprise solutions & trust layer powered by Lovable's creative energy. From idea to impact — secure, compliant, and ready for the real world." },
-      { name: "keywords", content: "Trustable, Lovable, Lovable.dev, enterprise AI, trust layer, tenant isolation, role-based access control, tamper-evident audit, AMD SEV-SNP, zero egress, SOC2, HIPAA" },
-      { property: "og:title", content: "Trustable — Enterprise Solutions & Trust Layer for Lovable" },
-      { property: "og:description", content: "Enterprise solutions & trust layer powered by Lovable's creative energy. From idea to impact — secure, compliant, and ready for the real world." },
-      { property: "og:url", content: "https://trustable-enterprise-solutions.lovable.app" },
-    ],
-  }),
+  head: () => {
+    const m = pageMeta({ title: SITE.title, description: SITE.description, path: "" });
+    return {
+      ...m,
+      meta: [...m.meta, { name: "keywords", content: SITE.keywords }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: SITE.name,
+            applicationCategory: "BusinessApplication",
+            description: SITE.description,
+            url: SITE.url,
+            author: { "@type": "Person", name: "Christopher Ware" },
+          }),
+        },
+      ],
+    };
+  },
   component: Landing,
 });
 

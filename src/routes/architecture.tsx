@@ -1,16 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { pageMeta } from "@/lib/site";
 import { ConfidentialFooter, ProofBadge, Wordmark } from "@/components/trustable/Chrome";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/architecture")({
-  head: () => ({
-    meta: [
-      { title: "Architecture — Trustable" },
-      { name: "description", content: "Trustable reference architecture: Lovable as the generative heart, Trustable as the trust layer." },
-      { property: "og:title", content: "Architecture — Trustable" },
-      { property: "og:description", content: "What runs today, and the enterprise reference architecture it grows into." },
-    ],
-  }),
+  head: () =>
+    pageMeta({
+      title: "Architecture — Trustable Enterprise Trust Layer",
+      description: "How Trustable adds tenant isolation, role-based access, tamper-evident audit and governed AI on top of Lovable — what runs today and where it goes next.",
+      path: "/architecture",
+    }),
   component: Architecture,
 });
 

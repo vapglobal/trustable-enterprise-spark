@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { SITE } from "@/lib/site";
 
 function NotFoundComponent() {
   return (
@@ -67,10 +68,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Trustable — Enterprise trust layer for Lovable" },
-      { name: "description", content: "Trustable: the enterprise trust layer for Lovable. Confidential prototype." },
-      { name: "author", content: "Christopher Ware / EngineWare.ai" },
-      { name: "robots", content: "noindex, nofollow, noarchive" },
+      { title: SITE.title },
+      { name: "description", content: SITE.description },
+      { name: "author", content: SITE.author },
+      { name: "application-name", content: SITE.name },
+      { property: "og:site_name", content: SITE.name },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

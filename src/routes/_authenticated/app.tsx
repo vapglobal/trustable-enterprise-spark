@@ -9,16 +9,10 @@ import { ConfidentialFooter, Wordmark } from "@/components/trustable/Chrome";
 import { HeartVault } from "@/components/trustable/HeartVault";
 import { useAccess } from "@/hooks/use-access";
 import type { Perm } from "@/lib/controls";
+import { pageMeta } from "@/lib/site";
 
 export const Route = createFileRoute("/_authenticated/app")({
-  head: () => ({
-    meta: [
-      { title: "Enclave — Trustable" },
-      { name: "description", content: "Trustable tenant console." },
-      { property: "og:title", content: "Enclave — Trustable" },
-      { property: "og:description", content: "Trustable tenant console." },
-    ],
-  }),
+  head: () => pageMeta({ title: "Workspace — Trustable", description: "Your secure Trustable enterprise workspace.", path: "/app", index: false }),
   component: AppLayout,
 });
 
@@ -27,10 +21,12 @@ const NAV: { to: string; label: string; perm: Perm; exact?: boolean }[] = [
   { to: "/app/posture", label: "Posture", perm: "posture.view" },
   { to: "/app/evidence", label: "Evidence", perm: "evidence.view" },
   { to: "/app/flow", label: "Trustable Flow", perm: "flow.view" },
+  { to: "/app/library", label: "Library", perm: "overview.view" },
   { to: "/app/ciso", label: "CISO Console", perm: "ciso.view" },
   { to: "/app/redteam", label: "Red Team", perm: "redteam.run" },
   { to: "/app/audit", label: "Audit Log", perm: "audit.view" },
   { to: "/app/access", label: "Access", perm: "access.view" },
+  { to: "/app/settings", label: "Settings", perm: "overview.view" },
 ];
 
 function permFor(path: string): Perm | null {
