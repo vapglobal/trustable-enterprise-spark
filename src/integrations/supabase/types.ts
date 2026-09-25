@@ -46,6 +46,44 @@ export type Database = {
           },
         ]
       }
+      assistant_messages: {
+        Row: {
+          content: string
+          context_paths: string[]
+          created_at: string
+          id: string
+          role: string
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          context_paths?: string[]
+          created_at?: string
+          id?: string
+          role: string
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          context_paths?: string[]
+          created_at?: string
+          id?: string
+          role?: string
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistant_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_ledger: {
         Row: {
           actor: string
