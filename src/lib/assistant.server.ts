@@ -44,10 +44,10 @@ export const askTrustableAssistant = createServerFn({ method: "POST" })
     if (!key) throw new Error("AI is not configured");
     const { data: prior, error: historyError } = await ctx.supabase.from("assistant_messages").select("role,content").eq("tenant_id", DEMO_TENANT_ID).eq("user_id", ctx.userId).order("created_at", { ascending: false }).limit(18);
     if (historyError) throw historyError;
-    const context = await getWorkspaceSnapshot(ctx, data.contextPaths);
+    const workspaceContext = await getWorkspaceSnapshot(ctx, data.contextPaths);
     await ctx.supabase.from("assistant_messages").insert({ tenant_id: DEMO_TENANT_ID, user_id: ctx.userId, role: "user", content: data.prompt, context_paths: data.contextPaths });
     const lovable = createOpenAI({ baseURL: "https://ai.gateway.lovable.dev/v1", apiKey: key, headers: { "Lovable-API-Key": key, "X-Lovable-AIG-SDK": "vercel-ai-sdk" } });
-    const messages = [...(prior ?? []).reverse().map((m) => ({ role: m.role as "user" | "assistant", content: m.content })), { role: "user" as const, content: `<authorized_workspace_context>\n${JSON.stringify(context).slice(0, 60000)}\n</authorized_workspace_context>\n<untrusted_user_request>\n${data.prompt}\n</untrusted_user_request>` }];
+    const messages = [...(prior ?? []).reverse().map((m: { role: string; content: string }) => ({ role: m.role as "user" | "assistant", content: m.content })), { role: "user" as const, content: `<authorized_workspace_context>\n${JSON.stringify(workspaceContext).slice(0, 60000)}\n</authorized_workspace_context>\n<untrusted_user_request>\n${data.prompt}\n</untrusted_user_request>` }];
     const result = await generateText({ model: lovable.responses("openai/gpt-6-astra"), system: SYSTEM, messages, providerOptions: { openai: { reasoningEffort: "low", store: false } } });
     const answer = result.text.trim() || "I could not produce an answer from the available context.";
     const { data: saved, error } = await ctx.supabase.from("assistant_messages").insert({ tenant_id: DEMO_TENANT_ID, user_id: ctx.userId, role: "assistant", content: answer, context_paths: data.contextPaths }).select("id,role,content,context_paths,created_at").single();

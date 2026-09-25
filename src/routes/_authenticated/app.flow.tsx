@@ -9,10 +9,8 @@ import { useWorkspace } from "@/hooks/use-workspace";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProofBadge, StatusPill } from "@/components/trustable/Chrome";
-import { LibraryPicker } from "@/components/trustable/LibraryPicker";
 import { EmphasizedControl, EmphasizedField } from "@/components/trustable/EmphasizedField";
 import { DrillDown, drillableClass } from "@/components/trustable/DrillDown";
 
