@@ -8,10 +8,12 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Trustable — Heart-to-Vault enterprise trust layer for Lovable" },
-      { name: "description", content: "Lovable's creative velocity with an enterprise trust layer: tenant isolation, roles, tamper-evident audit, bounded AI decisions." },
-      { property: "og:title", content: "Trustable — Enterprise trust layer for Lovable" },
-      { property: "og:description", content: "Creativity meets confidence. A confidential working prototype." },
+      { title: "Trustable — Enterprise Solutions & Trust Layer for Lovable" },
+      { name: "description", content: "Enterprise solutions & trust layer powered by Lovable's creative energy. From idea to impact — secure, compliant, and ready for the real world." },
+      { name: "keywords", content: "Trustable, Lovable, Lovable.dev, enterprise AI, trust layer, tenant isolation, role-based access control, tamper-evident audit, AMD SEV-SNP, zero egress, SOC2, HIPAA" },
+      { property: "og:title", content: "Trustable — Enterprise Solutions & Trust Layer for Lovable" },
+      { property: "og:description", content: "Enterprise solutions & trust layer powered by Lovable's creative energy. From idea to impact — secure, compliant, and ready for the real world." },
+      { property: "og:url", content: "https://trustable-enterprise-spark.lovable.app" },
     ],
   }),
   component: Landing,
