@@ -16,3 +16,7 @@
 - [ ] Voice transcription — never received; needs Chris to resend
 - [ ] Enterprise interaction pass: drill-down details, stronger visual depth, complete tooltips, and global multi-format report actions
 - [ ] Global context layer: emphasized form fields, per-field AI assist/action menus, and persistent top-nav AI assistant with suggestions, history, filters, and multi-select; align with CareerCaptain and MyCDB patterns
+- [ ] Rebuild Trustable Flow around Bob's two-week mobile pilot: searchable faceted flow catalog with dozens of role-based examples, edit/save-as/update/share, timestamps, connectors, live build progress, graph map, risk gates, Red Team handoff, API/code inspection, measurable KPI affirmation, and advanced drill-downs
+- [ ] Full-screen API Console: sanitized parameterized calls, telemetry/logs, search/filter/multi-select, generated endpoint documentation and saved queries, live OAS/sub-spec export; EngineWare/MyCDB SQL Server remains future source of truth pending direct connection contract
+- [ ] Landing page: explain the simple Trustable creation loop and measurable enterprise outcomes in plain language
+- [ ] Global choice rule: every multiple-choice prompt identifies a recommended option and always provides custom Other text input
