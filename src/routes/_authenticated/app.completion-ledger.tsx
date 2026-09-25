@@ -1,0 +1,43 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { AlertTriangle, CheckCircle2, ChevronDown, CircleDashed, FileCheck2, Filter, GitBranch, LockKeyhole, Search, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ProofBadge } from "@/components/trustable/Chrome";
+import { ReportActions } from "@/components/trustable/ReportActions";
+import { Tip } from "@/components/trustable/Tip";
+import { pageMeta } from "@/lib/site";
+import { cn } from "@/lib/utils";
+
+export const Route = createFileRoute("/_authenticated/app/completion-ledger")({
+  head: () => pageMeta({ title: "Completion Ledger — Trustable", description: "Requirement, evidence, verification, and immutable-receipt tracking.", path: "/app/completion-ledger", index: false }),
+  component: CompletionLedgerPage,
+});
+
+type Gate = "implementation" | "automated" | "browser" | "accessibility" | "redTeam" | "typesafe" | "receipt";
+type Requirement = { id: string; title: string; group: string; state: "verified" | "testing" | "blocked" | "planned"; proof: "live" | "reference"; gates: Partial<Record<Gate, boolean>>; blocker?: string };
+const GATES: Array<{ id: Gate; label: string }> = [{ id: "implementation", label: "Built" }, { id: "automated", label: "Automated" }, { id: "browser", label: "Browser" }, { id: "accessibility", label: "A11y" }, { id: "redTeam", label: "Red team" }, { id: "typesafe", label: "TypeSafe/JEV" }, { id: "receipt", label: "Receipt" }];
+const REQUIREMENTS: Requirement[] = [
+  { id: "REQ-001", title: "Tenant-scoped role and permission enforcement", group: "Security foundation", state: "testing", proof: "live", gates: { implementation: true, browser: true }, blocker: "Full role matrix and immutable receipt evidence remain open." },
+  { id: "REQ-002", title: "Tamper-evident SHA-512 audit chain", group: "Security foundation", state: "verified", proof: "live", gates: { implementation: true, automated: true, browser: true, receipt: true } },
+  { id: "REQ-003", title: "Searchable multi-select tree filters", group: "Enterprise experience", state: "testing", proof: "live", gates: { implementation: true, browser: true }, blocker: "Cross-form keyboard and screen-reader regression is in progress." },
+  { id: "REQ-004", title: "OASA Console real request states", group: "Enterprise experience", state: "testing", proof: "live", gates: { implementation: true, browser: true }, blocker: "Every action still needs allow, validation, and denied-path evidence." },
+  { id: "REQ-005", title: "Full graph canvas and accessible inventory", group: "Graph foundation", state: "testing", proof: "live", gates: { implementation: true, browser: true, accessibility: true }, blocker: "Saved backend graphs and execution simulation require approved contracts." },
+  { id: "REQ-006", title: "EngineWare OASA negotiation and graphlets", group: "EngineWare integration", state: "blocked", proof: "reference", gates: {}, blocker: "No callable EngineWare endpoint contract is available; direct checks returned unavailable." },
+  { id: "REQ-007", title: "JEV TypeSafe machine verification", group: "EngineWare integration", state: "blocked", proof: "reference", gates: {}, blocker: "No callable JEV TypeSafe verification contract is available." },
+  { id: "REQ-008", title: "Owner email and push alerts for sign-in activity", group: "Security operations", state: "planned", proof: "reference", gates: {}, blocker: "Delivery channels and verified notification contracts are not connected." },
+];
+
+function CompletionLedgerPage() {
+  const [query, setQuery] = useState("");
+  const [state, setState] = useState("all");
+  const visible = useMemo(() => REQUIREMENTS.filter((item) => (state === "all" || item.state === state) && `${item.id} ${item.title} ${item.group} ${item.blocker ?? ""}`.toLowerCase().includes(query.toLowerCase())), [query, state]);
+  const stats = { total: REQUIREMENTS.length, verified: REQUIREMENTS.filter((item) => item.state === "verified").length, blocked: REQUIREMENTS.filter((item) => item.state === "blocked").length, testing: REQUIREMENTS.filter((item) => item.state === "testing").length };
+  return <div className="space-y-6">
+    <header className="flex flex-wrap items-end justify-between gap-4"><div><p className="eyebrow">Contract-based completion evidence</p><h1 className="text-3xl font-bold">Completion ledger</h1><p className="mt-2 max-w-3xl text-sm text-muted-foreground">Planning records organize every requirement. Only rows with a verified backend receipt are immutable.</p></div><ReportActions title="Trustable completion ledger" data={visible} /></header>
+    <div className="grid gap-3 sm:grid-cols-4">{[["Requirements",stats.total,FileCheck2],["In verification",stats.testing,CircleDashed],["Verified",stats.verified,CheckCircle2],["Blocked",stats.blocked,AlertTriangle]].map(([label,value,Icon]) => { const I=Icon as typeof FileCheck2; return <section key={label as string} className="border border-border bg-card p-4 shadow-lg"><I className="h-5 w-5 text-primary"/><p className="mt-4 text-3xl font-bold">{value as number}</p><p className="text-xs text-muted-foreground">{label as string}</p></section>; })}</div>
+    <section className="border border-border bg-card p-4 shadow-xl"><div className="flex flex-col gap-3 sm:flex-row"><div className="relative flex-1"><Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground"/><Input value={query} onChange={(event)=>setQuery(event.target.value)} placeholder="Search requirement, group, or blocker…" className="pl-9" aria-label="Search completion ledger"/></div><div className="flex flex-wrap gap-1" aria-label="Filter by status">{["all","verified","testing","blocked","planned"].map((item)=><Button key={item} size="sm" variant={state===item?"secondary":"ghost"} onClick={()=>setState(item)} className="capitalize"><Filter className="mr-1 h-3.5 w-3.5"/>{item}</Button>)}</div></div></section>
+    <div className="space-y-3">{visible.map((item)=><Collapsible key={item.id} className="border border-border bg-card shadow-lg"><CollapsibleTrigger asChild><Button variant="ghost" className="h-auto w-full justify-start gap-3 whitespace-normal px-4 py-4 text-left"><span className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-full border",item.state==="verified"?"border-success/40 bg-success/10 text-success":item.state==="blocked"?"border-destructive/40 bg-destructive/10 text-destructive":"border-primary/40 bg-primary/10 text-primary")}>{item.state==="verified"?<CheckCircle2 className="h-4 w-4"/>:item.state==="blocked"?<LockKeyhole className="h-4 w-4"/>:<GitBranch className="h-4 w-4"/>}</span><span className="min-w-0 flex-1"><span className="font-mono text-[10px] text-muted-foreground">{item.id} · {item.group}</span><span className="block text-sm font-semibold">{item.title}</span></span><ProofBadge kind={item.proof}/><ChevronDown className="h-4 w-4 shrink-0"/></Button></CollapsibleTrigger><CollapsibleContent className="border-t border-border p-4"><div className="grid gap-2 sm:grid-cols-7">{GATES.map((gate)=>{ const passed=Boolean(item.gates[gate.id]); return <Tip key={gate.id} text={passed?`${gate.label} evidence recorded`:`${gate.label} evidence is still required`}><div className={cn("flex min-h-16 flex-col items-center justify-center border p-2 text-center text-[10px] font-semibold",passed?"border-success/35 bg-success/10 text-success":"border-border bg-muted/25 text-muted-foreground")}>{passed?<CheckCircle2 className="mb-1 h-4 w-4"/>:<CircleDashed className="mb-1 h-4 w-4"/>}{gate.label}</div></Tip>})}</div>{item.blocker&&<div className="mt-4 flex gap-2 border border-warning/35 bg-warning/10 p-3 text-xs text-warning"><AlertTriangle className="h-4 w-4 shrink-0"/><span>{item.blocker}</span></div>}<div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-muted-foreground"><span>Status: <strong className="capitalize text-foreground">{item.state}</strong></span><span>Receipt: <strong className="text-foreground">{item.gates.receipt?"Backend immutable receipt linked":"None — planning record only"}</strong></span>{item.gates.receipt&&<Button asChild size="sm" variant="outline"><Link to="/app/audit"><ShieldCheck className="mr-1 h-3.5 w-3.5"/>Inspect audit proof</Link></Button>}</div></CollapsibleContent></Collapsible>)}</div>
+  </div>;
+}

@@ -28,6 +28,7 @@ const NAV: { to: string; label: string; perm: Perm; exact?: boolean }[] = [
   { to: "/app/ciso", label: "CISO Console", perm: "ciso.view" },
   { to: "/app/redteam", label: "Red Team", perm: "redteam.run" },
   { to: "/app/audit", label: "Audit Log", perm: "audit.view" },
+  { to: "/app/completion-ledger", label: "Completion Ledger", perm: "audit.view" },
   { to: "/app/access", label: "Access", perm: "access.view" },
   { to: "/app/settings", label: "Settings", perm: "overview.view" },
 ];
