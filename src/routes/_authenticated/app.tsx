@@ -60,18 +60,18 @@ function AppLayout() {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
         <div className="border-b border-warning/25 bg-warning/10 px-4 py-1 text-center font-mono text-[9px] font-semibold uppercase text-warning">EngineWare.ai proprietary IP · Owned by Christopher Ware · Confidential · Not for redistribution</div>
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-          <Wordmark />
-          <div className="flex items-center gap-3">
+        <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-3 py-3 sm:gap-4 sm:px-6 sm:py-4">
+          <div className="min-w-0 overflow-hidden"><Wordmark /></div>
+          <div className="flex shrink-0 items-center gap-1 sm:gap-3">
             {access.data?.status === "active" && <GlobalAssistant pathname={pathname} />}
             {access.data?.email && <span className="hidden text-xs text-muted-foreground md:inline">{access.data.email}</span>}
             {access.data?.role && (
-              <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-primary">
+              <span className="hidden rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-primary sm:inline">
                 {access.data.role}
               </span>
             )}
-            <Button variant="ghost" size="sm" onClick={signOut}>
-              <LogOut className="mr-1 h-4 w-4" /> Sign out
+            <Button variant="ghost" size="sm" onClick={signOut} aria-label="Sign out" className="px-2 sm:px-3">
+              <LogOut className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Sign out</span>
             </Button>
           </div>
         </div>
