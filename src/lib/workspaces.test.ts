@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { WORKSPACES, canOpen, permForPath } from "./workspaces";
 
-const ROLE_PERMS: Record<string, string[]> = {
+const ROLE_PERMS = {
   none: [],
   auditor: ["overview.view", "posture.view", "audit.view", "evidence.view"],
   operator: ["overview.view", "flow.view", "flow.run"],
-};
+} as const;
 
 describe("workspace authorization", () => {
   it("every workspace declares a required permission", () => {

@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { ConfidentialFooter, Wordmark } from "@/components/trustable/Chrome";
 import { HeartVault } from "@/components/trustable/HeartVault";
 import { useAccess } from "@/hooks/use-access";
-import type { Perm } from "@/lib/controls";
 import { WORKSPACES, permForPath } from "@/lib/workspaces";
 import { pageMeta } from "@/lib/site";
 import { GlobalAssistant } from "@/components/trustable/GlobalAssistant";
