@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmphasizedControl, EmphasizedField } from "@/components/trustable/EmphasizedField";
+import { PermissionSimulator } from "@/components/trustable/PermissionSimulator";
 
 export const Route = createFileRoute("/_authenticated/app/access")({
   head: () => ({ meta: [{ title: "Access control — Trustable" }, { name: "description", content: "Members, roles, groups and permissions." }] }),
@@ -73,6 +74,7 @@ function AccessPage() {
           <TabsTrigger value="members">Members ({d.members.length})</TabsTrigger>
           <TabsTrigger value="roles">Roles ({d.roles.length})</TabsTrigger>
           <TabsTrigger value="groups">Groups ({d.groups.length})</TabsTrigger>
+          {d.canManage && <TabsTrigger value="simulator">Simulator</TabsTrigger>}
         </TabsList>
         <TabsContent value="members" className="space-y-6">
           {d.canManage && <CreateUser isOwner={d.isOwner} />}
