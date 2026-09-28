@@ -1,5 +1,7 @@
 # Trustable Roadmap
 
+- [ ] Approval gate: do not alter or publish any existing reviewer-facing surface; stage each proposed change on an isolated preview route and obtain Chris Ware’s individual approval before merging it into the reviewed experience
+
 - [x] Cloud + schema + RLS + roles + seeded demo tenant + hash-chained ledger
 - [x] Auth (email + Google) and tenant-scoped shell with confidentiality footer
 - [x] Trustable Flow, CISO console, ROI, Red Team, landing + architecture
@@ -46,5 +48,5 @@
 - [x] Change the homepage autonomy line to “Then watch the next—and all the rest—build themselves.”
 - [ ] Add verified owner email alerts, push notifications, and security summaries for successful and attempted sign-ins by named reviewers or any user; classify critical events accurately and do not claim delivery until notification contracts are connected and tested
 - [x] Build the Trustable growth organism experience: dedicated Level 1/5/10 synchronized toggle, progressively richer builder interfaces, measurable minutes-saved certification path, user and synaptic-link graph, feature/advocate unlocks, management and sales reporting, and an illustrative contract-discount calculator; distinguish live tenant run data from proposed program rules and keep every authority beneath customer RBAC, delegated approvals, and contractual gates — verified desktop/mobile, light/dark, synchronized levels, sliders, calculator update, public story, zero overflow, and zero browser errors on 25 Sep 2026
-- [ ] Build a reusable Trustable motion-story system inspired by the supplied CLM flow video: animated data paths, security gates, typed decisions, audit receipts, and responsive reduced-motion fallbacks; produce several in-app examples and keep Live/Reference labels accurate
-- [ ] Establish verified reviewer activity reporting for Lovable employees: distinguish authentication, authorized app actions, page views, and clicks; expose only events actually captured, with tenant/user context and admin audit access
+- [ ] Build a reusable Trustable motion-story system inspired by the supplied CLM flow video: private proposal staged at `/motion-preview` with three selectable stories, replay/pause, responsive layout, reduced-motion fallback, and accurate Live/Reference labels; awaiting individual approval before any existing surface changes
+- [ ] Establish verified reviewer activity reporting for Lovable employees: findings verified for Luke, Kevin, Jessica, and Matt, but no existing Audit surface changes are permitted before individual approval
