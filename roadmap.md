@@ -1,5 +1,7 @@
 # Trustable Roadmap
 
+- [ ] Approval gate: do not alter or publish any existing reviewer-facing surface; stage each proposed change on an isolated preview route and obtain Chris Ware’s individual approval before merging it into the reviewed experience
+
 - [x] Cloud + schema + RLS + roles + seeded demo tenant + hash-chained ledger
 - [x] Auth (email + Google) and tenant-scoped shell with confidentiality footer
 - [x] Trustable Flow, CISO console, ROI, Red Team, landing + architecture

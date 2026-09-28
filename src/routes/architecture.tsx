@@ -3,7 +3,6 @@ import { pageMeta } from "@/lib/site";
 import { ConfidentialFooter, ProofBadge, Wordmark } from "@/components/trustable/Chrome";
 import { Button } from "@/components/ui/button";
 import { GraphWorkbench } from "@/components/trustable/GraphWorkbench";
-import { MotionStory } from "@/components/trustable/MotionStory";
 
 export const Route = createFileRoute("/architecture")({
   head: () =>
@@ -50,8 +49,6 @@ function Architecture() {
         </div>
 
         <GraphWorkbench />
-
-        <MotionStory compact />
 
         <section className="panel p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">

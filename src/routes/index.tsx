@@ -4,7 +4,6 @@ import { Lock, Zap, Users, ShieldCheck, Link2, FileCheck2, ArrowRight, RotateCcw
 import { HeartVault } from "@/components/trustable/HeartVault";
 import { ConfidentialFooter, ProofBadge, Wordmark } from "@/components/trustable/Chrome";
 import { Button } from "@/components/ui/button";
-import { MotionStory } from "@/components/trustable/MotionStory";
 import { SITE, pageMeta } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
@@ -123,10 +122,6 @@ function Landing() {
           <div className="relative mt-9 grid gap-3 md:grid-cols-5 before:absolute before:left-[8%] before:right-[8%] before:top-7 before:hidden before:border-t before:border-dashed before:border-primary/40 md:before:block">{[[Zap,"Describe","Say what work should improve."],[GitBranch,"Map","See the people, systems, and handoffs."],[ShieldCheck,"Check","Apply permissions and safety gates."],[CheckCircle2,"Create","Launch a governed, useful flow."],[BarChart3,"Prove","Measure value and repeat automatically."]].map(([Icon,t,d], i) => { const I = Icon as typeof Zap; return <div key={t as string} className="relative z-10 border border-border bg-card/90 p-4 shadow-[0_18px_45px_-24px_oklch(0_0_0/95%)]"><span className="grid h-12 w-12 place-items-center rounded-full border border-primary/35 bg-background shadow-lg"><I className="h-6 w-6 text-primary" /></span><h3 className="mt-4 text-lg font-semibold">{t as string}</h3><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{d as string}</p><span className="absolute right-3 top-3 font-mono text-xs text-primary">0{i + 1}</span></div>; })}</div>
           <div className="mt-8 rounded-md border border-warning/40 bg-warning/10 px-4 py-3 text-xs font-semibold text-warning">CONFIDENTIAL · PROPRIETARY ENGINEWARE.AI IP · CREATED AND OWNED BY CHRISTOPHER WARE · NOT FOR REDISTRIBUTION</div>
         </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 py-16">
-        <MotionStory />
       </section>
 
       <section className="border-b border-border bg-background py-16">

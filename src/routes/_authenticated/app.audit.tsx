@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Download, Eye, FileCheck2, LogIn, MousePointerClick, Users } from "lucide-react";
+import { Download } from "lucide-react";
 import { listAudit, exportAudit } from "@/lib/security.functions";
 import { AUDIT_CATEGORIES } from "@/lib/controls";
 import { CONFIDENTIAL_NOTICE } from "@/lib/tenant";
@@ -60,26 +60,6 @@ function AuditPage() {
         </div>
         {q.data?.canExport && <Button onClick={doExport}><Download className="mr-2 h-4 w-4" /> Export CSV</Button>}
       </div>
-      <section className="panel overflow-hidden" aria-labelledby="activity-coverage-title">
-        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border p-5">
-          <div><p className="eyebrow">Verified snapshot · 28 Sep 2026</p><h2 id="activity-coverage-title" className="mt-1 text-xl font-semibold">Reviewer activity coverage</h2><p className="mt-1 max-w-3xl text-sm text-muted-foreground">Identity records, tenant access, immutable actions, and anonymous traffic are separate signals. Trustable does not reconstruct clicks it never captured.</p></div>
-          <span className="rounded-full border border-success/40 bg-success/10 px-2.5 py-1 font-mono text-[10px] uppercase text-success">Evidence checked</span>
-        </div>
-        <div className="grid divide-y divide-border md:grid-cols-4 md:divide-x md:divide-y-0">
-          {[
-            [LogIn, "Identity sign-ins", "Luke: 1", "25 Sep · 13:21 UTC"],
-            [Users, "Tenant membership", "Luke: no role", "Cannot enter workspaces"],
-            [FileCheck2, "Immutable actions", "Luke: none", "No ledger events"],
-            [Eye, "Anonymous traffic", "7 visitors", "30 pageviews · identity unavailable"],
-          ].map(([Icon, label, value, note]) => { const I = Icon as typeof LogIn; return <div key={label as string} className="p-4"><I className="h-5 w-5 text-primary"/><p className="mt-3 text-xs font-semibold uppercase text-muted-foreground">{label as string}</p><p className="mt-1 text-lg font-semibold">{value as string}</p><p className="mt-1 text-xs text-muted-foreground">{note as string}</p></div>; })}
-        </div>
-        <div className="grid border-t border-border lg:grid-cols-[1.2fr_.8fr]">
-          <div className="overflow-x-auto p-5">
-            <table className="w-full min-w-[560px] text-left text-sm"><thead className="text-xs text-muted-foreground"><tr><th className="pb-2">Reviewer</th><th className="pb-2">Identity</th><th className="pb-2">Trustable role</th><th className="pb-2">Ledger actions</th></tr></thead><tbody className="divide-y divide-border">{[["Luke","Signed in once","None","None"],["Kevin","No record","None","None"],["Jessica","No record","None","None"],["Matt","No record","None","None"]].map((row) => <tr key={row[0]}>{row.map((cell,index) => <td key={cell} className={`py-2 ${index ? "text-muted-foreground" : "font-semibold"}`}>{cell}</td>)}</tr>)}</tbody></table>
-          </div>
-          <div className="border-t border-border bg-muted/25 p-5 lg:border-l lg:border-t-0"><div className="flex items-center gap-2"><MousePointerClick className="h-5 w-5 text-warning"/><h3 className="font-semibold">Clicks are not captured</h3></div><p className="mt-2 text-sm leading-relaxed text-muted-foreground">The immutable ledger records selected security and business actions. It is not blanket surveillance. Historical page-level and button-level activity is unavailable.</p><p className="mt-3 text-xs text-muted-foreground">Your 106 access.signin entries are repeated application access checks under the owner account—not 106 distinct human sessions.</p></div>
-        </div>
-      </section>
       <form
         className="panel grid gap-4 p-5 md:grid-cols-5"
         onSubmit={(e) => { e.preventDefault(); setApplied(f); }}
