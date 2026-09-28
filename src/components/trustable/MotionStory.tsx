@@ -10,7 +10,7 @@ type StoryNode = { id: string; label: string; detail: string; x: number; y: numb
 type StoryEdge = { from: string; to: string; delay: number; blocked?: boolean };
 type Scene = { id: SceneId; title: string; kicker: string; summary: string; nodes: StoryNode[]; edges: StoryEdge[] };
 
-const SCENES: Scene[] = [
+const SCENES: readonly [Scene, Scene, Scene] = [
   {
     id: "receipt",
     kicker: "Live · governed execution",
