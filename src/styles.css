@@ -175,6 +175,26 @@
 .vault-heart-glow { animation: vault-heart-glow 7s ease-in-out forwards; }
 .vault-final-lock { animation: vault-lock-in 7s ease-out forwards; }
 
+@keyframes motion-story-path {
+  0% { stroke-dasharray: 0 1; opacity: .15; }
+  35%, 78% { stroke-dasharray: 1 0; opacity: 1; }
+  100% { stroke-dasharray: 1 0; opacity: .38; }
+}
+@keyframes motion-story-node {
+  0% { opacity: .34; transform: translateY(8px) scale(.96); filter: saturate(.4); }
+  24%, 70% { opacity: 1; transform: translateY(0) scale(1.025); filter: saturate(1.2); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: saturate(1); }
+}
+@keyframes motion-story-beacon {
+  0%, 100% { opacity: .28; box-shadow: 0 0 0 0 currentColor; }
+  45% { opacity: 1; box-shadow: 0 0 0 8px transparent; }
+}
+.motion-story-path { stroke-dasharray: 0 1; animation: motion-story-path 1.7s ease-out forwards; }
+.motion-story-node { opacity: .34; animation: motion-story-node 1.25s ease-out forwards; }
+.motion-story-beacon { margin-left: auto; animation: motion-story-beacon 1.4s ease-in-out infinite; }
+.motion-story-packet { filter: drop-shadow(0 0 8px var(--primary)); }
+.motion-story-paused *, .motion-story-paused *::before, .motion-story-paused *::after { animation-play-state: paused !important; }
+
 
 @layer base {
   * { border-color: var(--color-border); }
@@ -193,6 +213,13 @@
   input:not([type="checkbox"]):not([type="radio"]), textarea, select, button[role="combobox"] {
     box-shadow: 0 1px 0 oklch(1 0 0 / 7%) inset, 0 10px 24px -16px oklch(0 0 0 / 92%);
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-story-path { stroke-dasharray: 1 0; animation: none; opacity: .7; }
+  .motion-story-node { opacity: 1; animation: none; }
+  .motion-story-beacon { animation: none; opacity: .65; }
+  .motion-story-packet { display: none; }
 }
 
 @utility enterprise-field {
