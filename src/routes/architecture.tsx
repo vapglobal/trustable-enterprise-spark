@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { pageMeta } from "@/lib/site";
 import { ConfidentialFooter, ProofBadge, Wordmark } from "@/components/trustable/Chrome";
 import { Button } from "@/components/ui/button";
+import { Download, FileText, Shield, Cpu, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/architecture")({
   head: () =>
@@ -92,6 +93,139 @@ function Architecture() {
             </ul>
           </section>
         </div>
+
+        <section className="panel p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Cpu className="h-5 w-5 text-primary" />
+                The EngineWare Autonomous Organic Advocate System (AOAS)
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Decentralized Sub-Commander Control Nodes negotiating on behalf of corporate advocates using TypeSafe Jev System One.
+              </p>
+            </div>
+            <ProofBadge kind="live" />
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-lg border border-border bg-muted/20 p-4">
+              <div className="flex items-center gap-2 font-medium text-destructive">
+                <Shield className="h-4 w-4" /> CISO Sub-Commander
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Traps OWASP LLM Top 10 probes in &lt;42ms, enforces kernel-level 0.0.0.0/0 netfilter lockdown, and verifies SHA-512 ledger blocks.
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-border bg-muted/20 p-4">
+              <div className="flex items-center gap-2 font-medium text-primary">
+                <Sparkles className="h-4 w-4" /> Operator Sub-Commander
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Represents Bob & Sally, prioritizing interactive UI requests with zero artificial latency (&lt;200ms TTFT target).
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-border bg-muted/20 p-4">
+              <div className="flex items-center gap-2 font-medium text-amber-500">
+                <Cpu className="h-4 w-4" /> Resource Sub-Commander
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Monitors database pool health, dynamically applying jittered backpressure to background batch agents when load &gt;= 30%.
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-border bg-muted/20 p-4">
+              <div className="flex items-center gap-2 font-medium text-emerald-500">
+                <FileText className="h-4 w-4" /> Veracity Sub-Commander
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Enforces the universal DataProvider contract over mTLS, requiring authentic ATS/ERP cryptographic receipts.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="panel p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Download className="h-5 w-5 text-primary" />
+                Executive Interview Decks & Architecture Downloads
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Confidential materials prepared for Lovable Executive Leadership (Matthew Norton, Jessica, Katie, Kevin, Luke).
+              </p>
+            </div>
+            <ProofBadge kind="live" />
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <a
+              href="/downloads/ENGINEWARE_ORGANIC_API_SURFACE_PRESENTATION.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="flex flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 hover:border-primary/50 transition-colors"
+            >
+              <div>
+                <span className="font-mono text-[10px] text-primary uppercase font-bold">12-Slide Executive PDF</span>
+                <p className="mt-1 font-semibold text-sm">AOAS & Organic API Surface</p>
+                <p className="mt-1 text-xs text-muted-foreground">Landscape card deck covering multi-agent dialectic, TypeSafe economics, and viral PLG.</p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs text-primary font-medium">
+                <Download className="h-3 w-3" /> Download PDF (29 KB)
+              </span>
+            </a>
+
+            <a
+              href="/downloads/TRUSTABLE_TECHNICAL_PRESENTATION.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="flex flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 hover:border-primary/50 transition-colors"
+            >
+              <div>
+                <span className="font-mono text-[10px] text-primary uppercase font-bold">16-Slide Architecture Master</span>
+                <p className="mt-1 font-semibold text-sm">Trustable Technical Presentation</p>
+                <p className="mt-1 text-xs text-muted-foreground">Deep hardware enclave specs, AMD SEV-SNP isolation, and $4.2M ARR payback model.</p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs text-primary font-medium">
+                <Download className="h-3 w-3" /> Download PDF (38 KB)
+              </span>
+            </a>
+
+            <a
+              href="/downloads/ENGINEWARE_ORGANIC_API_SURFACE_PRESENTATION.pptx"
+              download
+              className="flex flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 hover:border-primary/50 transition-colors"
+            >
+              <div>
+                <span className="font-mono text-[10px] text-primary uppercase font-bold">Widescreen PPTX Deck</span>
+                <p className="mt-1 font-semibold text-sm">PowerPoint Presentation</p>
+                <p className="mt-1 text-xs text-muted-foreground">16:9 widescreen presentation deck with embedded speaker notes and card layouts.</p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs text-primary font-medium">
+                <Download className="h-3 w-3" /> Download PPTX (53 KB)
+              </span>
+            </a>
+
+            <a
+              href="/downloads/MATT_NORTON_AOAS_EXECUTIVE_EMAIL.html"
+              target="_blank"
+              rel="noreferrer"
+              className="flex flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 hover:border-primary/50 transition-colors"
+            >
+              <div>
+                <span className="font-mono text-[10px] text-primary uppercase font-bold">Executive Email Preview</span>
+                <p className="mt-1 font-semibold text-sm">Forwardable Leadership Briefing</p>
+                <p className="mt-1 text-xs text-muted-foreground">Rendered HTML email briefing explaining AOAS Sub-Commander nodes and Lovable duality.</p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs text-primary font-medium">
+                <FileText className="h-3 w-3" /> View HTML Briefing
+              </span>
+            </a>
+          </div>
+        </section>
 
         <section className="panel p-6">
           <h2 className="text-lg font-semibold">90-day Solutions Architecture plan</h2>
