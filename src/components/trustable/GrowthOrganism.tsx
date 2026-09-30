@@ -128,6 +128,56 @@ export function GrowthOrganism({ liveMinutes, liveRuns, livePeople, liveValue }:
   const visiblePeople = PEOPLE.filter((person) => person.level >= level);
   const visibleNames = new Set(visiblePeople.map((person) => person.name));
   const visibleEdges = EDGES.filter(([from, to]) => visibleNames.has(from) && visibleNames.has(to));
+  const dynamicEdges = useMemo(() => {
+    const reuseFactor = Math.min(1.6, Math.max(0.5, reuse / 3));
+    const builderFactor = Math.min(1.5, Math.max(0.6, builders / 52));
+    return visibleEdges.map(([from, to, baseWeight]) => {
+      const calibratedWeight = Math.min(99, Math.round(baseWeight * reuseFactor * builderFactor));
+      return [from, to, calibratedWeight] as const;
+    });
+  }, [visibleEdges, reuse, builders]);
+
+
+  const dynamicChart = useMemo(() => {
+    return [
+      {
+        stage: "Seed",
+        builders: Math.max(1, Math.round(builders * 0.05)),
+        minutes: Math.round(minutesPerBuilder * Math.max(1, Math.round(builders * 0.05))),
+        links: Math.max(1, Math.round(builders * 0.05 * Math.max(1, reuse * 0.4))),
+        advocates: Math.max(1, Math.round(levelFive * 0.05)),
+      },
+      {
+        stage: "Pilot",
+        builders: Math.max(2, Math.round(builders * 0.15)),
+        minutes: Math.round(minutesPerBuilder * Math.max(2, Math.round(builders * 0.15)) * Math.max(1, reuse * 0.6)),
+        links: Math.max(2, Math.round(builders * 0.15 * Math.max(1, reuse * 0.6))),
+        advocates: Math.max(2, Math.round(levelFive * 0.15)),
+      },
+      {
+        stage: "Team",
+        builders: Math.max(5, Math.round(builders * 0.4)),
+        minutes: Math.round(minutesPerBuilder * Math.max(5, Math.round(builders * 0.4)) * Math.max(1, reuse * 0.8)),
+        links: Math.max(5, Math.round(builders * 0.4 * Math.max(1, reuse * 0.8))),
+        advocates: Math.max(4, Math.round(levelFive * 0.4)),
+      },
+      {
+        stage: "Division",
+        builders: Math.max(10, Math.round(builders * 0.75)),
+        minutes: Math.round(minutesPerBuilder * Math.max(10, Math.round(builders * 0.75)) * reuse),
+        links: Math.max(12, Math.round(builders * 0.75 * Math.max(1, reuse - 0.2))),
+        advocates: Math.max(8, Math.round(levelFive * 0.75)),
+      },
+      {
+        stage: "Enterprise",
+        builders: builders,
+        minutes: economics.weeklyMinutes,
+        links: economics.links,
+        advocates: Math.max(levelFive, Math.round(levelFive * 1.2)),
+      },
+    ];
+  }, [builders, levelFive, minutesPerBuilder, reuse, economics.weeklyMinutes, economics.links]);
+
   const economics = useMemo(() => {
     const weeklyMinutes = builders * minutesPerBuilder * reuse;
     const annualMinutes = weeklyMinutes * ASSUMPTIONS.weeksPerYear;
@@ -139,6 +189,7 @@ export function GrowthOrganism({ liveMinutes, liveRuns, livePeople, liveValue }:
   }, [builders, hourlyRate, levelFive, minutesPerBuilder, reuse]);
 
   const report = { selectedLevel: level, levelName: config.name, liveTenantEvidence: { liveMinutes, liveRuns, livePeople, liveValue }, illustrativeModel: { builders, levelFive, minutesPerBuilder, reuse, hourlyRate, ...economics, assumptions: ASSUMPTIONS } };
+
 
   return <div className="space-y-6">
     <section className="overflow-hidden border border-border bg-card shadow-[0_30px_90px_-42px_var(--primary)]">
@@ -166,13 +217,28 @@ export function GrowthOrganism({ liveMinutes, liveRuns, livePeople, liveValue }:
       <div className="border border-border bg-card shadow-xl">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border p-4"><div><p className="eyebrow">OASA organization surface</p><h2 className="mt-1 text-xl font-semibold">People become nodes. Proven value becomes bridges.</h2></div><ProofBadge kind="reference" /></div>
         <div className="relative h-[460px] overflow-hidden bg-background/70 [background-image:radial-gradient(var(--border)_1px,transparent_1px)] [background-size:22px_22px]">
-          <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1000 460" preserveAspectRatio="none" aria-hidden="true">{visibleEdges.map(([from, to, weight]) => { const a=PEOPLE.find((person)=>person.name===from); const b=PEOPLE.find((person)=>person.name===to); if(!a||!b)return null; return <g key={`${from}-${to}`}><path d={`M${a.x*10+55} ${a.y*4.6+28} C${(a.x+b.x)*5+55} ${a.y*4.6+28}, ${(a.x+b.x)*5+55} ${b.y*4.6+28}, ${b.x*10+55} ${b.y*4.6+28}`} fill="none" stroke="var(--primary)" strokeOpacity=".6" strokeWidth={Math.max(2,weight/18)} strokeDasharray="9 7" className="animate-pulse motion-reduce:animate-none"/><text x={(a.x+b.x)*5+55} y={(a.y+b.y)*2.3+14} textAnchor="middle" fill="var(--muted-foreground)" fontSize="11">{weight}%</text></g>; })}</svg>
-          {visiblePeople.map((person) => <Tip key={person.name} text={`${person.role} · ${person.minutes.toLocaleString()} illustrative verified minutes`}><div className={cn("absolute z-10 w-36 border bg-card/95 p-3 shadow-[0_20px_50px_-22px_oklch(0_0_0/98%)]",person.level===10?"border-warning/50":person.level===5?"border-primary/55":"border-border")} style={{left:`min(${person.x}%, calc(100% - 9rem))`,top:`min(${person.y}%, calc(100% - 7rem))`}}><span className="flex items-center justify-between"><span className="grid h-8 w-8 place-items-center rounded-full bg-primary/12"><Users className="h-4 w-4 text-primary"/></span><span className="font-mono text-[10px] text-primary">L{person.level}</span></span><p className="mt-2 text-sm font-semibold">{person.name}</p><p className="truncate font-mono text-[9px] text-warning">{person.callsign}</p><p className="mt-1 truncate text-[10px] text-muted-foreground">{person.role}</p></div></Tip>)}
+          <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1000 460" preserveAspectRatio="none" aria-hidden="true">{dynamicEdges.map(([from, to, weight]) => { const a=PEOPLE.find((person)=>person.name===from); const b=PEOPLE.find((person)=>person.name===to); if(!a||!b)return null; return <g key={`${from}-${to}`}><path d={`M${a.x*10+55} ${a.y*4.6+28} C${(a.x+b.x)*5+55} ${a.y*4.6+28}, ${(a.x+b.x)*5+55} ${b.y*4.6+28}, ${b.x*10+55} ${b.y*4.6+28}`} fill="none" stroke="var(--primary)" strokeOpacity={Math.min(0.95, Math.max(0.4, weight / 100))} strokeWidth={Math.max(2, weight / 16)} strokeDasharray="9 7" className="animate-pulse motion-reduce:animate-none"/><text x={(a.x+b.x)*5+55} y={(a.y+b.y)*2.3+14} textAnchor="middle" fill="var(--muted-foreground)" fontSize="11">{weight}%</text></g>; })}</svg>
+          {visiblePeople.map((person) => {
+            const dynamicMinutes = Math.round(person.minutes * (minutesPerBuilder / 45) * (reuse / 3));
+            return <Tip key={person.name} text={`${person.role} · ${dynamicMinutes.toLocaleString()} calibrated verified minutes`}>
+              <div className={cn("absolute z-10 w-36 border bg-card/95 p-3 shadow-[0_20px_50px_-22px_oklch(0_0_0/98%)] transition-all duration-300",person.level===10?"border-warning/50":person.level===5?"border-primary/55":"border-border")} style={{left:`min(${person.x}%, calc(100% - 9rem))`,top:`min(${person.y}%, calc(100% - 7rem))`}}>
+                <span className="flex items-center justify-between">
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-primary/12"><Users className="h-4 w-4 text-primary"/></span>
+                  <span className="font-mono text-[10px] text-primary">L{person.level}</span>
+                </span>
+                <p className="mt-2 text-sm font-semibold">{person.name}</p>
+                <p className="truncate font-mono text-[9px] text-warning">{person.callsign}</p>
+                <p className="mt-1 truncate text-[10px] text-muted-foreground">{person.role}</p>
+                <p className="mt-1 font-mono text-[9px] text-primary">{dynamicMinutes.toLocaleString()} min</p>
+              </div>
+            </Tip>;
+          })}
           {!visiblePeople.length && <div className="absolute inset-0 grid place-items-center text-sm text-muted-foreground">No sample users meet this level.</div>}
         </div>
       </div>
-      <div className="border border-border bg-card p-5 shadow-xl"><div className="flex items-start justify-between gap-3"><div><p className="eyebrow">Progression model</p><h2 className="mt-1 text-xl font-semibold">Learning compounds into reach</h2></div><ProofBadge kind="reference" /></div><div className="mt-5 h-[285px]" aria-label="Illustrative growth chart"><ResponsiveContainer width="100%" height="100%"><LineChart data={CHART} margin={{left:-20,right:8,top:8,bottom:8}}><CartesianGrid stroke="var(--border)" strokeDasharray="4 4"/><XAxis dataKey="stage" tick={{fill:"var(--muted-foreground)",fontSize:10}}/><YAxis tick={{fill:"var(--muted-foreground)",fontSize:10}}/><ChartTooltip contentStyle={{background:"var(--popover)",border:"1px solid var(--border)",fontSize:12}}/><Line type="monotone" dataKey="builders" stroke="var(--primary)" strokeWidth={3}/><Line type="monotone" dataKey="links" stroke="var(--heart)" strokeWidth={2}/><Line type="monotone" dataKey="advocates" stroke="var(--success)" strokeWidth={2}/></LineChart></ResponsiveContainer></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-[10px]"><Legend color="bg-primary" label="Builders"/><Legend color="bg-heart" label="Links"/><Legend color="bg-success" label="Advocates"/></div><p className="mt-5 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">Each bridge represents one person or solution returning measurable value to another. OASA negotiation and advocate expansion remain Reference architecture.</p></div>
+      <div className="border border-border bg-card p-5 shadow-xl"><div className="flex items-start justify-between gap-3"><div><p className="eyebrow">Progression model</p><h2 className="mt-1 text-xl font-semibold">Learning compounds into reach</h2></div><ProofBadge kind="reference" /></div><div className="mt-5 h-[285px]" aria-label="Illustrative growth chart"><ResponsiveContainer width="100%" height="100%"><LineChart data={dynamicChart} margin={{left:-20,right:8,top:8,bottom:8}}><CartesianGrid stroke="var(--border)" strokeDasharray="4 4"/><XAxis dataKey="stage" tick={{fill:"var(--muted-foreground)",fontSize:10}}/><YAxis tick={{fill:"var(--muted-foreground)",fontSize:10}}/><ChartTooltip contentStyle={{background:"var(--popover)",border:"1px solid var(--border)",fontSize:12}}/><Line type="monotone" dataKey="builders" stroke="var(--primary)" strokeWidth={3} isAnimationActive={false}/><Line type="monotone" dataKey="links" stroke="var(--heart)" strokeWidth={2} isAnimationActive={false}/><Line type="monotone" dataKey="advocates" stroke="var(--success)" strokeWidth={2} isAnimationActive={false}/></LineChart></ResponsiveContainer></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-[10px]"><Legend color="bg-primary" label="Builders"/><Legend color="bg-heart" label="Links"/><Legend color="bg-success" label="Advocates"/></div><p className="mt-5 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">Each bridge represents one person or solution returning measurable value to another. Moving sliders recalibrates growth curves and network weights in real-time.</p></div>
     </section>
+
 
     <section className="border border-border bg-card shadow-[0_28px_80px_-38px_var(--primary)]">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border p-5"><div><p className="eyebrow">Sales and efficiency bridge</p><h2 className="mt-1 text-xl font-semibold">Calibrate the mutually beneficial growth model</h2></div><span className="border border-warning/35 bg-warning/10 px-2 py-1 font-mono text-[10px] uppercase text-warning">Illustrative commercial model</span></div>
