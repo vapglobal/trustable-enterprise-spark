@@ -47,9 +47,11 @@ function Landing() {
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <Wordmark />
-        <div className="flex items-center gap-2">
-          <span className="hidden eyebrow md:inline">Creativity meets confidence</span>
-          <Button asChild variant="outline" size="sm" className="ml-4">
+        <div className="flex items-center gap-3">
+          <Link to="/architecture" className="text-xs font-medium text-muted-foreground hover:text-foreground hidden sm:inline">Architecture</Link>
+          <Link to="/flow" className="text-xs font-medium text-muted-foreground hover:text-foreground hidden sm:inline">Mobile App Creator</Link>
+          <Link to="/motion-preview" className="text-xs font-medium text-muted-foreground hover:text-foreground hidden sm:inline">Motion Story</Link>
+          <Button asChild variant="outline" size="sm" className="ml-2">
             <Link to="/auth">Reviewer sign in</Link>
           </Button>
         </div>
@@ -68,12 +70,15 @@ function Landing() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <Link to="/auth">
-                Enter the enclave <ArrowRight className="ml-1 h-4 w-4" />
+              <Link to="/flow">
+                Mobile App Creator <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link to="/architecture">View architecture</Link>
+            </Button>
+            <Button asChild size="lg" variant="ghost">
+              <Link to="/motion-preview">Motion story</Link>
             </Button>
           </div>
           <div className="mt-10 grid max-w-md gap-4">
