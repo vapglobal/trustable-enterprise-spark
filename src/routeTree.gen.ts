@@ -16,6 +16,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as MotionPreviewRouteImport } from './routes/motion-preview'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as FlowRouteImport } from './routes/flow'
+import { Route as GrowthRouteImport } from './routes/growth'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
 import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authenticated/app.access'
@@ -63,6 +64,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const FlowRoute = FlowRouteImport.update({
   id: '/flow',
   path: '/flow',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GrowthRoute = GrowthRouteImport.update({
+  id: '/growth',
+  path: '/growth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
   '/flow': typeof FlowRoute
+  '/growth': typeof GrowthRoute
   '/motion-preview': typeof MotionPreviewRoute
   '/reset-password': typeof ResetPasswordRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
@@ -167,6 +174,7 @@ export interface FileRoutesByTo {
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
   '/flow': typeof FlowRoute
+  '/growth': typeof GrowthRoute
   '/motion-preview': typeof MotionPreviewRoute
   '/reset-password': typeof ResetPasswordRoute
   '/app/access': typeof AuthenticatedAppAccessRoute
@@ -190,6 +198,7 @@ export interface FileRoutesById {
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
   '/flow': typeof FlowRoute
+  '/growth': typeof GrowthRoute
   '/motion-preview': typeof MotionPreviewRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
@@ -214,6 +223,7 @@ export interface FileRouteTypes {
     | '/architecture'
     | '/auth'
     | '/flow'
+    | '/growth'
     | '/motion-preview'
     | '/reset-password'
     | '/app'
@@ -236,6 +246,7 @@ export interface FileRouteTypes {
     | '/architecture'
     | '/auth'
     | '/flow'
+    | '/growth'
     | '/motion-preview'
     | '/reset-password'
     | '/app/access'
@@ -258,6 +269,7 @@ export interface FileRouteTypes {
     | '/architecture'
     | '/auth'
     | '/flow'
+    | '/growth'
     | '/motion-preview'
     | '/reset-password'
     | '/_authenticated/app'
@@ -282,6 +294,7 @@ export interface RootRouteChildren {
   ArchitectureRoute: typeof ArchitectureRoute
   AuthRoute: typeof AuthRoute
   FlowRoute: typeof FlowRoute
+  GrowthRoute: typeof GrowthRoute
   MotionPreviewRoute: typeof MotionPreviewRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
 }
@@ -321,6 +334,13 @@ declare module '@tanstack/react-router' {
       path: '/flow'
       fullPath: '/flow'
       preLoaderRoute: typeof FlowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/growth': {
+      id: '/growth'
+      path: '/growth'
+      fullPath: '/growth'
+      preLoaderRoute: typeof GrowthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/motion-preview': {
@@ -490,6 +510,7 @@ const rootRouteChildren: RootRouteChildren = {
   ArchitectureRoute: ArchitectureRoute,
   AuthRoute: AuthRoute,
   FlowRoute: FlowRoute,
+  GrowthRoute: GrowthRoute,
   MotionPreviewRoute: MotionPreviewRoute,
   ResetPasswordRoute: ResetPasswordRoute,
 }

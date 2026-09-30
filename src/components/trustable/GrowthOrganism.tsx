@@ -138,6 +138,16 @@ export function GrowthOrganism({ liveMinutes, liveRuns, livePeople, liveValue }:
   }, [visibleEdges, reuse, builders]);
 
 
+  const economics = useMemo(() => {
+    const weeklyMinutes = builders * minutesPerBuilder * reuse;
+    const annualMinutes = weeklyMinutes * ASSUMPTIONS.weeksPerYear;
+    const annualValue = (annualMinutes / 60) * hourlyRate;
+    const cohorts = Math.floor(levelFive / 25);
+    const discount = Math.min(ASSUMPTIONS.maximumDiscount, cohorts * ASSUMPTIONS.discountPerCohort);
+    const links = Math.round(builders * Math.max(1, reuse - 0.4));
+    return { weeklyMinutes, annualMinutes, annualValue, discount, links };
+  }, [builders, hourlyRate, levelFive, minutesPerBuilder, reuse]);
+
   const dynamicChart = useMemo(() => {
     return [
       {
@@ -177,16 +187,6 @@ export function GrowthOrganism({ liveMinutes, liveRuns, livePeople, liveValue }:
       },
     ];
   }, [builders, levelFive, minutesPerBuilder, reuse, economics.weeklyMinutes, economics.links]);
-
-  const economics = useMemo(() => {
-    const weeklyMinutes = builders * minutesPerBuilder * reuse;
-    const annualMinutes = weeklyMinutes * ASSUMPTIONS.weeksPerYear;
-    const annualValue = (annualMinutes / 60) * hourlyRate;
-    const cohorts = Math.floor(levelFive / 25);
-    const discount = Math.min(ASSUMPTIONS.maximumDiscount, cohorts * ASSUMPTIONS.discountPerCohort);
-    const links = Math.round(builders * Math.max(1, reuse - 0.4));
-    return { weeklyMinutes, annualMinutes, annualValue, discount, links };
-  }, [builders, hourlyRate, levelFive, minutesPerBuilder, reuse]);
 
   const report = { selectedLevel: level, levelName: config.name, liveTenantEvidence: { liveMinutes, liveRuns, livePeople, liveValue }, illustrativeModel: { builders, levelFive, minutesPerBuilder, reuse, hourlyRate, ...economics, assumptions: ASSUMPTIONS } };
 

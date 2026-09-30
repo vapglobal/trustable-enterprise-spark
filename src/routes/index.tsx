@@ -50,6 +50,7 @@ function Landing() {
         <div className="flex items-center gap-3">
           <Link to="/architecture" className="text-xs font-medium text-muted-foreground hover:text-foreground hidden sm:inline">Architecture</Link>
           <Link to="/flow" className="text-xs font-medium text-muted-foreground hover:text-foreground hidden sm:inline">Mobile App Creator</Link>
+          <Link to="/growth" className="text-xs font-medium text-muted-foreground hover:text-foreground hidden sm:inline">Growth Model</Link>
           <Link to="/motion-preview" className="text-xs font-medium text-muted-foreground hover:text-foreground hidden sm:inline">Motion Story</Link>
           <Button asChild variant="outline" size="sm" className="ml-2">
             <Link to="/auth">Reviewer sign in</Link>
