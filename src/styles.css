@@ -189,7 +189,13 @@
   0%, 100% { opacity: .28; box-shadow: 0 0 0 0 currentColor; }
   45% { opacity: 1; box-shadow: 0 0 0 8px transparent; }
 }
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
 .motion-story-path { stroke-dasharray: 0 1; animation: motion-story-path 1.7s ease-out forwards; }
+.motion-story-active-path { animation: dash-flow 1.2s linear infinite; }
 .motion-story-node { opacity: .34; animation: motion-story-node 1.25s ease-out forwards; }
 .motion-story-beacon { margin-left: auto; animation: motion-story-beacon 1.4s ease-in-out infinite; }
 .motion-story-packet { filter: drop-shadow(0 0 8px var(--primary)); }
