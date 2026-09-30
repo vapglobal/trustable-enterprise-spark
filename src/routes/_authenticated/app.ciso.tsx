@@ -8,6 +8,7 @@ import { verifyLedger, exportSurfaceReport } from "@/lib/trustable.functions";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { Button } from "@/components/ui/button";
 import { ProofBadge } from "@/components/trustable/Chrome";
+import { DrillDown, drillableClass } from "@/components/trustable/DrillDown";
 
 export const Route = createFileRoute("/_authenticated/app/ciso")({
   component: CisoPage,
@@ -70,8 +71,8 @@ function CisoPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Posture title="Tenant isolation" detail="Row-level security on all 6 tables" kind="live" />
-        <Posture title="Role model" detail="Separate roles table · server-checked" kind="live" />
+        <Posture title="Tenant isolation" detail="Row-level security on tenant data" kind="live" />
+        <Posture title="Role model" detail="Configurable roles, groups and user overrides" kind="live" />
         <Posture title="AI gate" detail={`Schema-bound · ${piiRuns} PII holds`} kind="live" />
         <Posture title="Zero-egress enclave" detail="On-prem / private VPC deployment" kind="reference" />
       </div>
@@ -107,12 +108,12 @@ function CisoPage() {
             return (
               <div key={b.seq} className="grid grid-cols-[3rem_1fr_auto] items-center gap-3 py-3">
                 <span className={`font-mono text-sm ${bad ? "text-destructive" : "text-muted-foreground"}`}>#{b.seq}</span>
-                <div className="min-w-0">
+                <DrillDown title={`Ledger block #${b.seq}`} description={`${b.event} · ${b.actor}`} trigger={<button className={`min-w-0 text-left ${drillableClass}`}>
                   <p className="text-sm">
                     <span className="font-mono text-primary">{b.event}</span> <span className="text-muted-foreground">· {b.actor} · {new Date(b.created_at).toLocaleString()}</span>
                   </p>
                   <p className="truncate font-mono text-[10px] text-muted-foreground">{b.block_hash}</p>
-                </div>
+                </button>}><pre className="max-h-96 overflow-auto rounded bg-muted/50 p-3 text-xs">{JSON.stringify(b, null, 2)}</pre></DrillDown>
                 <Button size="sm" variant="ghost" className="text-xs" disabled={!!busy} onClick={() => doVerify(b.seq)}>
                   {busy === `t${b.seq}` ? "…" : "Simulate tamper"}
                 </Button>
@@ -127,7 +128,7 @@ function CisoPage() {
 
 function Posture({ title, detail, kind }: { title: string; detail: string; kind: "live" | "reference" }) {
   return (
-    <div className="panel p-5">
+    <div className={`panel p-5 ${drillableClass}`} title={`Open ${title} details`}>
       <ProofBadge kind={kind} />
       <p className="mt-3 font-semibold">{title}</p>
       <p className="text-sm text-muted-foreground">{detail}</p>

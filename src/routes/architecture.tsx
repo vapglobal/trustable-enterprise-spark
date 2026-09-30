@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { pageMeta } from "@/lib/site";
 import { ConfidentialFooter, ProofBadge, Wordmark } from "@/components/trustable/Chrome";
 import { Button } from "@/components/ui/button";
+import { GraphWorkbench } from "@/components/trustable/GraphWorkbench";
 import { Download, FileText, Shield, Cpu, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/architecture")({
@@ -13,16 +14,6 @@ export const Route = createFileRoute("/architecture")({
     }),
   component: Architecture,
 });
-
-const FLOW = [
-  ["Operator", "Describes a task in plain language", "live"],
-  ["Trustable cockpit", "Built with Lovable · role re-checked server-side", "live"],
-  ["Bounded decision gate", "Typed tool output · schema validation · 0.70 threshold", "live"],
-  ["Tenant data plane", "Row-level isolation · separate roles table", "live"],
-  ["Hash-chained ledger", "Append-only · SHA-512 · verifiable", "live"],
-  ["VAULTABLE enclave", "Private VPC / on-prem GPU · zero outbound egress", "reference"],
-  ["Enterprise systems", "SAP · Salesforce · Snowflake via mTLS", "reference"],
-] as const;
 
 const CONTRACT = `export interface TrustableDataProvider {
   getWorkflow(id: string): Promise<TrustableWorkflow>;
@@ -58,29 +49,29 @@ function Architecture() {
           </p>
         </div>
 
+        <GraphWorkbench />
+
         <section className="panel p-6">
-          <h2 className="text-lg font-semibold">End-to-end request path</h2>
-          <ol className="mt-5 space-y-3">
-            {FLOW.map(([t, d, k], i) => (
-              <li key={t} className="flex flex-wrap items-center gap-4 rounded-lg border border-border bg-muted/30 p-4">
-                <span className="font-mono text-xs text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
-                <div className="flex-1">
-                  <p className="font-medium">{t}</p>
-                  <p className="text-sm text-muted-foreground">{d}</p>
-                </div>
-                <ProofBadge kind={k} />
-              </li>
-            ))}
-          </ol>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="eyebrow">OASA · EngineWare.ai proprietary architecture</p>
+              <h2 className="mt-1 text-2xl font-bold">Organic API Advocate System Architecture</h2>
+            </div>
+            <ProofBadge kind="reference" />
+          </div>
+          <p className="mt-4 max-w-3xl text-sm text-muted-foreground">
+            A revolutionary, cutting-edge agentic evolution of the OAS specification: individual advocates negotiate typed endpoint subsets, parameters, permissions, and resources through governed organization graphlets.
+          </p>
+          <p className="mt-3 font-mono text-[10px] uppercase text-primary">Created and powered by EngineWare.ai · Owned by Christopher Ware · Confidential · Not for redistribution</p>
         </section>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <section className="panel p-6">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-2">
+          <section className="panel min-w-0 overflow-hidden p-6">
             <div className="flex items-center justify-between"><h2 className="text-lg font-semibold">DataProvider contract</h2></div>
             <p className="mt-1 text-sm text-muted-foreground">UI reads and writes only through this interface — Lovable iterates on the front end while the enterprise back end stays isolated.</p>
-            <pre className="mt-4 overflow-auto rounded-md bg-muted/50 p-4 font-mono text-[11px] leading-relaxed">{CONTRACT}</pre>
+            <pre className="mt-4 max-w-full overflow-auto rounded-md bg-muted/50 p-4 font-mono text-[11px] leading-relaxed">{CONTRACT}</pre>
           </section>
-          <section className="panel p-6">
+          <section className="panel min-w-0 overflow-hidden p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold">VAULTABLE zero-egress enclave</h2>
               <ProofBadge kind="reference" />

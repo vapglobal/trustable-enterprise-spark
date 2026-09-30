@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ProofBadge } from "@/components/trustable/Chrome";
 import { addFile, addLink, addNote, fmtSize, itemAsText, listLibrary, removeItem, signedUrl, togglePin, type LibraryItem } from "@/lib/library";
 import { pageMeta } from "@/lib/site";
+import { EmphasizedField } from "@/components/trustable/EmphasizedField";
 
 export const Route = createFileRoute("/_authenticated/app/library")({
   head: () => pageMeta({ title: "Library — Trustable", description: "Your private library of files, links and notes.", path: "/app/library", index: false }),
@@ -81,12 +82,12 @@ function LibraryPage() {
             <span className="text-[11px]">Any type, up to 50 MB each</span>
           </button>
           <input ref={fileRef} type="file" multiple hidden onChange={(e) => { if (e.target.files) uploadFiles(e.target.files); e.target.value = ""; }} />
-          <Input placeholder="Tags for new items, comma separated" value={tags} onChange={(e) => setTags(e.target.value)} />
+          <EmphasizedField label="Tags" value={tags} onChange={setTags}><Input placeholder="Tags for new items, comma separated" value={tags} onChange={(e) => setTags(e.target.value)} /></EmphasizedField>
         </div>
         <div className="space-y-2">
           <p className="eyebrow">Link</p>
-          <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); act(() => addLink(url, undefined, parseTags(tags)), "Link added").then(() => setUrl("")); }}>
-            <Input type="url" required placeholder="https://" value={url} onChange={(e) => setUrl(e.target.value)} />
+          <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); act(() => addLink(url, undefined, parseTags(tags)), "Link added").then(() => setUrl("")); }}>
+            <EmphasizedField label="URL" value={url} onChange={setUrl}><Input type="url" required placeholder="https://" value={url} onChange={(e) => setUrl(e.target.value)} /></EmphasizedField>
             <Button disabled={busy}>Add</Button>
           </form>
           {QUICK.filter((qk) => !data.some((d) => d.url === qk.url)).map((qk) => (
@@ -97,8 +98,8 @@ function LibraryPage() {
         </div>
         <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); act(() => addNote(note.title, note.body, parseTags(tags)), "Note saved").then(() => setNote({ title: "", body: "" })); }}>
           <p className="eyebrow">Note</p>
-          <Input placeholder="Title" value={note.title} onChange={(e) => setNote({ ...note, title: e.target.value })} />
-          <Textarea rows={2} required placeholder="Paste any context, talking points or prompts" value={note.body} onChange={(e) => setNote({ ...note, body: e.target.value })} />
+          <EmphasizedField label="Title" value={note.title} onChange={(title) => setNote({ ...note, title })}><Input placeholder="Title" value={note.title} onChange={(e) => setNote({ ...note, title: e.target.value })} /></EmphasizedField>
+          <EmphasizedField label="Context" value={note.body} onChange={(body) => setNote({ ...note, body })}><Textarea rows={2} required placeholder="Paste any context, talking points or prompts" value={note.body} onChange={(e) => setNote({ ...note, body: e.target.value })} /></EmphasizedField>
           <Button size="sm" disabled={busy}>Save note</Button>
         </form>
       </section>
@@ -110,7 +111,7 @@ function LibraryPage() {
         {allTags.map((t) => (
           <button key={t} onClick={() => setTag(tag === t ? null : t)} className={`rounded-full border px-2.5 py-0.5 text-xs ${tag === t ? "border-primary text-primary" : "border-border text-muted-foreground"}`}>#{t}</button>
         ))}
-        <Input placeholder="Search" value={q} onChange={(e) => setQ(e.target.value)} className="ml-auto h-8 w-56" />
+        <div className="ml-auto w-56"><EmphasizedField label="Search" ai={false} value={q} onChange={setQ}><Input placeholder="Search" value={q} onChange={(e) => setQ(e.target.value)} className="h-8" /></EmphasizedField></div>
       </div>
 
       {isLoading ? <p className="text-sm text-muted-foreground">Loading…</p> : shown.length === 0 ? (

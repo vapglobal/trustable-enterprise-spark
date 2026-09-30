@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getPosture } from "@/lib/security.functions";
 import { ProofBadge } from "@/components/trustable/Chrome";
+import { DrillDown, drillableClass } from "@/components/trustable/DrillDown";
 
 export const Route = createFileRoute("/_authenticated/app/posture")({
   head: () => ({ meta: [{ title: "Security posture — Trustable" }, { name: "description", content: "Tenant risk, findings, coverage and evidence freshness." }] }),
@@ -34,10 +35,10 @@ function PosturePage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Stat label="Risk score" value={`${p.risk}/100`} sub={p.riskLevel} tone={p.risk >= 60 ? "text-destructive" : p.risk >= 25 ? "text-warning" : "text-success"} />
-        <Stat label="Open findings" value={p.findings.open} sub={`${p.findings.overdue} overdue · ${p.findings.unassigned} unassigned`} />
-        <Stat label="Control coverage" value={`${pct}%`} sub={`${p.coverage.covered} of ${p.coverage.total} controls`} />
-        <Stat label="Evidence freshness" value={`${p.freshness.fresh}/${p.freshness.items.length}`} sub={`${p.freshness.stale} older than 90 days`} />
+        <DrillDown title="Risk score factors" description="Current tenant risk is calculated from open findings by severity." trigger={<button className={`rounded-xl ${drillableClass}`}><Stat label="Risk score" value={`${p.risk}/100`} sub={p.riskLevel} tone={p.risk >= 60 ? "text-destructive" : p.risk >= 25 ? "text-warning" : "text-success"} /></button>}><ul className="space-y-2 text-sm">{p.findings.bySeverity.map((s) => <li key={s.severity} className="flex justify-between"><span className="capitalize">{s.severity}</span><strong>{s.count}</strong></li>)}</ul></DrillDown>
+        <Link to="/app/evidence" className={`rounded-xl ${drillableClass}`} title="Open and manage findings"><Stat label="Open findings" value={p.findings.open} sub={`${p.findings.overdue} overdue · ${p.findings.unassigned} unassigned`} /></Link>
+        <button onClick={() => document.getElementById("control-coverage")?.scrollIntoView({ behavior: "smooth" })} className={`rounded-xl ${drillableClass}`} title="Jump to every control"><Stat label="Control coverage" value={`${pct}%`} sub={`${p.coverage.covered} of ${p.coverage.total} controls`} /></button>
+        <button onClick={() => document.getElementById("evidence-freshness")?.scrollIntoView({ behavior: "smooth" })} className={`rounded-xl ${drillableClass}`} title="Jump to evidence freshness"><Stat label="Evidence freshness" value={`${p.freshness.fresh}/${p.freshness.items.length}`} sub={`${p.freshness.stale} older than 90 days`} /></button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -58,10 +59,10 @@ function PosturePage() {
           <ul className="mt-2 divide-y divide-border text-sm">
             {p.findings.top.length === 0 && <li className="py-2 text-muted-foreground">No open findings. Submit evidence to assess controls.</li>}
             {p.findings.top.map((f, i) => (
-              <li key={i} className="flex items-center justify-between gap-3 py-2">
+              <li key={i}><Link to="/app/evidence" className="flex items-center justify-between gap-3 rounded py-2 hover:bg-accent/60" title="Open finding in Evidence">
                 <span className="truncate">P{f.priority} · {f.title}</span>
                 <span className={`rounded px-1.5 py-0.5 font-mono text-[10px] uppercase ${SEV[f.severity]}`}>{f.severity}</span>
-              </li>
+              </Link></li>
             ))}
           </ul>
           <Link to="/app/evidence" className="mt-3 inline-block text-sm text-primary hover:underline">Manage findings →</Link>
@@ -74,7 +75,7 @@ function PosturePage() {
             <tbody className="divide-y divide-border">
               {p.owners.length === 0 && <tr><td colSpan={4} className="py-2 text-muted-foreground">Nothing assigned yet.</td></tr>}
               {p.owners.map((o) => (
-                <tr key={o.owner}>
+                <tr key={o.owner} className="cursor-pointer transition hover:bg-accent/60" title={`Review findings assigned to ${o.owner}`}>
                   <td className={`py-2 ${o.owner === "Unassigned" ? "text-warning" : ""}`}>{o.owner}</td>
                   <td className="font-mono">{o.open}</td>
                   <td className="font-mono">{o.critical}</td>
@@ -89,11 +90,11 @@ function PosturePage() {
         </section>
       </div>
 
-      <section className="panel p-6">
+      <section id="control-coverage" className="panel scroll-mt-32 p-6">
         <h2 className="text-lg font-semibold">Control coverage</h2>
         <div className="mt-4 grid gap-2 md:grid-cols-2">
           {p.coverage.controls.map((c) => (
-            <div key={c.id} className="flex items-center justify-between rounded border border-border px-3 py-2 text-sm">
+            <Link to="/app/evidence" key={c.id} className="flex items-center justify-between rounded border border-border px-3 py-2 text-sm transition hover:border-primary/50 hover:bg-accent/50" title={`Review evidence and findings for ${c.id}`}>
               <div>
                 <span className="font-mono text-xs text-primary">{c.id}</span> {c.name}
                 <div className="text-[11px] text-muted-foreground">{c.frameworks}</div>
@@ -101,20 +102,20 @@ function PosturePage() {
               <span className={`font-mono text-[10px] uppercase tracking-widest ${c.status === "covered" ? "text-success" : c.status === "partial" ? "text-warning" : "text-destructive"}`}>
                 {c.status}{c.openFindings ? ` · ${c.openFindings}` : ""}
               </span>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
 
-      <section className="panel p-6">
+      <section id="evidence-freshness" className="panel scroll-mt-32 p-6">
         <h2 className="text-lg font-semibold">Evidence freshness</h2>
         <ul className="mt-3 divide-y divide-border text-sm">
           {p.freshness.items.length === 0 && <li className="py-2 text-muted-foreground">No evidence submitted yet.</li>}
           {p.freshness.items.map((e) => (
-            <li key={e.id} className="flex justify-between py-2">
+            <li key={e.id}><Link to="/app/evidence" className="flex justify-between rounded py-2 hover:bg-accent/60" title="Open evidence record">
               <span>{e.title} <span className="text-xs text-muted-foreground">· {e.kind}{e.analyzed ? "" : " · not analyzed"}</span></span>
               <span className={`font-mono text-xs ${e.ageDays > 90 ? "text-destructive" : e.ageDays > 30 ? "text-warning" : "text-success"}`}>{e.ageDays}d</span>
-            </li>
+            </Link></li>
           ))}
         </ul>
       </section>

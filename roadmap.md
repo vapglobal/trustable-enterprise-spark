@@ -1,5 +1,7 @@
 # Trustable Roadmap
 
+- [ ] Approval gate: do not alter or publish any existing reviewer-facing surface; stage each proposed change on an isolated preview route and obtain Chris Ware’s individual approval before merging it into the reviewed experience
+
 - [x] Cloud + schema + RLS + roles + seeded demo tenant + hash-chained ledger
 - [x] Auth (email + Google) and tenant-scoped shell with confidentiality footer
 - [x] Trustable Flow, CISO console, ROI, Red Team, landing + architecture
@@ -14,3 +16,37 @@
 - [x] Clean SEO: shared title/description/keywords in sync with landing; site indexable, private pages noindex
 - [x] Personal Library (files/links/notes, drag-drop, filters, tags, previews) + Settings; insert-from-library in Flow
 - [ ] Voice transcription — never received; needs Chris to resend
+- [ ] Enterprise interaction pass: drill-down details, stronger visual depth, complete tooltips, and global multi-format report actions
+- [ ] Global context layer: emphasized form fields, per-field AI assist/action menus, and persistent top-nav AI assistant with suggestions, history, filters, and multi-select; align with CareerCaptain and MyCDB patterns
+- [ ] Rebuild Trustable Flow around Bob's two-week mobile pilot: searchable faceted flow catalog with dozens of role-based examples, edit/save-as/update/share, timestamps, connectors, live build progress, graph map, risk gates, Red Team handoff, API/code inspection, measurable KPI affirmation, and advanced drill-downs
+- [ ] Full-screen API Console: sanitized parameterized calls, telemetry/logs, search/filter/multi-select, generated endpoint documentation and saved queries, live OAS/sub-spec export; EngineWare/MyCDB SQL Server remains future source of truth pending direct connection contract
+- [x] Landing page: explain the simple Trustable creation loop and measurable enterprise outcomes in plain language
+- [ ] Global choice rule: every multiple-choice prompt identifies a recommended option and always provides custom Other text input
+- [ ] EngineWare positioning: present Trustable as powered by Lovable and the EngineWare backend; use the official name “Organic API Advocate System Architecture (OASA), created and powered by EngineWare.ai” for the organic API advocate/router/sub-command architecture; document organization graph mapping, customized graphlets, TypeSafe governance, telemetry, RBAC, and evolving endpoint/query negotiation
+- [ ] EngineWare integration pre-wiring: discover available global modules, agent-memory recall, JEV TypeSafe endpoints, audit/ranking/decision/state modules; connect only verified interfaces and mark unavailable connections clearly
+- [ ] Dedicated in-app technical showcase plus confidential PDF and PowerPoint with diagrams, table of contents, and interview-ready narrative; sync corresponding CareerCaptain Trustable demo content
+- [ ] Apply highly visible EngineWare.ai / Christopher Ware confidential proprietary IP and no-redistribution markings to Trustable pages, exports, diagrams, and presentation deliverables
+- [ ] Deliver approved package by email and Dropbox once connected destinations and recipients are verified
+- [ ] Review the uploaded EngineWare Organic Advocate System backend-agent summaries against the Trustable specification and verified backend interfaces
+- [x] Publish the verified Trustable update after the specification audit and security check; unresolved security finding reported explicitly
+- [ ] Establish a contract-based completion ledger: each requirement must carry implementation evidence, test evidence, red-team status, TypeSafe/JEV status, Live/Reference classification, and immutable audit receipt before completion
+- [ ] Run comprehensive red-team and security verification across every live Trustable capability; do not mark items complete without evidence
+- [ ] Continue iterative milestone reporting; email milestone updates only after a verified email connection and recipient are available
+- [x] Rebuild the API Console from verified EngineWare global UI/API-console module patterns: single-frame flyout workspace, Magic Bar, sub-tabs, left endpoint tree, right inspector, guided prefilled controls, and live endpoint verification; adapt only presentation styling to Trustable without changing protected configuration or backend contracts
+- [x] Upgrade Trustable Flow’s narrow node list into a visible whiteboard dashboard with tabbed builder panels, graph/map/detail panes, and a substantially improved mobile-first creation experience
+- [x] Add dark/light/system appearance control to the always-present Magic Bar, then replace Flow’s flat search filters with a collapsible flyout facet tree and autocomplete-ready guided fields
+- [x] Replace Flow and OASA filter surfaces with one compact reusable searchable multi-select tree: global inline search, nested facets, counts, clear, recommended defaults, keyboard navigation, screen-reader labels, and an ellipsis trigger with tooltip
+- [x] Rebuild the landing-page creation loop with readable first-viewport typography and the sequence: create something useful, prove its value automatically, build the next one, share the success, and watch the next—or all the rest—build themselves
+- [x] Replace the Architecture page’s disconnected list with a compact, animated, color-coded graph map; add node drill-downs, tooltips, deeper shadows, Live/Reference truth labels, and validate the design against the available CareerCaptain resume-graph patterns
+- [ ] Verify light, dark, desktop, and mobile layouts with automated and browser-level regression checks for the filter tree, landing page, Flow, OASA Console, and Architecture page — desktop/mobile rendering passed; authenticated tree interaction rerun in progress
+- [x] Connect OASA Console action rows to their real callable server actions where contracts permit; show accurate idle, loading, success, validation, denied, and provider/error states without simulated responses
+- [ ] Apply reusable guided-field patterns across Trustable forms: searchable autocomplete, recommended prefill, dropdown suggestions, custom Other entry, inline help, keyboard support, screen-reader support, and client/server validation
+- [x] Add an in-app contract completion ledger that organizes every rapid-fire requirement with implementation proof, QA evidence, red-team result, TypeSafe/JEV verification, Live/Reference status, and completion gates; keep immutable receipt linking honestly pending a verified backend write contract
+- [ ] Build the graph foundation as a full canvas workspace: completed draggable nodes, searchable palette, collapsible inspector, weighted animated paths, trust-boundary overlays, accessible list, keyboard movement, undo/redo, and session save; connection editing, harness/loop overlays, multi-select, and verified simulation remain open
+- [ ] Review and adapt verified patterns from CareerCaptain Career Graph and the MICDP2 geospatial global module; preserve EngineWare backend ownership and label unavailable contracts Reference architecture
+- [ ] Establish a repeatable QA matrix and milestone checklist for every live surface, covering permissions, validation, request states, accessibility, themes, desktop/mobile layouts, graph interactions, audit receipts, red-team evidence, and TypeSafe/JEV evidence
+- [x] Change the homepage autonomy line to “Then watch the next—and all the rest—build themselves.”
+- [ ] Add verified owner email alerts, push notifications, and security summaries for successful and attempted sign-ins by named reviewers or any user; classify critical events accurately and do not claim delivery until notification contracts are connected and tested
+- [x] Build the Trustable growth organism experience: dedicated Level 1/5/10 synchronized toggle, progressively richer builder interfaces, measurable minutes-saved certification path, user and synaptic-link graph, feature/advocate unlocks, management and sales reporting, and an illustrative contract-discount calculator; distinguish live tenant run data from proposed program rules and keep every authority beneath customer RBAC, delegated approvals, and contractual gates — verified desktop/mobile, light/dark, synchronized levels, sliders, calculator update, public story, zero overflow, and zero browser errors on 25 Sep 2026
+- [ ] Build a reusable Trustable motion-story system inspired by the supplied CLM flow video: private proposal staged at `/motion-preview` with three selectable stories, replay/pause, responsive layout, reduced-motion fallback, and accurate Live/Reference labels; awaiting individual approval before any existing surface changes
+- [ ] Establish verified reviewer activity reporting for Lovable employees: findings verified for Luke, Kevin, Jessica, and Matt, but no existing Audit surface changes are permitted before individual approval

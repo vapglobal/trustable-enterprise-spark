@@ -13,14 +13,18 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as ArchitectureRouteImport } from './routes/architecture'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as MotionPreviewRouteImport } from './routes/motion-preview'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
 import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authenticated/app.access'
+import { Route as AuthenticatedAppApiConsoleRouteImport } from './routes/_authenticated/app.api-console'
 import { Route as AuthenticatedAppAuditRouteImport } from './routes/_authenticated/app.audit'
 import { Route as AuthenticatedAppCisoRouteImport } from './routes/_authenticated/app.ciso'
+import { Route as AuthenticatedAppCompletionLedgerRouteImport } from './routes/_authenticated/app.completion-ledger'
 import { Route as AuthenticatedAppEvidenceRouteImport } from './routes/_authenticated/app.evidence'
 import { Route as AuthenticatedAppFlowRouteImport } from './routes/_authenticated/app.flow'
+import { Route as AuthenticatedAppGrowthRouteImport } from './routes/_authenticated/app.growth'
 import { Route as AuthenticatedAppLibraryRouteImport } from './routes/_authenticated/app.library'
 import { Route as AuthenticatedAppPostureRouteImport } from './routes/_authenticated/app.posture'
 import { Route as AuthenticatedAppRedteamRouteImport } from './routes/_authenticated/app.redteam'
@@ -45,6 +49,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MotionPreviewRoute = MotionPreviewRouteImport.update({
+  id: '/motion-preview',
+  path: '/motion-preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -65,6 +74,12 @@ const AuthenticatedAppAccessRoute = AuthenticatedAppAccessRouteImport.update({
   path: '/access',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppApiConsoleRoute =
+  AuthenticatedAppApiConsoleRouteImport.update({
+    id: '/api-console',
+    path: '/api-console',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppAuditRoute = AuthenticatedAppAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
@@ -75,6 +90,12 @@ const AuthenticatedAppCisoRoute = AuthenticatedAppCisoRouteImport.update({
   path: '/ciso',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppCompletionLedgerRoute =
+  AuthenticatedAppCompletionLedgerRouteImport.update({
+    id: '/completion-ledger',
+    path: '/completion-ledger',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppEvidenceRoute =
   AuthenticatedAppEvidenceRouteImport.update({
     id: '/evidence',
@@ -84,6 +105,11 @@ const AuthenticatedAppEvidenceRoute =
 const AuthenticatedAppFlowRoute = AuthenticatedAppFlowRouteImport.update({
   id: '/flow',
   path: '/flow',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppGrowthRoute = AuthenticatedAppGrowthRouteImport.update({
+  id: '/growth',
+  path: '/growth',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
 const AuthenticatedAppLibraryRoute = AuthenticatedAppLibraryRouteImport.update({
@@ -112,13 +138,17 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
+  '/motion-preview': typeof MotionPreviewRoute
   '/reset-password': typeof ResetPasswordRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/api-console': typeof AuthenticatedAppApiConsoleRoute
   '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/completion-ledger': typeof AuthenticatedAppCompletionLedgerRoute
   '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/growth': typeof AuthenticatedAppGrowthRoute
   '/app/library': typeof AuthenticatedAppLibraryRoute
   '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
@@ -129,12 +159,16 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
+  '/motion-preview': typeof MotionPreviewRoute
   '/reset-password': typeof ResetPasswordRoute
   '/app/access': typeof AuthenticatedAppAccessRoute
+  '/app/api-console': typeof AuthenticatedAppApiConsoleRoute
   '/app/audit': typeof AuthenticatedAppAuditRoute
   '/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/app/completion-ledger': typeof AuthenticatedAppCompletionLedgerRoute
   '/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/app/flow': typeof AuthenticatedAppFlowRoute
+  '/app/growth': typeof AuthenticatedAppGrowthRoute
   '/app/library': typeof AuthenticatedAppLibraryRoute
   '/app/posture': typeof AuthenticatedAppPostureRoute
   '/app/redteam': typeof AuthenticatedAppRedteamRoute
@@ -147,13 +181,17 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
+  '/motion-preview': typeof MotionPreviewRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/app/access': typeof AuthenticatedAppAccessRoute
+  '/_authenticated/app/api-console': typeof AuthenticatedAppApiConsoleRoute
   '/_authenticated/app/audit': typeof AuthenticatedAppAuditRoute
   '/_authenticated/app/ciso': typeof AuthenticatedAppCisoRoute
+  '/_authenticated/app/completion-ledger': typeof AuthenticatedAppCompletionLedgerRoute
   '/_authenticated/app/evidence': typeof AuthenticatedAppEvidenceRoute
   '/_authenticated/app/flow': typeof AuthenticatedAppFlowRoute
+  '/_authenticated/app/growth': typeof AuthenticatedAppGrowthRoute
   '/_authenticated/app/library': typeof AuthenticatedAppLibraryRoute
   '/_authenticated/app/posture': typeof AuthenticatedAppPostureRoute
   '/_authenticated/app/redteam': typeof AuthenticatedAppRedteamRoute
@@ -166,13 +204,17 @@ export interface FileRouteTypes {
     | '/'
     | '/architecture'
     | '/auth'
+    | '/motion-preview'
     | '/reset-password'
     | '/app'
     | '/app/access'
+    | '/app/api-console'
     | '/app/audit'
     | '/app/ciso'
+    | '/app/completion-ledger'
     | '/app/evidence'
     | '/app/flow'
+    | '/app/growth'
     | '/app/library'
     | '/app/posture'
     | '/app/redteam'
@@ -183,12 +225,16 @@ export interface FileRouteTypes {
     | '/'
     | '/architecture'
     | '/auth'
+    | '/motion-preview'
     | '/reset-password'
     | '/app/access'
+    | '/app/api-console'
     | '/app/audit'
     | '/app/ciso'
+    | '/app/completion-ledger'
     | '/app/evidence'
     | '/app/flow'
+    | '/app/growth'
     | '/app/library'
     | '/app/posture'
     | '/app/redteam'
@@ -200,13 +246,17 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/architecture'
     | '/auth'
+    | '/motion-preview'
     | '/reset-password'
     | '/_authenticated/app'
     | '/_authenticated/app/access'
+    | '/_authenticated/app/api-console'
     | '/_authenticated/app/audit'
     | '/_authenticated/app/ciso'
+    | '/_authenticated/app/completion-ledger'
     | '/_authenticated/app/evidence'
     | '/_authenticated/app/flow'
+    | '/_authenticated/app/growth'
     | '/_authenticated/app/library'
     | '/_authenticated/app/posture'
     | '/_authenticated/app/redteam'
@@ -219,6 +269,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ArchitectureRoute: typeof ArchitectureRoute
   AuthRoute: typeof AuthRoute
+  MotionPreviewRoute: typeof MotionPreviewRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
@@ -252,6 +303,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/motion-preview': {
+      id: '/motion-preview'
+      path: '/motion-preview'
+      fullPath: '/motion-preview'
+      preLoaderRoute: typeof MotionPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -280,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppAccessRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/api-console': {
+      id: '/_authenticated/app/api-console'
+      path: '/api-console'
+      fullPath: '/app/api-console'
+      preLoaderRoute: typeof AuthenticatedAppApiConsoleRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/audit': {
       id: '/_authenticated/app/audit'
       path: '/audit'
@@ -294,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppCisoRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/completion-ledger': {
+      id: '/_authenticated/app/completion-ledger'
+      path: '/completion-ledger'
+      fullPath: '/app/completion-ledger'
+      preLoaderRoute: typeof AuthenticatedAppCompletionLedgerRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/evidence': {
       id: '/_authenticated/app/evidence'
       path: '/evidence'
@@ -306,6 +378,13 @@ declare module '@tanstack/react-router' {
       path: '/flow'
       fullPath: '/app/flow'
       preLoaderRoute: typeof AuthenticatedAppFlowRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/growth': {
+      id: '/_authenticated/app/growth'
+      path: '/growth'
+      fullPath: '/app/growth'
+      preLoaderRoute: typeof AuthenticatedAppGrowthRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
     '/_authenticated/app/library': {
@@ -341,10 +420,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppAccessRoute: typeof AuthenticatedAppAccessRoute
+  AuthenticatedAppApiConsoleRoute: typeof AuthenticatedAppApiConsoleRoute
   AuthenticatedAppAuditRoute: typeof AuthenticatedAppAuditRoute
   AuthenticatedAppCisoRoute: typeof AuthenticatedAppCisoRoute
+  AuthenticatedAppCompletionLedgerRoute: typeof AuthenticatedAppCompletionLedgerRoute
   AuthenticatedAppEvidenceRoute: typeof AuthenticatedAppEvidenceRoute
   AuthenticatedAppFlowRoute: typeof AuthenticatedAppFlowRoute
+  AuthenticatedAppGrowthRoute: typeof AuthenticatedAppGrowthRoute
   AuthenticatedAppLibraryRoute: typeof AuthenticatedAppLibraryRoute
   AuthenticatedAppPostureRoute: typeof AuthenticatedAppPostureRoute
   AuthenticatedAppRedteamRoute: typeof AuthenticatedAppRedteamRoute
@@ -354,10 +436,13 @@ interface AuthenticatedAppRouteChildren {
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppAccessRoute: AuthenticatedAppAccessRoute,
+  AuthenticatedAppApiConsoleRoute: AuthenticatedAppApiConsoleRoute,
   AuthenticatedAppAuditRoute: AuthenticatedAppAuditRoute,
   AuthenticatedAppCisoRoute: AuthenticatedAppCisoRoute,
+  AuthenticatedAppCompletionLedgerRoute: AuthenticatedAppCompletionLedgerRoute,
   AuthenticatedAppEvidenceRoute: AuthenticatedAppEvidenceRoute,
   AuthenticatedAppFlowRoute: AuthenticatedAppFlowRoute,
+  AuthenticatedAppGrowthRoute: AuthenticatedAppGrowthRoute,
   AuthenticatedAppLibraryRoute: AuthenticatedAppLibraryRoute,
   AuthenticatedAppPostureRoute: AuthenticatedAppPostureRoute,
   AuthenticatedAppRedteamRoute: AuthenticatedAppRedteamRoute,
@@ -384,6 +469,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ArchitectureRoute: ArchitectureRoute,
   AuthRoute: AuthRoute,
+  MotionPreviewRoute: MotionPreviewRoute,
   ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
