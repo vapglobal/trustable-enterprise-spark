@@ -443,7 +443,7 @@ export function MotionStory({ compact = false }: { compact?: boolean }) {
   const [selectedNodeId, setSelectedNodeId] = useState<string>("intent");
 
   const scene = useMemo(
-    () => SCENES.find((item) => item.id === sceneId) ?? SCENES[0],
+    () => SCENES.find((item) => item.id === sceneId) ?? SCENES[0]!,
     [sceneId]
   );
 
@@ -467,7 +467,7 @@ export function MotionStory({ compact = false }: { compact?: boolean }) {
     const interval = setInterval(() => {
       setActiveStepIndex((prev) => {
         const nextIndex = (prev + 1) % scene.nodes.length;
-        setSelectedNodeId(scene.nodes[nextIndex].id);
+        setSelectedNodeId(scene.nodes[nextIndex]!.id);
         return nextIndex;
       });
     }, intervalTime);
@@ -476,7 +476,7 @@ export function MotionStory({ compact = false }: { compact?: boolean }) {
   }, [isPlaying, playbackSpeed, scene.nodes]);
 
   const activeNode = useMemo(
-    () => nodeMap.get(selectedNodeId) ?? scene.nodes[activeStepIndex] ?? scene.nodes[0],
+    () => nodeMap.get(selectedNodeId) ?? scene.nodes[activeStepIndex] ?? scene.nodes[0]!,
     [nodeMap, selectedNodeId, scene.nodes, activeStepIndex]
   );
 
@@ -490,18 +490,18 @@ export function MotionStory({ compact = false }: { compact?: boolean }) {
   const handleStepPrev = () => {
     const prev = (activeStepIndex - 1 + scene.nodes.length) % scene.nodes.length;
     setActiveStepIndex(prev);
-    setSelectedNodeId(scene.nodes[prev].id);
+    setSelectedNodeId(scene.nodes[prev]!.id);
   };
 
   const handleStepNext = () => {
     const next = (activeStepIndex + 1) % scene.nodes.length;
     setActiveStepIndex(next);
-    setSelectedNodeId(scene.nodes[next].id);
+    setSelectedNodeId(scene.nodes[next]!.id);
   };
 
   const handleReset = () => {
     setActiveStepIndex(0);
-    setSelectedNodeId(scene.nodes[0].id);
+    setSelectedNodeId(scene.nodes[0]!.id);
     setIsPlaying(true);
     toast.success("Animation sequence restarted from Stage 1.");
   };

@@ -179,13 +179,13 @@ export async function executeSecurityAttackSimulation(
   modelTier: 'heuristic_scanner' | 'mid_tier_llm' | 'frontier_swarm',
   onLogUpdate?: (log: SecurityAttackRunResult['logs'][0]) => void
 ): Promise<SecurityAttackRunResult> {
-  const scenario = SECURITY_ATTACK_SCENARIOS.find(s => s.id === scenarioId) || SECURITY_ATTACK_SCENARIOS[0];
+  const scenario = SECURITY_ATTACK_SCENARIOS.find(s => s.id === scenarioId) || SECURITY_ATTACK_SCENARIOS[0]!;
   const logs: SecurityAttackRunResult['logs'] = [];
   
   const tierDelay = modelTier === 'heuristic_scanner' ? 120 : modelTier === 'mid_tier_llm' ? 240 : 380;
 
   for (let i = 0; i < scenario.probes.length; i++) {
-    const probe = scenario.probes[i];
+    const probe = scenario.probes[i]!;
     await new Promise(resolve => setTimeout(resolve, tierDelay));
     
     // Simulate real defensive evaluation

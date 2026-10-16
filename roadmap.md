@@ -2,6 +2,8 @@
 
 - [ ] Approval gate: do not alter or publish any existing reviewer-facing surface; stage each proposed change on an isolated preview route and obtain Chris Ware’s individual approval before merging it into the reviewed experience
 
+- [x] Leak sanitization (2026-10-16): removed all 14 confidential documents from the public web folder (resume, OASA deck, dossiers, executive emails, LinkedIn overhaul); moved to a private storage bucket; downloads now require sign-in and are issued as 5-minute revocable signed links; exec names removed from the public Architecture page copy; old public paths return 404; verified signed-out refusal, signed-in download (200, application/pdf), and tampered-token rejection (400). Unpublish of the live site is Chris's step (Publish → Unpublish); republish the sanitized build after it is down.
+
 - [x] Cloud + schema + RLS + roles + seeded demo tenant + hash-chained ledger
 - [x] Auth (email + Google) and tenant-scoped shell with confidentiality footer
 - [x] Trustable Flow, CISO console, ROI, Red Team, landing + architecture
