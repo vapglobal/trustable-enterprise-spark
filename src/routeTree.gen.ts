@@ -13,10 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as ArchitectureRouteImport } from './routes/architecture'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as MotionPreviewRouteImport } from './routes/motion-preview'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as FlowRouteImport } from './routes/flow'
 import { Route as GrowthRouteImport } from './routes/growth'
+import { Route as MotionPreviewRouteImport } from './routes/motion-preview'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
 import { Route as AuthenticatedAppAccessRouteImport } from './routes/_authenticated/app.access'
@@ -51,16 +51,6 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MotionPreviewRoute = MotionPreviewRouteImport.update({
-  id: '/motion-preview',
-  path: '/motion-preview',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FlowRoute = FlowRouteImport.update({
   id: '/flow',
   path: '/flow',
@@ -69,6 +59,16 @@ const FlowRoute = FlowRouteImport.update({
 const GrowthRoute = GrowthRouteImport.update({
   id: '/growth',
   path: '/growth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MotionPreviewRoute = MotionPreviewRouteImport.update({
+  id: '/motion-preview',
+  path: '/motion-preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
