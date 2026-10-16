@@ -53,7 +53,7 @@ export function RedTeam() {
 
   const selectedScenario =
     SECURITY_ATTACK_SCENARIOS.find((s) => s.id === selectedScenarioId) ||
-    SECURITY_ATTACK_SCENARIOS[0];
+    SECURITY_ATTACK_SCENARIOS[0]!;
 
   async function handleLaunchAttack() {
     setIsSimulating(true);
