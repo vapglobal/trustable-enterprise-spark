@@ -165,18 +165,18 @@ function Architecture() {
                 Executive Interview Decks & Architecture Downloads
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Confidential materials prepared for Lovable Executive Leadership (Matthew Norton, Jessica, Katie, Kevin, Luke).
+                Confidential materials available to signed-in reviewers only. Downloads are issued as short-lived, revocable links.
               </p>
             </div>
             <ProofBadge kind="live" />
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <a
-              href="/downloads/ENGINEWARE_ORGANIC_API_SURFACE_PRESENTATION.pdf"
-              target="_blank"
-              rel="noreferrer"
-              className="flex flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 hover:border-primary/50 transition-colors"
+            <button
+              type="button"
+              onClick={() => openDoc("ENGINEWARE_ORGANIC_API_SURFACE_PRESENTATION.pdf")}
+              disabled={busyDoc !== null}
+              className="flex cursor-pointer flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 text-left hover:border-primary/50 transition-colors disabled:opacity-60"
             >
               <div>
                 <span className="font-mono text-[10px] text-primary uppercase font-bold">12-Slide Executive PDF</span>
@@ -184,15 +184,15 @@ function Architecture() {
                 <p className="mt-1 text-xs text-muted-foreground">Landscape card deck covering multi-agent dialectic, TypeSafe economics, and viral PLG.</p>
               </div>
               <span className="mt-4 inline-flex items-center gap-1 text-xs text-primary font-medium">
-                <Download className="h-3 w-3" /> Download PDF (29 KB)
+                <Download className="h-3 w-3" /> {busyDoc === "ENGINEWARE_ORGANIC_API_SURFACE_PRESENTATION.pdf" ? "Preparing secure link…" : "Download PDF (sign-in required)"}
               </span>
-            </a>
+            </button>
 
-            <a
-              href="/downloads/TRUSTABLE_TECHNICAL_PRESENTATION.pdf"
-              target="_blank"
-              rel="noreferrer"
-              className="flex flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 hover:border-primary/50 transition-colors"
+            <button
+              type="button"
+              onClick={() => openDoc("TRUSTABLE_TECHNICAL_PRESENTATION.pdf")}
+              disabled={busyDoc !== null}
+              className="flex cursor-pointer flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 text-left hover:border-primary/50 transition-colors disabled:opacity-60"
             >
               <div>
                 <span className="font-mono text-[10px] text-primary uppercase font-bold">16-Slide Architecture Master</span>
@@ -200,14 +200,15 @@ function Architecture() {
                 <p className="mt-1 text-xs text-muted-foreground">Deep hardware enclave specs, AMD SEV-SNP isolation, and $4.2M ARR payback model.</p>
               </div>
               <span className="mt-4 inline-flex items-center gap-1 text-xs text-primary font-medium">
-                <Download className="h-3 w-3" /> Download PDF (38 KB)
+                <Download className="h-3 w-3" /> {busyDoc === "TRUSTABLE_TECHNICAL_PRESENTATION.pdf" ? "Preparing secure link…" : "Download PDF (sign-in required)"}
               </span>
-            </a>
+            </button>
 
-            <a
-              href="/downloads/ENGINEWARE_ORGANIC_API_SURFACE_PRESENTATION.pptx"
-              download
-              className="flex flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 hover:border-primary/50 transition-colors"
+            <button
+              type="button"
+              onClick={() => openDoc("ENGINEWARE_ORGANIC_API_SURFACE_PRESENTATION.pptx")}
+              disabled={busyDoc !== null}
+              className="flex cursor-pointer flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 text-left hover:border-primary/50 transition-colors disabled:opacity-60"
             >
               <div>
                 <span className="font-mono text-[10px] text-primary uppercase font-bold">Widescreen PPTX Deck</span>
@@ -215,15 +216,15 @@ function Architecture() {
                 <p className="mt-1 text-xs text-muted-foreground">16:9 widescreen presentation deck with embedded speaker notes and card layouts.</p>
               </div>
               <span className="mt-4 inline-flex items-center gap-1 text-xs text-primary font-medium">
-                <Download className="h-3 w-3" /> Download PPTX (53 KB)
+                <Download className="h-3 w-3" /> {busyDoc === "ENGINEWARE_ORGANIC_API_SURFACE_PRESENTATION.pptx" ? "Preparing secure link…" : "Download PPTX (sign-in required)"}
               </span>
-            </a>
+            </button>
 
-            <a
-              href="/downloads/MATT_NORTON_AOAS_EXECUTIVE_EMAIL.html"
-              target="_blank"
-              rel="noreferrer"
-              className="flex flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 hover:border-primary/50 transition-colors"
+            <button
+              type="button"
+              onClick={() => openDoc("MATT_NORTON_AOAS_EXECUTIVE_EMAIL.html")}
+              disabled={busyDoc !== null}
+              className="flex cursor-pointer flex-col justify-between rounded-lg border border-border bg-muted/30 p-4 text-left hover:border-primary/50 transition-colors disabled:opacity-60"
             >
               <div>
                 <span className="font-mono text-[10px] text-primary uppercase font-bold">Executive Email Preview</span>
@@ -231,9 +232,9 @@ function Architecture() {
                 <p className="mt-1 text-xs text-muted-foreground">Rendered HTML email briefing explaining AOAS Sub-Commander nodes and Lovable duality.</p>
               </div>
               <span className="mt-4 inline-flex items-center gap-1 text-xs text-primary font-medium">
-                <FileText className="h-3 w-3" /> View HTML Briefing
+                <FileText className="h-3 w-3" /> {busyDoc === "MATT_NORTON_AOAS_EXECUTIVE_EMAIL.html" ? "Preparing secure link…" : "View HTML Briefing (sign-in required)"}
               </span>
-            </a>
+            </button>
           </div>
         </section>
 
