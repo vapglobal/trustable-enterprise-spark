@@ -36,6 +36,21 @@ const ROADMAP = [
 ];
 
 function Architecture() {
+  const fetchDocUrl = useServerFn(getDocUrl);
+  const [busyDoc, setBusyDoc] = useState<string | null>(null);
+
+  async function openDoc(name: string) {
+    setBusyDoc(name);
+    try {
+      const { url } = await fetchDocUrl({ data: { name } });
+      window.open(url, "_blank", "noopener");
+    } catch {
+      toast.error("Sign in to access confidential downloads.");
+    } finally {
+      setBusyDoc(null);
+    }
+  }
+
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
