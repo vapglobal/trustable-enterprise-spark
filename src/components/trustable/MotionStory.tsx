@@ -496,12 +496,12 @@ export function MotionStory({ compact = false }: { compact?: boolean }) {
   const handleStepNext = () => {
     const next = (activeStepIndex + 1) % scene.nodes.length;
     setActiveStepIndex(next);
-    setSelectedNodeId(scene.nodes[next].id);
+    setSelectedNodeId(scene.nodes[next]!.id);
   };
 
   const handleReset = () => {
     setActiveStepIndex(0);
-    setSelectedNodeId(scene.nodes[0].id);
+    setSelectedNodeId(scene.nodes[0]!.id);
     setIsPlaying(true);
     toast.success("Animation sequence restarted from Stage 1.");
   };
