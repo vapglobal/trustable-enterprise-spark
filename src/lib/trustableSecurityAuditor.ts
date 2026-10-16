@@ -185,7 +185,7 @@ export async function executeSecurityAttackSimulation(
   const tierDelay = modelTier === 'heuristic_scanner' ? 120 : modelTier === 'mid_tier_llm' ? 240 : 380;
 
   for (let i = 0; i < scenario.probes.length; i++) {
-    const probe = scenario.probes[i];
+    const probe = scenario.probes[i]!;
     await new Promise(resolve => setTimeout(resolve, tierDelay));
     
     // Simulate real defensive evaluation
