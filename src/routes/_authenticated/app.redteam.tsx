@@ -41,7 +41,7 @@ export function RedTeam() {
   const qc = useQueryClient();
 
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>(
-    SECURITY_ATTACK_SCENARIOS[0].id
+    SECURITY_ATTACK_SCENARIOS[0]!.id
   );
   const [selectedModelTier, setSelectedModelTier] = useState<
     "heuristic_scanner" | "mid_tier_llm" | "frontier_swarm"
