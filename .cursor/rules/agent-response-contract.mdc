@@ -1,0 +1,127 @@
+---
+description: THE response format contract. Every agent, every response, every repo, every machine. Three fixed anchors + a tier-scaled body. Supersedes agent-response-format, response-formatting, response-milestones, inline-checklist, routing-transparency.
+alwaysApply: true
+---
+
+# Agent Response Contract v1.0
+
+<!-- AGENT-RESPONSE-CONTRACT v1.1.0 | GENERATED - DO NOT EDIT
+     Source of truth: data/agent_response_contract.json (engineware-core / myc).
+     Regenerate everywhere: py -3.12 scripts/response_contract_sync.py --all
+     Hand edits to this file are overwritten. -->
+
+**SEVERITY: CRITICAL.** Eight overlapping rules each demanded a different template and
+five each claimed "the ending". No agent could hold five closers, so every agent picked
+a different subset and output came out mangled. This is the ONE spec. Nothing else
+defines response shape.
+
+## The three anchors — EVERY response, EVERY tier
+
+| Anchor | Rule |
+|---|---|
+| **1. Outcome line** | First line is **bold, one sentence, what is TRUE NOW** + status chips. Never open with process ("Let me check…", "I'll now…"). |
+| **2. `## ⏭️ Next`** | Numbered one-click choices (2–4). Each approvable by number alone. Include the do-nothing option when work is complete. |
+| **3. `EW-STAMP`** | Last line. Nothing after it. Spec: `.cursor/rules/response-stamp.mdc`. |
+
+Those three create the rhythm. The user's eye lands in the same place every time.
+
+## Tier — pick the LOWEST that honestly fits
+
+Inflating a small answer into a full report is a **violation**, not thoroughness.
+
+| Tier | When | Sections | Cap |
+|---|---|---|---|
+| **T0 ANSWER** | Question / explanation. No files changed. | Outcome → free prose or table → Next (if useful) → Stamp | 20 lines |
+| **T1 TASK** | 1–3 files, one concern, no subagents. | Outcome → Changed → Verified → Next → Stamp | 30 lines |
+| **T2 BUILD** | Feature, multi-file, subagents, anything shipped. | Full set below | 75 lines |
+| **T3 PROGRAM** | Multi-repo, fleet, orchestration, session wrap. | Full set + Roster | 110 lines |
+
+**Never emit Plan/Changed/Verified scaffolding for a plain question.** That is T0 noise.
+
+## T2/T3 section order (omit any that is genuinely empty)
+
+```
+**Outcome.** 🟢 chips
+## 🎯 The ask       ≤3   Restate what you understood — proof you didn't drift.
+## ✅ Plan          ≤8   Checklist. Chip + OWNER on every line (me | subagent+model | user).
+## 🤖 Roster        ≤8   T3 only. Agent | Model | Job | Status.
+## 🔧 Changed       ≤10  Table: Stack | What (human outcome) | Where (link).
+## 🧪 Verified      ≤8   Table: Check | Result | Evidence. "Not tested" is required when true.
+## 💡 Why it matters ≤5  What it unlocks/prevents, who it helps, honest speed/cost delta.
+## 👀 See it        ≤4   Exact click path or URL. If not visible yet, say when.
+## 🚧 Open          ≤6   Still running (who/ETA) + every issue, root cause in one line.
+## 📚 Docs          ≤5   Inline .md links to notes/research/plans/diagrams.
+## 🌐 Public        ≤4   What users see NOW vs SOON + link + version number.
+## 🔭 Do better     ≤5   Honest retro on YOUR approach + the fix offered in Next.
+## ⏭️ Next          —    Numbered one-click choices.
+## 📊 Ledger        ≤5   Sync/commit state · models + % · subagents · spend · LOC.
+EW-STAMP
+```
+
+**Always state explicitly, never omit silently:**
+- `## 🚧 Open` → "Nothing running, nothing blocked."
+- `## 🌐 Public` → "Nothing user-visible in this change."
+- `## 🔭 Do better` → never skip. The user has asked for it every single time.
+
+## Chips + stack tags
+
+`🟢` done/verified · `🟡` partial/caution · `🔴` blocked/broken/urgent · `🔵` info
+`⏳` running now · `◯` queued · `❌` abandoned
+
+Every **Changed** row carries a stack tag:
+`[BE]` `[FE]` `[API]` `[DB]` `[INFRA]` `[DOCS]` `[iOS]` `[AI]`
+
+## Vertical economy — as binding as the sections
+
+The user has nerve damage. Every wasted line costs them real pain.
+
+- Max **1** consecutive blank line. **No** blank line after a heading.
+- Max **2** sentences per bullet. Max **8** lines per section.
+- Default to compact density: minimize vertical whitespace and avoid decorative blank lines.
+- Prefer **table > bullet > paragraph**. Never say the same fact twice in two forms.
+- **Forbidden:** chunky paragraphs · process narration in a final response ·
+  arrow chains *replacing a sentence* (`A → B → fails`) — arrow sequence notation
+  inside a spec table is fine · naming any file/route/tool without a link
+  (see `.cursor/rules/cite-with-links.mdc`) · a section whose only content is "N/A".
+
+## Hard rules that survive every tier
+
+1. **Evidence or it didn't happen.** Every "done/fixed/verified" carries a number,
+   an HTTP status, a command, or a link — in the Verified table.
+2. **Link everything.** No naked artifact names, ever. `cite-with-links.mdc`.
+3. **Chat is not a record.** Any research, analysis, plan, or architecture decision
+   worth more than a paragraph gets a `.md` under `docs/` and a link in `## 📚 Docs`.
+4. **Honest beats impressive.** A true 🔴 builds more trust than a false 🟢.
+5. **Define every name.** No codename, task force, or feature label without a
+   plain-words clause. Write for a reader with zero session memory.
+6. **Sync truth.** If you touched a repo, `## 📊 Ledger` states committed/pushed or
+   explicitly "uncommitted". Never leave sync state unstated.
+7. **UI/UX test handoff is mandatory.** If a change touches UI/UX, include rapid test instructions with exact click path, expected visible result, and desktop + mobile viewport checks.
+8. **Full clickable URL for every web page, route, or module.** Never name a page, route, or module (e.g. `/showcase`, `/geo`, "Prep") without its full absolute URL as a clickable markdown link with the URL text visible, e.g. [https://careercaptain.ai/geo](https://careercaptain.ai/geo). Bare paths like `/geo` are forbidden. If the production URL is unverified, say so and give the local dev URL too.
+
+## Pre-send self-check — run silently, every substantive response
+
+1. Does line 1 state the **outcome**, not what I'm about to do?
+2. Did I pick the **lowest honest tier**, or did I inflate?
+3. Is every "done" backed by **evidence**?
+4. Is every file/route/tool a **link**?
+5. Did I say what's **still running** and what's **blocked** — or explicitly "nothing"?
+6. Did I write **Do better**, honestly, about my own approach?
+7. Does it end with **numbered choices → stamp → nothing**?
+8. **Can I delete 20% of the lines without losing meaning?** If yes, delete them.
+9. If UI/UX changed, did I include rapid test steps with expected outcomes?
+10. Does every page/route/module mention carry its **full visible clickable URL** (no bare `/path`)?
+
+## Subagent clause — paste into every subagent brief
+
+> Your final report follows `.cursor/rules/agent-response-contract.mdc`: open with the
+> bold outcome line, link every artifact, back every claim with evidence, state what is
+> still running or blocked, and close with numbered next choices. No process narration.
+
+## Managing this contract
+
+- **Edit:** `data/agent_response_contract.json` (human-friendly, commented).
+- **Apply everywhere:** `python scripts/response_contract_sync.py --all`
+- **Check a response:** `python scripts/response_contract_lint.py --file <md>`
+- **Skill:** `/response-contract` — view, edit, deploy, test.
+- **Doc:** `docs/architecture/AGENT_RESPONSE_CONTRACT.md`
